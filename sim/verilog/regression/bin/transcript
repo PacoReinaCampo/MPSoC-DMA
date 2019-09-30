@@ -1,0 +1,19 @@
+# vsim -c -do "run.do" work.riscv_dma_testbench 
+# Start time: 14:14:00 on Sep 26,2019
+# Loading sv_std.std
+# Loading work.riscv_dma_testbench
+# Loading work.riscv_dma
+# Loading work.riscv_dma_interface
+# Loading work.riscv_dma_transfer_table
+# Loading work.riscv_dma_initiator
+# Loading work.riscv_dma_initiator_interface
+# Loading work.riscv_dma_initiator_request
+# Loading work.riscv_dma_arb_rr
+# Loading work.riscv_dma_initiator_response
+# Loading work.riscv_dma_buffer
+# Loading work.riscv_dma_transfer_target
+# Loading work.riscv_mpb
+# Loading work.riscv_mpb_endpoint
+# do run.do
+# End time: 14:14:00 on Sep 26,2019, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0

@@ -1,0 +1,24 @@
+ghdl -i rtl/vhdl/pkg/riscv_mpsoc_pkg.vhd
+ghdl -i rtl/vhdl/pkg/riscv_dma_pkg.vhd
+ghdl -i rtl/vhdl/pkg/riscv_noc_pkg.vhd
+
+ghdl -i rtl/vhdl/modules/riscv_dma_initiator_interface.vhd
+ghdl -i rtl/vhdl/modules/riscv_dma_initiator_request.vhd
+ghdl -i rtl/vhdl/modules/riscv_dma_initiator_response.vhd
+ghdl -i rtl/vhdl/modules/riscv_dma_initiator.vhd
+ghdl -i rtl/vhdl/modules/riscv_dma_interface.vhd
+ghdl -i rtl/vhdl/modules/riscv_dma_transfer_table.vhd
+ghdl -i rtl/vhdl/modules/riscv_dma_transfer_target.vhd
+ghdl -i rtl/vhdl/riscv_dma.vhd
+
+ghdl -i rtl/vhdl/mpb/riscv_mpb.vhd
+ghdl -i rtl/vhdl/mpb/riscv_mpb_endpoint.vhd
+
+ghdl -i rtl/vhdl/noc/riscv_dma_arb_rr.vhd
+ghdl -i rtl/vhdl/noc/riscv_dma_buffer.vhd
+
+ghdl -i bench/vhdl/regression/riscv_dma_testbench.vhd
+
+ghdl -m riscv_dma_testbench
+
+ghdl -r riscv_dma_testbench --ieee-asserts=disable-at-0 --disp-tree=inst > riscv_dma_testbench.tree

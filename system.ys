@@ -1,0 +1,13 @@
+#read_verilog -sv rtl/verilog/modules/riscv_dma_initiator_interface.sv
+#read_verilog -sv rtl/verilog/modules/riscv_dma_initiator_request.sv
+#read_verilog -sv rtl/verilog/modules/riscv_dma_initiator_response.sv
+#read_verilog -sv rtl/verilog/modules/riscv_dma_initiator.sv
+#read_verilog -sv rtl/verilog/modules/riscv_dma_interface.sv
+#read_verilog -sv rtl/verilog/modules/riscv_dma_transfer_table.sv
+#read_verilog -sv rtl/verilog/modules/riscv_dma_transfer_target.sv
+#read_verilog -sv rtl/verilog/riscv_dma.sv
+
+read_verilog -sv rtl/verilog/noc/riscv_dma_arb_rr.sv
+#read_verilog -sv rtl/verilog/noc/riscv_dma_buffer.sv
+
+#read_verilog -sv bench/verilog/regression/riscv_dma_testbench.sv
