@@ -94,15 +94,10 @@ A Direct memory access (DMA) is a feature of computer systems that allows hardwa
 ## Hardware Description Language
 
 dma
-
 ├── bench
-
 │   ├── verilog
-
 │   │   └── regression
-
 │   │       └── mpsoc_dma_testbench.sv
-
 │   └── vhdl
 │       └── regression
 │           └── mpsoc_dma_testbench.vhd
