@@ -9,13 +9,14 @@
 //                  |_|                                                       //
 //                                                                            //
 //                                                                            //
-//              MPSoC-RV64 CPU                                                //
-//              Network on Chip Makefile                                      //
-//              Mesh Topology                                                 //
+//              MPSoC-RISCV CPU                                               //
+//              Direct Access Memory Interface                                //
+//              AMBA3 AHB-Lite Bus Interface                                  //
+//              WishBone Bus Interface                                        //
 //                                                                            //
 ////////////////////////////////////////////////////////////////////////////////
 
-/* Copyright (c) 2019-2020 by the author(s)
+/* Copyright (c) 2018-2019 by the author(s)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -40,21 +41,28 @@
  *   Francisco Javier Reina Campo <frareicam@gmail.com>
  */
 
-../../../../rtl/vhdl/pkg/riscv_mpsoc_pkg.vhd
-../../../../rtl/vhdl/pkg/riscv_dma_pkg.vhd
-../../../../rtl/vhdl/pkg/riscv_noc_pkg.vhd
+../../../../rtl/vhdl/pkg/mpsoc_dma_pkg.vhd
 
-../../../../rtl/vhdl/modules/riscv_dma_initiator_interface.vhd
-../../../../rtl/vhdl/modules/riscv_dma_initiator_request.vhd
-../../../../rtl/vhdl/modules/riscv_dma_initiator_response.vhd
-../../../../rtl/vhdl/modules/riscv_dma_initiator.vhd
-../../../../rtl/vhdl/modules/riscv_dma_interface.vhd
-../../../../rtl/vhdl/modules/riscv_dma_transfer_table.vhd
-../../../../rtl/vhdl/modules/riscv_dma_transfer_target.vhd
-../../../../rtl/vhdl/riscv_dma.vhd
+../../../../rtl/vhdl/core/mpsoc_dma_arbitrer_rr.vhd
+../../../../rtl/vhdl/core/mpsoc_dma_initiator_nocreq.vhd
+../../../../rtl/vhdl/core/mpsoc_dma_packet_buffer.vhd
+../../../../rtl/vhdl/core/mpsoc_dma_request_table.vhd
 
-../../../../rtl/vhdl/mpb/riscv_mpb.vhd
-../../../../rtl/vhdl/mpb/riscv_mpb_endpoint.vhd
+../../../../rtl/vhdl/ahb3/mpsoc_dma_ahb3_initiator_nocres.vhd
+../../../../rtl/vhdl/ahb3/mpsoc_dma_ahb3_initiator_req.vhd
+../../../../rtl/vhdl/ahb3/mpsoc_dma_ahb3_initiator.vhd
+../../../../rtl/vhdl/ahb3/mpsoc_dma_ahb3_interface.vhd
+../../../../rtl/vhdl/ahb3/mpsoc_dma_ahb3_target.vhd
+../../../../rtl/vhdl/ahb3/mpsoc_dma_ahb3_top.vhd
 
-../../../../rtl/vhdl/noc/riscv_dma_arb_rr.vhd
-../../../../rtl/vhdl/noc/riscv_dma_buffer.vhd
+../../../../rtl/vhdl/wb/mpsoc_dma_wb_initiator_nocres.vhd
+../../../../rtl/vhdl/wb/mpsoc_dma_wb_initiator_req.vhd
+../../../../rtl/vhdl/wb/mpsoc_dma_wb_initiator.vhd
+../../../../rtl/vhdl/wb/mpsoc_dma_wb_interface.vhd
+../../../../rtl/vhdl/wb/mpsoc_dma_wb_target.vhd
+../../../../rtl/vhdl/wb/mpsoc_dma_wb_top.vhd
+
+../../../../rtl/vhdl/mpi/mpsoc_mpi_ahb.vhd
+../../../../rtl/vhdl/mpi/mpsoc_mpi_wb.vhd
+../../../../rtl/vhdl/mpi/mpsoc_mpi.vhd
+../../../../rtl/vhdl/mpi/mpsoc_packet_buffer.vhd

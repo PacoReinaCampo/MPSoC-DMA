@@ -1,9 +1,10 @@
 **Implementation in VHDL & (System)Verilog of a Direct Access Memory and simulation in GHDL & Icarus Verilog**
 
-Direct memory access (DMA) is a feature of computer systems that allows hardware subsystems to access main system memory (random-access memory), independent of the Processing Unit (PU). A PU inside a SoC can transfer data to and from its local memory without occupying its processor time, allowing computation and data transfer to proceed in parallel.
+A Direct memory access (DMA) is a feature of computer systems that allows hardware subsystems to access main system memory (random-access memory), independent of the Processing Unit (PU). A PU inside a SoC can transfer data to and from its local memory without occupying its processor time, allowing computation and data transfer to proceed in parallel.
 
 
 **MIT License**
+
 Copyright (c) 2018-2019 by the author(s)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy

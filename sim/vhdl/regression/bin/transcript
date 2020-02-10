@@ -1,26 +1,32 @@
-# vsim -c -do "run.do" work.riscv_dma_testbench 
-# Start time: 01:11:53 on Sep 23,2019
+# vsim -c -do "run.do" work.mpsoc_dma_testbench 
+# Start time: 17:57:32 on Feb 10,2020
 # Loading std.standard
 # Loading std.textio(body)
 # Loading ieee.std_logic_1164(body)
 # Loading ieee.numeric_std(body)
 # Loading ieee.math_real(body)
-# Loading work.riscv_mpsoc_pkg
-# Loading work.riscv_dma_pkg
-# Loading work.riscv_dma_testbench(rtl)
-# Loading work.riscv_dma(rtl)
-# Loading work.riscv_dma_interface(rtl)
-# Loading work.riscv_dma_transfer_table(rtl)
-# Loading work.riscv_dma_initiator(rtl)
-# Loading work.riscv_dma_initiator_interface(rtl)
-# Loading work.riscv_dma_initiator_request(rtl)
-# Loading work.riscv_dma_arb_rr(rtl)
-# Loading work.riscv_dma_initiator_response(rtl)
-# Loading work.riscv_noc_pkg
-# Loading work.riscv_dma_buffer(rtl)
-# Loading work.riscv_dma_transfer_target(rtl)
-# Loading work.riscv_mpb(rtl)
-# Loading work.riscv_mpb_endpoint(rtl)
+# Loading work.mpsoc_dma_pkg
+# Loading work.mpsoc_dma_testbench(rtl)
+# Loading work.mpsoc_dma_ahb3_top(rtl)
+# Loading work.mpsoc_dma_ahb3_interface(rtl)
+# Loading work.mpsoc_dma_request_table(rtl)
+# Loading work.mpsoc_dma_ahb3_initiator(rtl)
+# Loading work.mpsoc_dma_ahb3_initiator_req(rtl)
+# Loading work.mpsoc_dma_initiator_nocreq(rtl)
+# Loading work.mpsoc_dma_arbitrer_rr(rtl)
+# Loading work.mpsoc_dma_ahb3_initiator_nocres(rtl)
+# Loading work.mpsoc_dma_packet_buffer(rtl)
+# Loading work.mpsoc_dma_ahb3_target(rtl)
+# Loading work.mpsoc_dma_wb_top(rtl)
+# Loading work.mpsoc_dma_wb_interface(rtl)
+# Loading work.mpsoc_dma_wb_initiator(rtl)
+# Loading work.mpsoc_dma_wb_initiator_req(rtl)
+# Loading work.mpsoc_dma_wb_initiator_nocres(rtl)
+# Loading work.mpsoc_dma_wb_target(rtl)
+# Loading work.mpsoc_mpi_ahb(rtl)
+# Loading work.mpsoc_mpi(rtl)
+# Loading work.mpsoc_packet_buffer(rtl)
+# Loading work.mpsoc_mpi_wb(rtl)
 # do run.do
-# End time: 01:11:53 on Sep 23,2019, Elapsed time: 0:00:00
+# End time: 17:57:32 on Feb 10,2020, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 0
