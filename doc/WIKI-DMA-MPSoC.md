@@ -97,8 +97,7 @@ dma
 ├── bench
 │   ├── verilog
 │   │   └── regression
-│   │       └── mpsoc_dma_testbench.sv
-│   └── vhdl
+│   │       └── mpsoc_dma_testbench.sv│   └── vhdl
 │       └── regression
 │           └── mpsoc_dma_testbench.vhd
 ├── doc
