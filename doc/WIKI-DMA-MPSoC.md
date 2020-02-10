@@ -83,7 +83,7 @@ A Direct memory access (DMA) is a feature of computer systems that allows hardwa
 | `dint`  |    1   |   Output  | Interrupt signal output         |
 
 
-## Data INPUTS/OUTPUTS Wishbone Bus
+## Count Lines of Code
 
 |Language              | files | blank | comment | code |
 | ---------------------| ----- | ----- | ------- | ---- |
