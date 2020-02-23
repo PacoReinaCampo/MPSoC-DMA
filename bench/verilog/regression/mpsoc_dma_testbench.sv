@@ -152,44 +152,6 @@ module mpsoc_dma_testbench;
 
   logic [TABLE_ENTRIES-1:0] irq_wb;
 
-  // AHB
-  logic [NoC_FLIT_WIDTH-1:0] ahb_noc_out_flit;
-  logic                      ahb_noc_out_valid;
-  logic                      ahb_noc_out_ready;
-
-  logic [NoC_FLIT_WIDTH-1:0] ahb_noc_in_flit;
-  logic                      ahb_noc_in_valid;
-  logic                      ahb_noc_in_ready;
-
-  logic [               5:0] HADDR;
-  logic                      HWRITE;
-  logic                      HMASTLOCK;
-  logic                      HSEL;
-  logic [NoC_DATA_WIDTH-1:0] HRDATA;
-  logic [NoC_DATA_WIDTH-1:0] HWDATA;
-  logic                      HREADY;
-
-  logic                      ahb_irq;
-
-  // WB
-  logic [NoC_FLIT_WIDTH-1:0] wb_noc_out_flit;
-  logic                      wb_noc_out_valid;
-  logic                      wb_noc_out_ready;
-
-  logic [NoC_FLIT_WIDTH-1:0] wb_noc_in_flit;
-  logic                      wb_noc_in_valid;
-  logic                      wb_noc_in_ready;
-
-  logic [               5:0] wb_mpi_addr_i;
-  logic                      wb_mpi_we_i;
-  logic                      wb_mpi_cyc_i;
-  logic                      wb_mpi_stb_i;
-  logic [NoC_DATA_WIDTH-1:0] wb_mpi_dat_i;
-  logic [NoC_DATA_WIDTH-1:0] wb_mpi_dat_o;
-  logic                      wb_mpi_ack_o;
-
-  logic                      wb_irq;
-
   //////////////////////////////////////////////////////////////////
   //
   // Module Body
@@ -304,67 +266,5 @@ module mpsoc_dma_testbench;
     .wb_ack_i (wb_ack_i),
 
     .irq (irq_ahb3)
-  );
-
-  mpsoc_mpi_ahb #(
-    .NoC_DATA_WIDTH ( NoC_DATA_WIDTH ),
-    .NoC_TYPE_WIDTH ( NoC_TYPE_WIDTH ),
-    .FIFO_DEPTH     ( FIFO_DEPTH     ),
-    .NoC_FLIT_WIDTH ( NoC_FLIT_WIDTH ),
-    .SIZE_WIDTH     ( SIZE_WIDTH     )
-  )
-  mpi_ahb (
-    .clk ( clk ),
-    .rst ( rst ),
-
-    // NoC interface
-    .noc_out_flit  ( ahb_noc_out_flit  ),
-    .noc_out_valid ( ahb_noc_out_valid ),
-    .noc_out_ready ( ahb_noc_out_ready ),
-
-    .noc_in_flit  ( ahb_noc_in_flit  ),
-    .noc_in_valid ( ahb_noc_in_valid ),
-    .noc_in_ready ( ahb_noc_in_ready ),
-
-    .HADDR     ( HADDR     ),
-    .HWRITE    ( HWRITE    ),
-    .HMASTLOCK ( HMASTLOCK ),
-    .HSEL      ( HSEL      ),
-    .HRDATA    ( HRDATA    ),
-    .HWDATA    ( HWDATA    ),
-    .HREADY    ( HREADY    ),
-
-    .irq ( ahb_irq )
-  );
-
-  mpsoc_mpi_wb #(
-    .NoC_DATA_WIDTH ( NoC_DATA_WIDTH ),
-    .NoC_TYPE_WIDTH ( NoC_TYPE_WIDTH ),
-    .FIFO_DEPTH     ( FIFO_DEPTH     ),
-    .NoC_FLIT_WIDTH ( NoC_FLIT_WIDTH ),
-    .SIZE_WIDTH     ( SIZE_WIDTH     )
-  )
-  mpi_wb (
-    .clk ( clk ),
-    .rst ( rst ),
-
-    // NoC interface
-    .noc_out_flit  ( wb_noc_out_flit  ),
-    .noc_out_valid ( wb_noc_out_valid ),
-    .noc_out_ready ( wb_noc_out_ready ),
-
-    .noc_in_flit  ( wb_noc_in_flit  ),
-    .noc_in_valid ( wb_noc_in_valid ),
-    .noc_in_ready ( wb_noc_in_ready ),
-
-    .wb_addr_i ( wb_mpi_addr_i ),
-    .wb_we_i   ( wb_mpi_we_i   ),
-    .wb_cyc_i  ( wb_mpi_cyc_i  ),
-    .wb_stb_i  ( wb_mpi_stb_i  ),
-    .wb_dat_i  ( wb_mpi_dat_i  ),
-    .wb_dat_o  ( wb_mpi_dat_o  ),
-    .wb_ack_o  ( wb_mpi_ack_o  ),
-
-    .irq ( wb_irq )
   );
 endmodule

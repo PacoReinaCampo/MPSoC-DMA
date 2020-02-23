@@ -17,9 +17,4 @@
 #read_verilog -sv rtl/verilog/wb/mpsoc_dma_wb_target.sv
 #read_verilog -sv rtl/verilog/wb/mpsoc_dma_wb_top.sv
 
-#read_verilog -sv rtl/verilog/mpi/mpsoc_mpi_ahb.sv
-#read_verilog -sv rtl/verilog/mpi/mpsoc_mpi_wb.sv
-#read_verilog -sv rtl/verilog/mpi/mpsoc_mpi.sv
-#read_verilog -sv rtl/verilog/mpi/mpsoc_packet_buffer.sv
-
 #read_verilog -sv bench/verilog/regression/mpsoc_dma_testbench.sv

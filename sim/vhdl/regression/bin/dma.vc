@@ -62,9 +62,4 @@
 ../../../../rtl/vhdl/wb/mpsoc_dma_wb_target.vhd
 ../../../../rtl/vhdl/wb/mpsoc_dma_wb_top.vhd
 
-../../../../rtl/vhdl/mpi/mpsoc_mpi_ahb.vhd
-../../../../rtl/vhdl/mpi/mpsoc_mpi_wb.vhd
-../../../../rtl/vhdl/mpi/mpsoc_mpi.vhd
-../../../../rtl/vhdl/mpi/mpsoc_packet_buffer.vhd
-
 ../../../../bench/vhdl/regression/mpsoc_dma_testbench.vhd

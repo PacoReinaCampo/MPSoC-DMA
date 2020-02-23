@@ -19,11 +19,6 @@ ghdl -i rtl/vhdl/wb/mpsoc_dma_wb_interface.vhd
 ghdl -i rtl/vhdl/wb/mpsoc_dma_wb_target.vhd
 ghdl -i rtl/vhdl/wb/mpsoc_dma_wb_top.vhd
 
-ghdl -i rtl/vhdl/mpi/mpsoc_mpi_ahb.vhd
-ghdl -i rtl/vhdl/mpi/mpsoc_mpi_wb.vhd
-ghdl -i rtl/vhdl/mpi/mpsoc_mpi.vhd
-ghdl -i rtl/vhdl/mpi/mpsoc_packet_buffer.vhd
-
 ghdl -i bench/vhdl/regression/mpsoc_dma_testbench.vhd
 
 ghdl -m mpsoc_dma_testbench
