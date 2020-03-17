@@ -1,12 +1,12 @@
 # DMA-MPSoC WIKI
 
-A Direct memory access (DMA) is a feature of computer systems that allows hardware subsystems to access main system memory (random-access memory), independent of the Processing Unit (PU). A PU inside a SoC can transfer data to and from its local memory without occupying its processor time, allowing computation and data transfer to proceed in parallel.
+A Direct Memory Access (DMA) is a feature of computer systems that allows hardware subsystems to access main system memory (Random Access Memory), independent of the Processing Unit (PU). A PU inside a SoC can transfer data to and from its local memory without occupying its processor time, allowing computation and data transfer to proceed in parallel.
 
 
 ## Instruction INPUTS/OUTPUTS AMBA3 AHB-Lite Bus
 
 | Port         |  Size  | Direction | Description                                           |
-| -------------| ------ | --------- | ----------------------------------------------------- |
+| ------------ | ------ | --------- | ----------------------------------------------------- |
 | `HRESETn`    |    1   |   Input   | Asynchronous active low reset                         |
 | `HCLK`       |    1   |   Input   | System clock input                                    |
 |              |        |           |                                                       |
@@ -27,7 +27,7 @@ A Direct memory access (DMA) is a feature of computer systems that allows hardwa
 ## Instruction INPUTS/OUTPUTS Wishbone Bus
 
 | Port    |  Size  | Direction | Description                     |
-| --------| ------ | --------- | ------------------------------- |
+| ------- | ------ | --------- | ------------------------------- |
 | `rst`   |    1   |   Input   | Synchronous, active high        |
 | `clk`   |    1   |   Input   | Master clock                    |
 |         |        |           |                                 |
@@ -46,7 +46,7 @@ A Direct memory access (DMA) is a feature of computer systems that allows hardwa
 ## Data INPUTS/OUTPUTS AMBA3 AHB-Lite Bus
 
 | Port         |  Size  | Direction | Description                                           |
-| -------------| ------ | --------- | ----------------------------------------------------- |
+| ------------ | ------ | --------- | ----------------------------------------------------- |
 | `HRESETn`    |    1   |   Input   | Asynchronous active low reset                         |
 | `HCLK`       |    1   |   Input   | System clock input                                    |
 |              |        |           |                                                       |
@@ -67,7 +67,7 @@ A Direct memory access (DMA) is a feature of computer systems that allows hardwa
 ## Data INPUTS/OUTPUTS Wishbone Bus
 
 | Port    |  Size  | Direction | Description                     |
-| --------| ------ | --------- | ------------------------------- |
+| ------- | ------ | --------- | ------------------------------- |
 | `rst`   |    1   |   Input   | Synchronous, active high        |
 | `clk`   |    1   |   Input   | Master clock                    |
 |         |        |           |                                 |
@@ -81,109 +81,3 @@ A Direct memory access (DMA) is a feature of computer systems that allows hardwa
 | `dack`  |    1   |   Output  | Bus cycle acknowledge output    |
 | `derr`  |    1   |   Output  | Bus cycle error output          |
 | `dint`  |    1   |   Output  | Interrupt signal output         |
-
-
-## Count Lines of Code
-
-|Language              | files | blank | comment | code |
-| ---------------------| ----- | ----- | ------- | ---- |
-|VHDL                  |    18 |   652 |    1482 | 3869 |
-|Verilog-SystemVerilog |    18 |   515 |    1356 | 3048 |
-
-
-## Hardware Description Language
-
-dma
-├── bench
-│   ├── verilog
-│   │   └── regression
-│   │       └── mpsoc_dma_testbench.sv
-│   └── vhdl
-│       └── regression
-│           └── mpsoc_dma_testbench.vhd
-├── doc
-│ └── WIKI-DMA-MPSoC.md
-├── rtl
-│   ├── verilog
-│   │   ├── ahb3
-│   │   │   ├── mpsoc_dma_ahb3_initiator_nocres.sv
-│   │   │   ├── mpsoc_dma_ahb3_initiator_req.sv
-│   │   │   ├── mpsoc_dma_ahb3_initiator.sv
-│   │   │   ├── mpsoc_dma_ahb3_interface.sv
-│   │   │   ├── mpsoc_dma_ahb3_target.sv
-│   │   │   └── mpsoc_dma_ahb3_top.sv
-│   │   ├── core
-│   │   │   ├── mpsoc_dma_arb_rr.sv
-│   │   │   ├── mpsoc_dma_initiator_nocreq.sv
-│   │   │   ├── mpsoc_dma_packet_buffer.sv
-│   │   │   └── mpsoc_dma_request_table.sv
-│   │   ├── pkg
-│   │   │   └── mpsoc_dma_pkg.sv
-│   │   └── wb
-│   │       ├── mpsoc_dma_wb_initiator_nocres.sv
-│   │       ├── mpsoc_dma_wb_initiator_req.sv
-│   │       ├── mpsoc_dma_wb_initiator.sv
-│   │       ├── mpsoc_dma_wb_interface.sv
-│   │       ├── mpsoc_dma_wb_target.sv
-│   │       └── mpsoc_dma_wb_top.sv
-│   └── vhdl
-│       ├── ahb3
-│       │   ├── mpsoc_dma_ahb3_initiator_nocres.vhd
-│       │   ├── mpsoc_dma_ahb3_initiator_req.vhd
-│       │   ├── mpsoc_dma_ahb3_initiator.vhd
-│       │   ├── mpsoc_dma_ahb3_interface.vhd
-│       │   ├── mpsoc_dma_ahb3_target.vhd
-│       │   └── mpsoc_dma_ahb3_top.vhd
-│       ├── core
-│       │   ├── mpsoc_dma_arb_rr.vhd
-│       │   ├── mpsoc_dma_initiator_nocreq.vhd
-│       │   ├── mpsoc_dma_packet_buffer.vhd
-│       │   └── mpsoc_dma_request_table.vhd
-│       ├── pkg
-│       │   └── mpsoc_dma_pkg.vhd
-│       └── wb
-│           ├── mpsoc_dma_wb_initiator_nocres.vhd
-│           ├── mpsoc_dma_wb_initiator_req.vhd
-│           ├── mpsoc_dma_wb_initiator.vhd
-│           ├── mpsoc_dma_wb_interface.vhd
-│           ├── mpsoc_dma_wb_target.vhd
-│           └── mpsoc_dma_wb_top.vhd
-├── sim
-│   ├── mixed
-│   │   └── regression
-│   │       └── bin
-│   │           ├── mpsoc_dma_verilog.vc
-│   │           ├── mpsoc_dma_vhdl.vc
-│   │           ├── Makefile
-│   │           ├── run.do
-│   │           └── transcript
-│   ├── verilog
-│   │   └── regression
-│   │       └── bin
-│   │           ├── mpsoc_dma.vc
-│   │           ├── Makefile
-│   │           ├── run.do
-│   │           └── transcript
-│   └── vhdl
-│       └── regression
-│           └── bin
-│               ├── mpsoc_dma.vc
-│               ├── Makefile
-│               ├── run.do
-│               └── transcript
-├── system.vtor
-├── system.qf
-├── system.ys
-├── README.md
-├── CLEAN-IT
-├── DELETE-IT
-├── EXECUTE-IT
-├── SIMULATE-MIXED-MS-IT
-├── SIMULATE-VHDL-GHDL-IT
-├── SIMULATE-VHDL-MS-IT
-├── SIMULATE-VLOG-IV-IT
-├── SIMULATE-VLOG-MS-IT
-├── SIMULATE-VLOG-VTOR-DMA-IT
-├── SYNTHESIZE-VLOG-YS-IT
-├── TRANSLATE-IT
-└── UPLOAD-IT

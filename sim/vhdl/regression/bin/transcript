@@ -1,5 +1,5 @@
 # vsim -c -do "run.do" work.mpsoc_dma_testbench 
-# Start time: 16:28:45 on Feb 23,2020
+# Start time: 19:15:44 on Mar 09,2020
 # Loading std.standard
 # Loading std.textio(body)
 # Loading ieee.std_logic_1164(body)
@@ -24,5 +24,5 @@
 # Loading work.mpsoc_dma_wb_initiator_nocres(rtl)
 # Loading work.mpsoc_dma_wb_target(rtl)
 # do run.do
-# End time: 16:28:45 on Feb 23,2020, Elapsed time: 0:00:00
+# End time: 19:15:44 on Mar 09,2020, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 0

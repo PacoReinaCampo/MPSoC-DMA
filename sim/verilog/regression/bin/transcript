@@ -1,5 +1,5 @@
 # vsim -c -do "run.do" work.mpsoc_dma_testbench 
-# Start time: 16:28:50 on Feb 23,2020
+# Start time: 19:15:37 on Mar 09,2020
 # Loading sv_std.std
 # Loading work.mpsoc_dma_testbench
 # Loading work.mpsoc_dma_ahb3_top
@@ -19,5 +19,5 @@
 # Loading work.mpsoc_dma_wb_initiator_nocres
 # Loading work.mpsoc_dma_wb_target
 # do run.do
-# End time: 16:28:51 on Feb 23,2020, Elapsed time: 0:00:01
+# End time: 19:15:37 on Mar 09,2020, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 0
