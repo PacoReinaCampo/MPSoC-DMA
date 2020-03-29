@@ -1,0 +1,4 @@
+rm -rf dma.vvp
+iverilog -g2012 -o dma.vvp -c dma.vtor -s wb_top_tb \
+-I rtl/verilog/pkg
+vvp dma.vvp

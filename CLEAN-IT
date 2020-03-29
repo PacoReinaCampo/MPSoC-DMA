@@ -5,6 +5,6 @@ rm -rf sim/vhdl/regression/bin/work
 rm -rf synthesis
 
 rm -rf work-obj93.cf
-rm -rf system.vvp
+rm -rf *.vvp
 rm -rf obj_dir
 rm -rf mpsoc_dma_testbench.tree
