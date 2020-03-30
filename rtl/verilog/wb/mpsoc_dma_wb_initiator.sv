@@ -44,12 +44,12 @@
 
 module mpsoc_dma_wb_initiator #(
   //parameters
-  parameter ADDR_WIDTH = 32,
-  parameter DATA_WIDTH = 32,
-  parameter TABLE_ENTRIES = 4,
+  parameter ADDR_WIDTH             = 32,
+  parameter DATA_WIDTH             = 32,
+  parameter TABLE_ENTRIES          = 4,
   parameter TABLE_ENTRIES_PTRWIDTH = $clog2(4),
-  parameter TILEID = 0,
-  parameter NOC_PACKET_SIZE = 16
+  parameter TILEID                 = 0,
+  parameter NOC_PACKET_SIZE        = 16
 )
   (
     input  clk,
@@ -57,12 +57,12 @@ module mpsoc_dma_wb_initiator #(
  
     // Control read (request) interface
     output [TABLE_ENTRIES_PTRWIDTH-1:0] ctrl_read_pos,
-    input  [`DMA_REQUEST_WIDTH-1:0]     ctrl_read_req,
+    input  [`DMA_REQUEST_WIDTH    -1:0] ctrl_read_req,
 
     output [TABLE_ENTRIES_PTRWIDTH-1:0] ctrl_done_pos,
     output                              ctrl_done_en,
 
-    input  [TABLE_ENTRIES-1:0]          valid,
+    input  [TABLE_ENTRIES         -1:0] valid,
 
     // NOC-Interface
     output [`FLIT_WIDTH-1:0]                noc_out_flit,
@@ -104,11 +104,11 @@ module mpsoc_dma_wb_initiator #(
   //
 
   // Beginning of automatic wires (for undeclared instantiated-module outputs)
-  wire [DATA_WIDTH-1:0]               req_data;
+  wire [DATA_WIDTH              -1:0] req_data;
   wire                                req_data_ready;
   wire                                req_data_valid;
   wire                                req_is_l2r;
-  wire [ADDR_WIDTH-1:0]               req_laddr;
+  wire [ADDR_WIDTH              -1:0] req_laddr;
   wire [`DMA_REQFIELD_SIZE_WIDTH-3:0] req_size;
   wire                                req_start;
 
@@ -175,14 +175,14 @@ module mpsoc_dma_wb_initiator #(
   wb_initiator_nocres (
     // Outputs
     .noc_in_ready              (noc_in_ready),
-    .wb_cyc_o                  (wb_res_cyc_o),                  // Templated
-    .wb_stb_o                  (wb_res_stb_o),                  // Templated
-    .wb_we_o                   (wb_res_we_o),                   // Templated
-    .wb_dat_o                  (wb_res_dat_o[DATA_WIDTH-1:0]),  // Templated
-    .wb_adr_o                  (wb_res_adr_o[ADDR_WIDTH-1:0]),  // Templated
-    .wb_cti_o                  (wb_res_cti_o[2:0]),             // Templated
-    .wb_bte_o                  (wb_res_bte_o[1:0]),             // Templated
-    .wb_sel_o                  (wb_res_sel_o[3:0]),             // Templated
+    .wb_cyc_o                  (wb_res_cyc_o),
+    .wb_stb_o                  (wb_res_stb_o),
+    .wb_we_o                   (wb_res_we_o), 
+    .wb_dat_o                  (wb_res_dat_o[DATA_WIDTH-1:0]),
+    .wb_adr_o                  (wb_res_adr_o[ADDR_WIDTH-1:0]),
+    .wb_cti_o                  (wb_res_cti_o[2:0]),
+    .wb_bte_o                  (wb_res_bte_o[1:0]),
+    .wb_sel_o                  (wb_res_sel_o[3:0]),
     .ctrl_done_pos             (ctrl_done_pos[TABLE_ENTRIES_PTRWIDTH-1:0]),
     .ctrl_done_en              (ctrl_done_en),
     // Inputs
@@ -190,7 +190,7 @@ module mpsoc_dma_wb_initiator #(
     .rst                       (rst),
     .noc_in_flit               (noc_in_flit[`FLIT_WIDTH-1:0]),
     .noc_in_valid              (noc_in_valid),
-    .wb_ack_i                  (wb_res_ack_i),                 // Templated
-    .wb_dat_i                  (wb_res_dat_i[DATA_WIDTH-1:0])  // Templated
+    .wb_ack_i                  (wb_res_ack_i),
+    .wb_dat_i                  (wb_res_dat_i[DATA_WIDTH-1:0])
   );
 endmodule

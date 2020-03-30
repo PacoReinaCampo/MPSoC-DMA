@@ -57,7 +57,7 @@ module mpsoc_dma_packet_buffer #(
     input                   clk,
     input                   rst,
 
-    input [FLIT_WIDTH-1:0]  in_flit,
+    input  [FLIT_WIDTH-1:0] in_flit,
     input                   in_valid,
     output                  in_ready,
 
@@ -75,9 +75,9 @@ module mpsoc_dma_packet_buffer #(
 
   // Signals for fifo
   reg [FLIT_WIDTH-1:0] fifo_data [0:FIFO_DEPTH]; //actual fifo
-  reg [FIFO_DEPTH:0]   fifo_write_ptr;
+  reg [FIFO_DEPTH  :0] fifo_write_ptr;
 
-  reg [FIFO_DEPTH:0]   last_flits;
+  reg [FIFO_DEPTH  :0] last_flits;
 
   wire                 full_packet;
   wire                 pop;

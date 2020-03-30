@@ -46,7 +46,7 @@ module mpsoc_dma_wb_interface #(
   parameter ADDR_WIDTH = 32,
   parameter DATA_WIDTH = 32,
 
-  parameter TABLE_ENTRIES = 4,
+  parameter TABLE_ENTRIES          = 4,
   parameter TABLE_ENTRIES_PTRWIDTH = 2,
 
   parameter TILEID = 0
@@ -63,9 +63,9 @@ module mpsoc_dma_wb_interface #(
     output reg [DATA_WIDTH-1:0] wb_if_dat_o,
     output                      wb_if_ack_o,
 
-    output [`DMA_REQUEST_WIDTH-1:0]     if_write_req,
+    output [`DMA_REQUEST_WIDTH    -1:0] if_write_req,
     output [TABLE_ENTRIES_PTRWIDTH-1:0] if_write_pos,
-    output [`DMA_REQMASK_WIDTH-1:0]     if_write_select,
+    output [`DMA_REQMASK_WIDTH    -1:0] if_write_select,
     output                              if_write_en,
 
     // Interface read (status) interface
@@ -117,4 +117,4 @@ module mpsoc_dma_wb_interface #(
       assign if_write_select[i] = (wb_if_addr_i[4:2] == i);
     end
   endgenerate
-endmodule // lisnoc_dma_wbinterface
+endmodule

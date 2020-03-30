@@ -57,16 +57,16 @@ module mpsoc_dma_wb_initiator_req #(
     input      [DATA_WIDTH-1:0] wb_req_dat_i,
     output     [DATA_WIDTH-1:0] wb_req_dat_o,
     output reg [ADDR_WIDTH-1:0] wb_req_adr_o,
-    output reg [2:0]            wb_req_cti_o,
-    output     [1:0]            wb_req_bte_o,
-    output     [3:0]            wb_req_sel_o,
+    output reg [           2:0] wb_req_cti_o,
+    output     [           1:0] wb_req_bte_o,
+    output     [           3:0] wb_req_sel_o,
 
     input                                 req_start,
     input                                 req_is_l2r,
     input  [`DMA_REQFIELD_SIZE_WIDTH-3:0] req_size,
-    input  [ADDR_WIDTH-1:0]               req_laddr,
+    input  [ADDR_WIDTH              -1:0] req_laddr,
     output                                req_data_valid,
-    output [DATA_WIDTH-1:0]               req_data,
+    output [DATA_WIDTH              -1:0] req_data,
     input                                 req_data_ready
   );
 
@@ -116,7 +116,7 @@ module mpsoc_dma_wb_initiator_req #(
   wire [DATA_WIDTH-1:0]               data_fifo_out; // Current first element
   wire [DATA_WIDTH-1:0]               data_fifo_in;  // Push element
   // Shift register for current position (4th bit is full mark)
-  reg [3:0]                           data_fifo_pos;
+  reg [            3:0]               data_fifo_pos;
 
   wire        data_fifo_empty; // FIFO empty
   wire        data_fifo_ready; // FIFO accepts new elements

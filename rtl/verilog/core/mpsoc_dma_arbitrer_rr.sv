@@ -54,7 +54,6 @@ module mpsoc_dma_arbitrer_rr #(
   //
   // Variables
   //
-
   reg [N-1:0] mask [0:N-1];
 
   integer i,j;
@@ -65,7 +64,6 @@ module mpsoc_dma_arbitrer_rr #(
   //
   // Module body
   //
-
   always @(*) begin
     for (i=0;i<N;i=i+1) begin
       mask[i] = {N{1'b0}};
@@ -82,7 +80,7 @@ module mpsoc_dma_arbitrer_rr #(
           mask[i][i-j+N] = mask[i][i-j+N+1] & ~gnt[i-j+N];
       end
     end
-  end // always @ (*)
+  end
 
   generate
     for (k=0;k<N;k=k+1) begin

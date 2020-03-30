@@ -46,17 +46,17 @@ module mpsoc_dma_wb_target #(
   parameter ADDR_WIDTH = 32,
   parameter DATA_WIDTH = 32,
 
-  parameter FLIT_WIDTH = `FLIT_WIDTH,
-  parameter STATE_WIDTH = 4,
-  parameter STATE_IDLE = 4'b0000,
-  parameter STATE_L2R_GETADDR = 4'b0001,
-  parameter STATE_L2R_DATA = 4'b0010,
+  parameter FLIT_WIDTH         = `FLIT_WIDTH,
+  parameter STATE_WIDTH        = 4,
+  parameter STATE_IDLE         = 4'b0000,
+  parameter STATE_L2R_GETADDR  = 4'b0001,
+  parameter STATE_L2R_DATA     = 4'b0010,
   parameter STATE_L2R_SENDRESP = 4'b0011,
   parameter STATE_R2L_GETLADDR = 4'b0100,
   parameter STATE_R2L_GETRADDR = 4'b0101,
-  parameter STATE_R2L_GENHDR = 4'b0110,
-  parameter STATE_R2L_GENADDR = 4'b0111,
-  parameter STATE_R2L_DATA = 4'b1000,
+  parameter STATE_R2L_GENHDR   = 4'b0110,
+  parameter STATE_R2L_GENADDR  = 4'b0111,
+  parameter STATE_R2L_DATA     = 4'b1000,
 
   parameter TABLE_ENTRIES = 4,
   parameter TABLE_ENTRIES_PTRWIDTH = $clog2(4),
@@ -72,7 +72,7 @@ module mpsoc_dma_wb_target #(
     output reg                   noc_out_valid,
     input                        noc_out_ready,
 
-    input [`FLIT_WIDTH-1:0]      noc_in_flit,
+    input      [`FLIT_WIDTH-1:0] noc_in_flit,
     input                        noc_in_valid,
     output                       noc_in_ready,
 
@@ -84,9 +84,9 @@ module mpsoc_dma_wb_target #(
     input      [DATA_WIDTH-1:0]  wb_dat_i,
     output     [DATA_WIDTH-1:0]  wb_dat_o,
     output     [ADDR_WIDTH-1:0]  wb_adr_o,
-    output     [3:0]             wb_sel_o,
-    output reg [2:0]             wb_cti_o,
-    output reg [1:0]             wb_bte_o
+    output     [           3:0]  wb_sel_o,
+    output reg [           2:0]  wb_cti_o,
+    output reg [           1:0]  wb_bte_o
   );
 
   //////////////////////////////////////////////////////////////////
@@ -119,8 +119,8 @@ module mpsoc_dma_wb_target #(
   reg [ADDR_WIDTH-1:0]         nxt_address;
   reg                          end_of_request;
   reg                          nxt_end_of_request;
-  reg [`SOURCE_WIDTH-1:0]      src_tile;
-  reg [`SOURCE_WIDTH-1:0]      nxt_src_tile;
+  reg [`SOURCE_WIDTH   -1:0]   src_tile;
+  reg [`SOURCE_WIDTH   -1:0]   nxt_src_tile;
   reg [`PACKET_ID_WIDTH-1:0]   packet_id;
   reg [`PACKET_ID_WIDTH-1:0]   nxt_packet_id;
 
@@ -137,8 +137,8 @@ module mpsoc_dma_wb_target #(
   reg [4:0]             nxt_noc_resp_packet_wsize;
 
   // TODO: correct define!
-  reg [`DMA_REQFIELD_SIZE_WIDTH-3:0]   resp_wsize;
-  reg [`DMA_REQFIELD_SIZE_WIDTH-3:0]   nxt_resp_wsize;
+  reg [`DMA_REQFIELD_SIZE_WIDTH -3:0]  resp_wsize;
+  reg [`DMA_REQFIELD_SIZE_WIDTH -3:0]  nxt_resp_wsize;
   reg [`DMA_RESPFIELD_SIZE_WIDTH-3:0]  wb_resp_count;
   reg [`DMA_RESPFIELD_SIZE_WIDTH-3:0]  nxt_wb_resp_count;
 
@@ -172,21 +172,21 @@ module mpsoc_dma_wb_target #(
   )
   packet_buffer (
     // Outputs
-    .in_ready                      (noc_in_ready),             // Templated
-    .out_flit                      (buf_flit[FLIT_WIDTH-1:0]), // Templated
-    .out_valid                     (buf_valid),                // Templated
-    .out_size                      (),                         // Templated
+    .in_ready                      (noc_in_ready),
+    .out_flit                      (buf_flit[FLIT_WIDTH-1:0]),
+    .out_valid                     (buf_valid),
+    .out_size                      (),
     // Inputs
     .clk                           (clk),
     .rst                           (rst),
-    .in_flit                       (noc_in_flit[FLIT_WIDTH-1:0]), // Templated
-    .in_valid                      (noc_in_valid),                // Templated
-    .out_ready                     (buf_ready)                    // Templated
+    .in_flit                       (noc_in_flit[FLIT_WIDTH-1:0]),
+    .in_valid                      (noc_in_valid),
+    .out_ready                     (buf_ready)
   );
 
   // Is this the last flit of a packet?
   assign buf_last_flit = (buf_flit[`FLIT_TYPE_MSB:`FLIT_TYPE_LSB]==`FLIT_TYPE_LAST) |
-    (buf_flit[`FLIT_TYPE_MSB:`FLIT_TYPE_LSB]==`FLIT_TYPE_SINGLE);
+                         (buf_flit[`FLIT_TYPE_MSB:`FLIT_TYPE_LSB]==`FLIT_TYPE_SINGLE);
 
   // The intermediate store a FIFO of three elements
   //
@@ -408,7 +408,7 @@ module mpsoc_dma_wb_target #(
           // Only (NOC_PACKET_SIZE -2) flits are availabel for the payload,
           // because we need a header-flit and an address-flit, too.
           noc_out_flit[`SIZE_MSB:`SIZE_LSB] = 7'd120;
-          noc_out_flit[`PACKET_RESP_LAST]     = 1'b0;
+          noc_out_flit[`PACKET_RESP_LAST]   = 1'b0;
           nxt_noc_resp_packet_wsize = NOC_PACKET_SIZE -2;
           // count is the current transfer number
           nxt_noc_resp_packet_wcount = 5'd1;

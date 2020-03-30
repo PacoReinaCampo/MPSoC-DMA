@@ -46,11 +46,11 @@ module mpsoc_dma_wb_top #(
   parameter ADDR_WIDTH = 32,
   parameter DATA_WIDTH = 32,
 
-  parameter TABLE_ENTRIES = 4,
+  parameter TABLE_ENTRIES          = 4,
   parameter TABLE_ENTRIES_PTRWIDTH = $clog2(4),
-  parameter TILEID = 0,
-  parameter NOC_PACKET_SIZE = 16,
-  parameter GENERATE_INTERRUPT = 1
+  parameter TILEID                 = 0,
+  parameter NOC_PACKET_SIZE        = 16,
+  parameter GENERATE_INTERRUPT     = 1
 )
   (
     input clk,
@@ -86,11 +86,11 @@ module mpsoc_dma_wb_top #(
     output reg [DATA_WIDTH-1:0] wb_dat_o,
     output reg                  wb_cyc_o,
     output reg                  wb_stb_o,
-    output reg [3:0]            wb_sel_o,
+    output reg [           3:0] wb_sel_o,
     output reg                  wb_we_o,
     output                      wb_cab_o,
-    output reg [2:0]            wb_cti_o,
-    output reg [1:0]            wb_bte_o,
+    output reg [           2:0] wb_cti_o,
+    output reg [           1:0] wb_bte_o,
     input      [DATA_WIDTH-1:0] wb_dat_i,
     input                       wb_ack_i,
 
@@ -116,9 +116,9 @@ module mpsoc_dma_wb_top #(
   wire                     wb_req_cyc_o;
   wire                     wb_req_stb_o;
   wire                     wb_req_we_o;
-  wire [3:0]               wb_req_sel_o;
-  wire [2:0]               wb_req_cti_o;
-  wire [1:0]               wb_req_bte_o;
+  wire [           3:0]    wb_req_sel_o;
+  wire [           2:0]    wb_req_cti_o;
+  wire [           1:0]    wb_req_bte_o;
   reg  [DATA_WIDTH-1:0]    wb_req_dat_i;
   reg                      wb_req_ack_i;
 
@@ -127,9 +127,9 @@ module mpsoc_dma_wb_top #(
   wire                     wb_res_cyc_o;
   wire                     wb_res_stb_o;
   wire                     wb_res_we_o;
-  wire [3:0]               wb_res_sel_o;
-  wire [2:0]               wb_res_cti_o;
-  wire [1:0]               wb_res_bte_o;
+  wire [           3:0]    wb_res_sel_o;
+  wire [           2:0]    wb_res_cti_o;
+  wire [           1:0]    wb_res_bte_o;
   reg  [DATA_WIDTH-1:0]    wb_res_dat_i;
   reg                      wb_res_ack_i;
 
@@ -138,35 +138,35 @@ module mpsoc_dma_wb_top #(
   wire                     wb_target_cyc_o;
   wire                     wb_target_stb_o;
   wire                     wb_target_we_o;
-  wire [2:0]               wb_target_cti_o;
-  wire [1:0]               wb_target_bte_o;
+  wire [           2:0]    wb_target_cti_o;
+  wire [           1:0]    wb_target_bte_o;
   reg  [DATA_WIDTH-1:0]    wb_target_dat_i;
   reg                      wb_target_ack_i;
 
   // Beginning of automatic wires (for undeclared instantiated-module outputs)
-  wire                              ctrl_done_en;     // From ctrl_initiator of lisnoc_dma_initiator.v
-  wire [TABLE_ENTRIES_PTRWIDTH-1:0] ctrl_done_pos;    // From ctrl_initiator of lisnoc_dma_initiator.v
-  wire [TABLE_ENTRIES_PTRWIDTH-1:0] ctrl_read_pos;    // From ctrl_initiator of lisnoc_dma_initiator.v
-  wire [`DMA_REQUEST_WIDTH-1:0]     ctrl_read_req;    // From request_table of lisnoc_dma_request_table.v
-  wire [TABLE_ENTRIES-1:0]          done;             // From request_table of lisnoc_dma_request_table.v
-  wire                              if_valid_en;      // From wbinterface of lisnoc_dma_wbinterface.v
-  wire [TABLE_ENTRIES_PTRWIDTH-1:0] if_valid_pos;     // From wbinterface of lisnoc_dma_wbinterface.v
-  wire                              if_valid_set;     // From wbinterface of lisnoc_dma_wbinterface.v
-  wire                              if_validrd_en;    // From wbinterface of lisnoc_dma_wbinterface.v
-  wire                              if_write_en;      // From wbinterface of lisnoc_dma_wbinterface.v
-  wire [TABLE_ENTRIES_PTRWIDTH-1:0] if_write_pos;     // From wbinterface of lisnoc_dma_wbinterface.v
-  wire [`DMA_REQUEST_WIDTH-1:0]     if_write_req;     // From wbinterface of lisnoc_dma_wbinterface.v
-  wire [`DMA_REQMASK_WIDTH-1:0]     if_write_select;  // From wbinterface of lisnoc_dma_wbinterface.v
-  wire [TABLE_ENTRIES-1:0]          valid;            // From request_table of lisnoc_dma_request_table.v
-  wire [3:0]                        wb_target_sel_o;  // From target of lisnoc_dma_target.v
+  wire                              ctrl_done_en;     // From initiator
+  wire [TABLE_ENTRIES_PTRWIDTH-1:0] ctrl_done_pos;    // From initiator
+  wire [TABLE_ENTRIES_PTRWIDTH-1:0] ctrl_read_pos;    // From initiator
+  wire [`DMA_REQUEST_WIDTH    -1:0] ctrl_read_req;    // From request_table
+  wire [TABLE_ENTRIES         -1:0] done;             // From request_table
+  wire                              if_valid_en;      // From wb interface
+  wire [TABLE_ENTRIES_PTRWIDTH-1:0] if_valid_pos;     // From wb interface
+  wire                              if_valid_set;     // From wb interface
+  wire                              if_validrd_en;    // From wb interface
+  wire                              if_write_en;      // From wb interface
+  wire [TABLE_ENTRIES_PTRWIDTH-1:0] if_write_pos;     // From wb interface
+  wire [`DMA_REQUEST_WIDTH    -1:0] if_write_req;     // From wb interface
+  wire [`DMA_REQMASK_WIDTH    -1:0] if_write_select;  // From wb interface
+  wire [TABLE_ENTRIES         -1:0] valid;            // From request_table
+  wire [                       3:0] wb_target_sel_o;  // From target
   // End of automatics
 
   wire [TABLE_ENTRIES_PTRWIDTH-1:0] ctrl_out_read_pos;
   wire [TABLE_ENTRIES_PTRWIDTH-1:0] ctrl_in_read_pos;
   wire [TABLE_ENTRIES_PTRWIDTH-1:0] ctrl_write_pos;
 
-  reg [1:0]                         wb_arb;
-  reg [1:0]                         nxt_wb_arb;
+  reg [           1:0]              wb_arb;
+  reg [           1:0]              nxt_wb_arb;
 
   wire wb_arb_active;
 
@@ -179,8 +179,8 @@ module mpsoc_dma_wb_top #(
   assign wb_if_rty_o = 1'b0;
 
   assign ctrl_out_read_pos = 0;
-  assign ctrl_in_read_pos = 0;
-  assign ctrl_write_pos = 0;
+  assign ctrl_in_read_pos  = 0;
+  assign ctrl_write_pos    = 0;
 
   mpsoc_dma_wb_interface #(
     .TILEID(TILEID)
@@ -200,7 +200,7 @@ module mpsoc_dma_wb_top #(
     // Inputs
     .clk                     (clk),
     .rst                     (rst),
-    .wb_if_addr_i             (wb_if_addr_i[ADDR_WIDTH-1:0]),
+    .wb_if_addr_i            (wb_if_addr_i[ADDR_WIDTH-1:0]),
     .wb_if_dat_i             (wb_if_dat_i[DATA_WIDTH-1:0]),
     .wb_if_cyc_i             (wb_if_cyc_i),
     .wb_if_stb_i             (wb_if_stb_i),
@@ -240,9 +240,9 @@ module mpsoc_dma_wb_top #(
     .ctrl_read_pos        (ctrl_read_pos[TABLE_ENTRIES_PTRWIDTH-1:0]),
     .ctrl_done_pos        (ctrl_done_pos[TABLE_ENTRIES_PTRWIDTH-1:0]),
     .ctrl_done_en         (ctrl_done_en),
-    .noc_out_flit         (noc_out_req_flit[`FLIT_WIDTH-1:0]), // Templated
-    .noc_out_valid        (noc_out_req_valid),                 // Templated
-    .noc_in_ready         (noc_in_res_ready),                 // Templated
+    .noc_out_flit         (noc_out_req_flit[`FLIT_WIDTH-1:0]),
+    .noc_out_valid        (noc_out_req_valid),
+    .noc_in_ready         (noc_in_res_ready),
     .wb_req_cyc_o         (wb_req_cyc_o),
     .wb_req_stb_o         (wb_req_stb_o),
     .wb_req_we_o          (wb_req_we_o),
@@ -264,9 +264,9 @@ module mpsoc_dma_wb_top #(
     .rst                  (rst),
     .ctrl_read_req        (ctrl_read_req[`DMA_REQUEST_WIDTH-1:0]),
     .valid                (valid[TABLE_ENTRIES-1:0]),
-    .noc_out_ready        (noc_out_req_ready),                  // Templated
-    .noc_in_flit          (noc_in_res_flit[`FLIT_WIDTH-1:0]),  // Templated
-    .noc_in_valid         (noc_in_res_valid),                  // Templated
+    .noc_out_ready        (noc_out_req_ready),
+    .noc_in_flit          (noc_in_res_flit[`FLIT_WIDTH-1:0]),
+    .noc_in_valid         (noc_in_res_valid),
     .wb_req_ack_i         (wb_req_ack_i),
     .wb_req_dat_i         (wb_req_dat_i[DATA_WIDTH-1:0]),
     .wb_res_ack_i         (wb_res_ack_i),
@@ -278,25 +278,25 @@ module mpsoc_dma_wb_top #(
   )
   wb_target (
     // Outputs
-    .noc_out_flit                 (noc_out_res_flit[`FLIT_WIDTH-1:0]),  // Templated
-    .noc_out_valid                (noc_out_res_valid),                  // Templated
-    .noc_in_ready                 (noc_in_req_ready),                    // Templated
-    .wb_cyc_o                     (wb_target_cyc_o),                     // Templated
-    .wb_stb_o                     (wb_target_stb_o),                     // Templated
-    .wb_we_o                      (wb_target_we_o),                      // Templated
-    .wb_dat_o                     (wb_target_dat_o[DATA_WIDTH-1:0]),     // Templated
-    .wb_adr_o                     (wb_target_adr_o[ADDR_WIDTH-1:0]),     // Templated
-    .wb_sel_o                     (wb_target_sel_o[3:0]),                // Templated
-    .wb_cti_o                     (wb_target_cti_o[2:0]),                // Templated
-    .wb_bte_o                     (wb_target_bte_o[1:0]),                // Templated
+    .noc_out_flit                 (noc_out_res_flit[`FLIT_WIDTH-1:0]),
+    .noc_out_valid                (noc_out_res_valid),
+    .noc_in_ready                 (noc_in_req_ready),
+    .wb_cyc_o                     (wb_target_cyc_o),
+    .wb_stb_o                     (wb_target_stb_o),
+    .wb_we_o                      (wb_target_we_o),
+    .wb_dat_o                     (wb_target_dat_o[DATA_WIDTH-1:0]),
+    .wb_adr_o                     (wb_target_adr_o[ADDR_WIDTH-1:0]),
+    .wb_sel_o                     (wb_target_sel_o[3:0]),
+    .wb_cti_o                     (wb_target_cti_o[2:0]),
+    .wb_bte_o                     (wb_target_bte_o[1:0]),
     // Inputs
     .clk                          (clk),
     .rst                          (rst),
-    .noc_out_ready                (noc_out_res_ready),               // Templated
-    .noc_in_flit                  (noc_in_req_flit[`FLIT_WIDTH-1:0]), // Templated
-    .noc_in_valid                 (noc_in_req_valid),                 // Templated
-    .wb_ack_i                     (wb_target_ack_i),                  // Templated
-    .wb_dat_i                     (wb_target_dat_i[DATA_WIDTH-1:0])   // Templated
+    .noc_out_ready                (noc_out_res_ready),
+    .noc_in_flit                  (noc_in_req_flit[`FLIT_WIDTH-1:0]),
+    .noc_in_valid                 (noc_in_req_valid),
+    .wb_ack_i                     (wb_target_ack_i),
+    .wb_dat_i                     (wb_target_dat_i[DATA_WIDTH-1:0])
   );
 
   always @(posedge clk) begin
@@ -308,7 +308,7 @@ module mpsoc_dma_wb_top #(
     end
   end
 
-  assign wb_arb_active = ((wb_arb == wb_arb_req)    & wb_req_cyc_o)  |
+  assign wb_arb_active = ((wb_arb == wb_arb_req)    & wb_req_cyc_o) |
                          ((wb_arb == wb_arb_resp)   & wb_res_cyc_o) |
                          ((wb_arb == wb_arb_target) & wb_target_cyc_o);
 
@@ -399,4 +399,4 @@ module mpsoc_dma_wb_top #(
       wb_target_dat_i = 32'hx;
     end
   end
-endmodule // lisnoc_dma
+endmodule

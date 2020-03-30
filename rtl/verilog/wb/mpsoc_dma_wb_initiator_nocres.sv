@@ -48,15 +48,15 @@ module mpsoc_dma_wb_initiator_nocres #(
 
   parameter FLIT_WIDTH = `FLIT_WIDTH,
 
-  parameter TABLE_ENTRIES = 4,
+  parameter TABLE_ENTRIES          = 4,
   parameter TABLE_ENTRIES_PTRWIDTH = $clog2(4),
 
   parameter NOC_PACKET_SIZE = 16,
 
-  parameter STATE_WIDTH = 2,
-  parameter STATE_IDLE = 2'b00,
+  parameter STATE_WIDTH    = 2,
+  parameter STATE_IDLE     = 2'b00,
   parameter STATE_GET_ADDR = 2'b01,
-  parameter STATE_DATA = 2'b10,
+  parameter STATE_DATA     = 2'b10,
   parameter STATE_GET_SIZE = 2'b11
 )
   (
@@ -75,9 +75,9 @@ module mpsoc_dma_wb_initiator_nocres #(
     input      [ADDR_WIDTH-1:0]             wb_dat_i,
     output     [ADDR_WIDTH-1:0]             wb_dat_o,
     output     [ADDR_WIDTH-1:0]             wb_adr_o,
-    output reg [2:0]                        wb_cti_o,
-    output reg [1:0]                        wb_bte_o,
-    output     [3:0]                        wb_sel_o,
+    output reg [           2:0]             wb_cti_o,
+    output reg [           1:0]             wb_bte_o,
+    output     [           3:0]             wb_sel_o,
 
     output reg [TABLE_ENTRIES_PTRWIDTH-1:0] ctrl_done_pos,
     output reg                              ctrl_done_en
@@ -91,8 +91,8 @@ module mpsoc_dma_wb_initiator_nocres #(
   // State registers and next state logic
   reg [STATE_WIDTH-1:0]                   state;
   reg [STATE_WIDTH-1:0]                   nxt_state;
-  reg [ADDR_WIDTH-1:0]                    resp_address;
-  reg [ADDR_WIDTH-1:0]                    nxt_resp_address;
+  reg [ADDR_WIDTH -1:0]                   resp_address;
+  reg [ADDR_WIDTH -1:0]                   nxt_resp_address;
   reg                                     last_packet_of_response;
   reg                                     nxt_last_packet_of_response;
   reg [TABLE_ENTRIES_PTRWIDTH-1:0]        resp_id;
@@ -117,16 +117,16 @@ module mpsoc_dma_wb_initiator_nocres #(
   )
   packet_buffer (
     // Outputs
-    .in_ready                      (noc_in_ready),             // Templated
-    .out_flit                      (buf_flit[FLIT_WIDTH-1:0]), // Templated
-    .out_valid                     (buf_valid),                // Templated
-    .out_size                      (),                         // Templated
+    .in_ready                      (noc_in_ready),
+    .out_flit                      (buf_flit[FLIT_WIDTH-1:0]),
+    .out_valid                     (buf_valid),
+    .out_size                      (),
     // Inputs
     .clk                           (clk),
     .rst                           (rst),
-    .in_flit                       (noc_in_flit[FLIT_WIDTH-1:0]), // Templated
-    .in_valid                      (noc_in_valid),                // Templated
-    .out_ready                     (buf_ready)                    // Templated
+    .in_flit                       (noc_in_flit[FLIT_WIDTH-1:0]),
+    .in_valid                      (noc_in_valid),
+    .out_ready                     (buf_ready)
   );
 
   // Is this the last flit of a packet?
@@ -149,7 +149,7 @@ module mpsoc_dma_wb_initiator_nocres #(
     wb_bte_o = 2'b00;
     wb_cti_o = 3'b000;
 
-    ctrl_done_en = 1'b0;
+    ctrl_done_en  = 1'b0;
     ctrl_done_pos = 0;
 
     // Default values are old values
@@ -224,8 +224,8 @@ module mpsoc_dma_wb_initiator_nocres #(
       default: begin
         nxt_state = STATE_IDLE;
       end
-    endcase // case (state)
-  end // always @ (*)
+    endcase
+  end
 
   always @(posedge clk) begin
     if (rst) begin

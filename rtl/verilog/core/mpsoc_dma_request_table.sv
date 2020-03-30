@@ -44,7 +44,7 @@
 `include "mpsoc_dma_pkg.sv"
 
 module mpsoc_dma_request_table #(
-  parameter TABLE_ENTRIES = 4,
+  parameter TABLE_ENTRIES          = 4,
   parameter TABLE_ENTRIES_PTRWIDTH = $clog2(4),
 
   parameter GENERATE_INTERRUPT = 1
@@ -54,9 +54,9 @@ module mpsoc_dma_request_table #(
     input rst,
 
     // Interface write (request) interface
-    input [`DMA_REQUEST_WIDTH-1:0]     if_write_req,
+    input [`DMA_REQUEST_WIDTH    -1:0] if_write_req,
     input [TABLE_ENTRIES_PTRWIDTH-1:0] if_write_pos,
-    input [`DMA_REQMASK_WIDTH-1:0]     if_write_select,
+    input [`DMA_REQMASK_WIDTH    -1:0] if_write_select,
     input                              if_write_en,
 
     input [TABLE_ENTRIES_PTRWIDTH-1:0] if_valid_pos,
@@ -65,7 +65,7 @@ module mpsoc_dma_request_table #(
     input                              if_validrd_en,
 
     // Control read (request) interface
-    output [`DMA_REQUEST_WIDTH-1:0]    ctrl_read_req,
+    output [`DMA_REQUEST_WIDTH   -1:0] ctrl_read_req,
     input [TABLE_ENTRIES_PTRWIDTH-1:0] ctrl_read_pos,
 
     // Control write (status) interface
@@ -101,7 +101,7 @@ module mpsoc_dma_request_table #(
   //
 
   assign if_write_mask[`DMA_REQFIELD_LADDR_MSB:`DMA_REQFIELD_LADDR_LSB] = {`DMA_REQFIELD_LADDR_WIDTH{if_write_select[`DMA_REQMASK_LADDR]}};
-  assign if_write_mask[`DMA_REQFIELD_SIZE_MSB:`DMA_REQFIELD_SIZE_LSB] = {`DMA_REQFIELD_SIZE_WIDTH{if_write_select[`DMA_REQMASK_SIZE]}};
+  assign if_write_mask[`DMA_REQFIELD_SIZE_MSB:`DMA_REQFIELD_SIZE_LSB]   = {`DMA_REQFIELD_SIZE_WIDTH{if_write_select[`DMA_REQMASK_SIZE]}};
   assign if_write_mask[`DMA_REQFIELD_RTILE_MSB:`DMA_REQFIELD_RTILE_LSB] = {`DMA_REQFIELD_RTILE_WIDTH{if_write_select[`DMA_REQMASK_RTILE]}};
   assign if_write_mask[`DMA_REQFIELD_RADDR_MSB:`DMA_REQFIELD_RADDR_LSB] = {`DMA_REQFIELD_RADDR_WIDTH{if_write_select[`DMA_REQMASK_RADDR]}};
   assign if_write_mask[`DMA_REQFIELD_DIR] = if_write_select[`DMA_REQMASK_DIR];
@@ -150,4 +150,4 @@ module mpsoc_dma_request_table #(
 
   // The interrupt is set when any request is valid and done
   assign irq = (transfer_valid & transfer_done) & {(TABLE_ENTRIES){1'b1}};
-endmodule // dma_transfer_table
+endmodule

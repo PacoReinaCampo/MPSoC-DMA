@@ -45,14 +45,14 @@ module wb_top_tb;
   //
   // Module Body
   //
-   vlog_tb_utils vlog_tb_utils0();
+   vlog_tb_utils vlog_tb_util0();
    vlog_tap_generator #("wb_dma_tb.tap", 3) vtg();
 
    wb_dma_tb #(.AUTORUN (0)) wb_dma_tb();
 
    initial begin
       wb_dma_tb.run;
-      vtg.ok("wb_mux: All tests passed!");
+      vtg.ok("wb_dma: All tests passed!");
 
       #3 $finish;
    end

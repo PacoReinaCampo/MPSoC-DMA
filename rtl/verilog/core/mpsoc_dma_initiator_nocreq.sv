@@ -45,10 +45,11 @@
 module mpsoc_dma_initiator_nocreq #(
   parameter ADDR_WIDTH = 32,
   parameter DATA_WIDTH = 32,
-  parameter TABLE_ENTRIES = 4,
+
+  parameter TABLE_ENTRIES          = 4,
   parameter TABLE_ENTRIES_PTRWIDTH = $clog2(4),
-  parameter TILEID = 0,
-  parameter NOC_PACKET_SIZE = 16  // flits per packet
+  parameter TILEID                 = 0,
+  parameter NOC_PACKET_SIZE        = 16  // flits per packet
 )
   (
     input clk,
@@ -61,7 +62,7 @@ module mpsoc_dma_initiator_nocreq #(
 
     // Control read (request) interface
     output reg [TABLE_ENTRIES_PTRWIDTH-1:0] ctrl_read_pos,
-    input [`DMA_REQUEST_WIDTH-1:0]          ctrl_read_req,
+    input [`DMA_REQUEST_WIDTH         -1:0] ctrl_read_req,
 
     input [TABLE_ENTRIES-1:0]               valid,
 
@@ -164,10 +165,10 @@ module mpsoc_dma_initiator_nocreq #(
   )
   arbitrer_rr (
     // Outputs
-    .nxt_gnt (nxt_select),  // Templated
+    .nxt_gnt (nxt_select),
     // Inputs
-    .req     (requests),  // Templated
-    .gnt     (select)     // Templated
+    .req     (requests),
+    .gnt     (select)
   );
 
   // register next select to select
