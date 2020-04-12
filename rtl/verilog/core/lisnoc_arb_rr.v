@@ -11,7 +11,6 @@
 //                                                                            //
 //              MPSoC-RISCV CPU                                               //
 //              Direct Access Memory Interface                                //
-//              AMBA3 AHB-Lite Bus Interface                                  //
 //              WishBone Bus Interface                                        //
 //                                                                            //
 ////////////////////////////////////////////////////////////////////////////////
@@ -41,19 +40,29 @@
  *   Francisco Javier Reina Campo <frareicam@gmail.com>
  */
 
-module mpsoc_dma_arbitrer_rr #(
-  parameter N = 2
-)
-  (
-    input  [N-1:0] req,
-    input  [N-1:0] gnt,
-    output [N-1:0] nxt_gnt
-  );
+module lisnoc_arb_rr(
+  // Outputs
+  nxt_gnt,
+  // Inputs
+  req, gnt
+);
+
+  //////////////////////////////////////////////////////////////////
+  //
+  // Constants
+  //
+
+  parameter N = 2;
 
   //////////////////////////////////////////////////////////////////
   //
   // Variables
   //
+
+  input  [N-1:0] req;
+  input  [N-1:0] gnt;
+  output [N-1:0] nxt_gnt;
+
   reg [N-1:0] mask [0:N-1];
 
   integer i,j;
@@ -64,6 +73,7 @@ module mpsoc_dma_arbitrer_rr #(
   //
   // Module body
   //
+
   always @(*) begin
     for (i=0;i<N;i=i+1) begin
       mask[i] = {N{1'b0}};

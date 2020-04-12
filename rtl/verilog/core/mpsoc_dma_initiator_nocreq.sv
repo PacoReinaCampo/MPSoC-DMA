@@ -159,11 +159,11 @@ module mpsoc_dma_initiator_nocreq #(
 
   assign requests = valid & ~open_responses & {TABLE_ENTRIES{(noc_req_state == NOC_REQ_IDLE)}};
 
-  // Round robin (rr) arbiter
-  mpsoc_dma_arbitrer_rr #(
+  // Round Robin (rr) arbiter
+  lisnoc_arb_rr #(
     .N(TABLE_ENTRIES)
   )
-  arbitrer_rr (
+  arbiter_rr (
     // Outputs
     .nxt_gnt (nxt_select),
     // Inputs

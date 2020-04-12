@@ -41,7 +41,7 @@
  *   Francisco Javier Reina Campo <frareicam@gmail.com>
  */
 
-../../../../rtl/verilog/core/mpsoc_dma_arbitrer_rr.sv
+../../../../rtl/verilog/core/lisnoc_arb_rr.v
 ../../../../rtl/verilog/core/mpsoc_dma_initiator_nocreq.sv
 ../../../../rtl/verilog/core/mpsoc_dma_packet_buffer.sv
 ../../../../rtl/verilog/core/mpsoc_dma_request_table.sv
