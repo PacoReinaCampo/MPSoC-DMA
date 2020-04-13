@@ -128,21 +128,6 @@ architecture RTL of mpsoc_dma_wb_target is
 
   --////////////////////////////////////////////////////////////////
   --
-  -- Functions
-  --
-  function to_stdlogic (
-    input : boolean
-    ) return std_logic is
-  begin
-    if input then
-      return('1');
-    else
-      return('0');
-    end if;
-  end function to_stdlogic;
-
-  --////////////////////////////////////////////////////////////////
-  --
   -- Types
   --
   type M_2_DATA_WIDTH is array (2 downto 0) of std_logic_vector(DATA_WIDTH-1 downto 0);

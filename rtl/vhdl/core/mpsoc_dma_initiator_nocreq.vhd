@@ -92,7 +92,7 @@ entity mpsoc_dma_initiator_nocreq is
 end mpsoc_dma_initiator_nocreq;
 
 architecture RTL of mpsoc_dma_initiator_nocreq is
-  component mpsoc_dma_arbitrer_rr
+  component arb_rr
     generic (
       N : integer := 2
       );
@@ -102,21 +102,6 @@ architecture RTL of mpsoc_dma_initiator_nocreq is
       nxt_gnt : out std_logic_vector(N-1 downto 0)
       );
   end component;
-
-  --////////////////////////////////////////////////////////////////
-  --
-  -- Functions
-  --
-  function to_stdlogic (
-    input : boolean
-    ) return std_logic is
-  begin
-    if input then
-      return('1');
-    else
-      return('0');
-    end if;
-  end function to_stdlogic;
 
   --////////////////////////////////////////////////////////////////
   --
@@ -216,8 +201,8 @@ begin
 
   requests <= valid and not open_responses and (TABLE_ENTRIES-1 downto 0 => to_stdlogic(noc_req_state = NOC_REQ_IDLE));
 
-  -- Round robin (rr) arbiter
-  arb_rr : mpsoc_dma_arbitrer_rr
+  -- Round Robin (rr) arbiter
+  arbiter_rr : arb_rr
     generic map (
       N => TABLE_ENTRIES
       )

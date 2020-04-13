@@ -86,21 +86,6 @@ architecture RTL of mpsoc_dma_packet_buffer is
 
   --////////////////////////////////////////////////////////////////
   --
-  -- Functions
-  --
-  function to_stdlogic (
-    input : boolean
-    ) return std_logic is
-  begin
-    if input then
-      return('1');
-    else
-      return('0');
-    end if;
-  end function to_stdlogic;
-
-  --////////////////////////////////////////////////////////////////
-  --
   -- Variables
   --
 

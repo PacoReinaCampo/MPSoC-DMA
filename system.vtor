@@ -1,4 +1,4 @@
-rtl/verilog/core/lisnoc_arb_rr.v
+rtl/verilog/core/arb_rr.v
 rtl/verilog/core/mpsoc_dma_initiator_nocreq.sv
 rtl/verilog/core/mpsoc_dma_packet_buffer.sv
 rtl/verilog/core/mpsoc_dma_request_table.sv

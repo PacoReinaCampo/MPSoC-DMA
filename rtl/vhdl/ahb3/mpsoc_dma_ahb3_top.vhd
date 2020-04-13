@@ -286,21 +286,6 @@ architecture RTL of mpsoc_dma_ahb3_top is
 
   --////////////////////////////////////////////////////////////////
   --
-  -- Functions
-  --
-  function to_stdlogic (
-    input : boolean
-    ) return std_logic is
-  begin
-    if input then
-      return('1');
-    else
-      return('0');
-    end if;
-  end function to_stdlogic;
-
-  --////////////////////////////////////////////////////////////////
-  --
   -- Constants
   --
   constant ahb3_arb_req    : std_logic_vector(1 downto 0) := "00";

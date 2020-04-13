@@ -1,6 +1,6 @@
 ghdl -i rtl/vhdl/pkg/mpsoc_dma_pkg.vhd
 
-ghdl -i rtl/vhdl/core/mpsoc_dma_arbitrer_rr.vhd
+ghdl -i rtl/vhdl/core/arb_rr.vhd
 ghdl -i rtl/vhdl/core/mpsoc_dma_initiator_nocreq.vhd
 ghdl -i rtl/vhdl/core/mpsoc_dma_packet_buffer.vhd
 ghdl -i rtl/vhdl/core/mpsoc_dma_request_table.vhd

@@ -1,4 +1,4 @@
--- Converted from rtl/verilog/core/mpsoc_dma_arb_rr.sv
+-- Converted from rtl/verilog/core/arb_rr.sv
 -- by verilog2vhdl - QueenField
 
 --//////////////////////////////////////////////////////////////////////////////
@@ -48,7 +48,7 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-entity mpsoc_dma_arbitrer_rr is
+entity arb_rr is
   generic (
     N : integer := 2
     );
@@ -57,9 +57,9 @@ entity mpsoc_dma_arbitrer_rr is
     gnt     : in  std_logic_vector(N-1 downto 0);
     nxt_gnt : out std_logic_vector(N-1 downto 0)
     );
-end mpsoc_dma_arbitrer_rr;
+end arb_rr;
 
-architecture RTL of mpsoc_dma_arbitrer_rr is
+architecture RTL of arb_rr is
   --////////////////////////////////////////////////////////////////
   --
   -- Variables
@@ -70,6 +70,8 @@ architecture RTL of mpsoc_dma_arbitrer_rr is
   --
   -- Variables
   --
+
+  -- Mask net
   signal mask : M_N_N;
 
   --//////////////////////////////////////////////////////////////
@@ -95,10 +97,13 @@ begin
   processing_0 : process (gnt)
   begin
     for i in 0 to N - 1 loop
+      -- Initialize mask as 0
       mask(i) <= (others => '0');
       if (i > 0) then
+        -- For i=N:1 the next right is i-1
         mask(i)(i-1) <= not gnt(i-1);
       else
+        -- For i=0 the next right is N-1
         mask(i)(N-1) <= not gnt(N-1);
       end if;
       for j in 2 to N - 1 loop
@@ -113,6 +118,7 @@ begin
     end loop;
   end process;
 
+  -- Calculate the nxt_gnt
   generating_0 : for k in 0 to N - 1 generate
     nxt_gnt(k) <= (reduce_nor(mask(k) and req) and req(k)) or (reduce_nor(req) and gnt(k));
   end generate;

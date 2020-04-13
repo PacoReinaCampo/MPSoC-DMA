@@ -10,7 +10,8 @@
 //                                                                            //
 //                                                                            //
 //              MPSoC-RISCV CPU                                               //
-//              Direct Access Memory Interface                                //
+//              Network on Chip                                               //
+//              AMBA3 AHB-Lite Bus Interface                                  //
 //              WishBone Bus Interface                                        //
 //                                                                            //
 ////////////////////////////////////////////////////////////////////////////////
@@ -40,29 +41,22 @@
  *   Francisco Javier Reina Campo <frareicam@gmail.com>
  */
 
-module lisnoc_arb_rr(
-  // Outputs
-  nxt_gnt,
-  // Inputs
-  req, gnt
-);
-
-  //////////////////////////////////////////////////////////////////
-  //
-  // Constants
-  //
-
-  parameter N = 2;
+module arb_rr #(
+  parameter N = 2
+)
+  (
+    input  [N-1:0] req,
+    input 	   en,
+    input  [N-1:0] gnt,
+    output [N-1:0] nxt_gnt
+  );
 
   //////////////////////////////////////////////////////////////////
   //
   // Variables
   //
 
-  input  [N-1:0] req;
-  input  [N-1:0] gnt;
-  output [N-1:0] nxt_gnt;
-
+  // Mask net
   reg [N-1:0] mask [0:N-1];
 
   integer i,j;
@@ -71,20 +65,26 @@ module lisnoc_arb_rr(
 
   //////////////////////////////////////////////////////////////////
   //
-  // Module body
+  // Module Body
   //
 
-  always @(*) begin
+  // Calculate the mask
+  always @(*) begin : calc_mask
     for (i=0;i<N;i=i+1) begin
+      // Initialize mask as 0
       mask[i] = {N{1'b0}};
+
       if(i>0)
+        // For i=N:1 the next right is i-1
         mask[i][i-1] = ~gnt[i-1];
       else
+        // For i=0 the next right is N-1
         mask[i][N-1] = ~gnt[N-1];
+
       for (j=2;j<N;j=j+1) begin
         if (i-j>=0)
           mask[i][i-j] = mask[i][i-j+1] & ~gnt[i-j];
-        else if(i-j+1>=0)
+        else if (i-j+1>=0)
           mask[i][i-j+N] = mask[i][i-j+1] & ~gnt[i-j+N];
         else
           mask[i][i-j+N] = mask[i][i-j+N+1] & ~gnt[i-j+N];
@@ -92,9 +92,10 @@ module lisnoc_arb_rr(
     end
   end
 
+  // Calculate the nxt_gnt
   generate
-    for (k=0;k<N;k=k+1) begin
-      assign nxt_gnt[k] = (~|(mask[k] & req) & req[k]) | (~|req & gnt[k]);
+    for (k=0;k<N;k=k+1) begin : gen_nxt_gnt         
+      assign nxt_gnt[k] = en ? (~|(mask[k] & req) & req[k]) | (~|req & gnt[k]) : gnt[k];
     end
   endgenerate
 endmodule

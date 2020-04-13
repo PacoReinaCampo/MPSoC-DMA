@@ -1,5 +1,5 @@
 # vsim -c -do "run.do" work.mpsoc_dma_testbench 
-# Start time: 02:04:35 on Apr 12,2020
+# Start time: 13:52:06 on Apr 13,2020
 # Loading std.standard
 # Loading std.textio(body)
 # Loading ieee.std_logic_1164(body)
@@ -13,7 +13,7 @@
 # Loading work.mpsoc_dma_ahb3_initiator(rtl)
 # Loading work.mpsoc_dma_ahb3_initiator_req(rtl)
 # Loading work.mpsoc_dma_initiator_nocreq(rtl)
-# Loading work.mpsoc_dma_arbitrer_rr(rtl)
+# Loading work.arb_rr(rtl)
 # Loading work.mpsoc_dma_ahb3_initiator_nocres(rtl)
 # Loading work.mpsoc_dma_packet_buffer(rtl)
 # Loading work.mpsoc_dma_ahb3_target(rtl)
@@ -24,5 +24,5 @@
 # Loading work.mpsoc_dma_wb_initiator_nocres(rtl)
 # Loading work.mpsoc_dma_wb_target(rtl)
 # do run.do
-# End time: 02:04:35 on Apr 12,2020, Elapsed time: 0:00:00
+# End time: 13:52:06 on Apr 13,2020, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 0

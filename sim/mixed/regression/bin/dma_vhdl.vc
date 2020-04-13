@@ -43,7 +43,7 @@
 
 ../../../../rtl/vhdl/pkg/mpsoc_dma_pkg.vhd
 
-../../../../rtl/vhdl/core/mpsoc_dma_arbitrer_rr.vhd
+../../../../rtl/vhdl/core/arb_rr.vhd
 ../../../../rtl/vhdl/core/mpsoc_dma_initiator_nocreq.vhd
 ../../../../rtl/vhdl/core/mpsoc_dma_packet_buffer.vhd
 ../../../../rtl/vhdl/core/mpsoc_dma_request_table.vhd

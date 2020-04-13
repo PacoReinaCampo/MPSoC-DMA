@@ -218,21 +218,6 @@ architecture RTL of mpsoc_dma_ahb3_target is
 
   signal noc_sgn_valid : std_logic;
 
-  --//////////////////////////////////////////////////////////////
-  --
-  -- Functions
-  --
-  function reduce_nor (
-    reduce_nor_in : std_logic_vector
-  ) return std_logic is
-    variable reduce_nor_out : std_logic := '0';
-  begin
-    for i in reduce_nor_in'range loop
-      reduce_nor_out := reduce_nor_out nor reduce_nor_in(i);
-    end loop;
-    return reduce_nor_out;
-  end reduce_nor;
-
 begin
   --////////////////////////////////////////////////////////////////
   --
