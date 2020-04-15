@@ -98,6 +98,7 @@ architecture RTL of mpsoc_dma_initiator_nocreq is
       );
     port (
       req     : in  std_logic_vector(N-1 downto 0);
+      en      : in  std_logic;
       gnt     : in  std_logic_vector(N-1 downto 0);
       nxt_gnt : out std_logic_vector(N-1 downto 0)
       );
@@ -208,10 +209,12 @@ begin
       )
     port map (
       -- Outputs
-      nxt_gnt => nxt_select,            -- Templated
+      nxt_gnt => nxt_select,
+
       -- Inputs
-      req     => requests,              -- Templated
-      gnt     => ini_select             -- Templated
+      req => requests, 
+      en  => '1'
+      gnt => ini_select
       );
 
   -- register next select to initial select

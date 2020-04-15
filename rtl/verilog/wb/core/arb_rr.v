@@ -46,6 +46,7 @@ module arb_rr #(
 )
   (
     input  [N-1:0] req,
+    input          en,
     input  [N-1:0] gnt,
     output [N-1:0] nxt_gnt
   );
@@ -94,7 +95,7 @@ module arb_rr #(
   // Calculate the nxt_gnt
   generate
     for (k=0;k<N;k=k+1) begin : gen_nxt_gnt         
-      assign nxt_gnt[k] = (~|(mask[k] & req) & req[k]) | (~|req & gnt[k]);
+      assign nxt_gnt[k] = en ? (~|(mask[k] & req) & req[k]) | (~|req & gnt[k]) : gnt[k];
     end
   endgenerate
 endmodule

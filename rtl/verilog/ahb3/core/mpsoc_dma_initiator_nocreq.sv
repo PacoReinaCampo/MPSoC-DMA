@@ -168,6 +168,7 @@ module mpsoc_dma_initiator_nocreq #(
     .nxt_gnt (nxt_select),
     // Inputs
     .req     (requests),
+    .en      (1'b1),
     .gnt     (select)
   );
 
