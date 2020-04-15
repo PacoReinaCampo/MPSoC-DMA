@@ -1,10 +1,22 @@
-rm -rf sim/mixed/regression/bin/work
-rm -rf sim/verilog/regression/bin/work
-rm -rf sim/vhdl/regression/bin/work
+rm -rf sim/mixed/regression/ahb3/msim/transcript
+rm -rf sim/mixed/regression/wb/msim/transcript
+rm -rf sim/verilog/regression/ahb3/msim/transcript
+rm -rf sim/verilog/regression/wb/msim/transcript
+rm -rf sim/vhdl/regression/ahb3/msim/transcript
+rm -rf sim/vhdl/regression/wb/msim/transcript
 
-rm -rf synthesis
+rm -rf sim/mixed/regression/ahb3/msim/work
+rm -rf sim/mixed/regression/wb/msim/work
+rm -rf sim/verilog/regression/ahb3/msim/work
+rm -rf sim/verilog/regression/wb/msim/work
+rm -rf sim/vhdl/regression/ahb3/msim/work
+rm -rf sim/vhdl/regression/wb/msim/work
 
-rm -rf work-obj93.cf
-rm -rf *.vvp
-rm -rf obj_dir
-rm -rf mpsoc_dma_testbench.tree
+rm -rf sim/verilog/regression/ahb3/iverilog/system.vvp
+rm -rf sim/verilog/regression/wb/iverilog/system.vvp
+
+rm -rf sim/verilog/regression/ahb3/iverilog/*.tap
+rm -rf sim/verilog/regression/wb/iverilog/*.tap
+
+rm -rf sim/verilog/regression/ahb3/vtor/obj_dir
+rm -rf sim/verilog/regression/wb/vtor/obj_dir
