@@ -213,7 +213,7 @@ begin
 
       -- Inputs
       req => requests, 
-      en  => '1'
+      en  => '1',
       gnt => ini_select
       );
 
