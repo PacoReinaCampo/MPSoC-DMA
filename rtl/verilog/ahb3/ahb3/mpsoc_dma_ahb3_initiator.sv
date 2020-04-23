@@ -74,28 +74,30 @@ module mpsoc_dma_ahb3_initiator #(
     output                                  noc_in_ready,
 
     // Wishbone interface for L2R data fetch
-    input                                   ahb3_req_hready,
-    output                                  ahb3_req_hmastlock,
     output                                  ahb3_req_hsel,
-    output                                  ahb3_req_hwrite,
-    input  [DATA_WIDTH-1:0]                 ahb3_req_hrdata,
-    output [DATA_WIDTH-1:0]                 ahb3_req_hwdata,
     output [ADDR_WIDTH-1:0]                 ahb3_req_haddr,
+    output [DATA_WIDTH-1:0]                 ahb3_req_hwdata,
+    output                                  ahb3_req_hwrite,
     output [           2:0]                 ahb3_req_hburst,
-    output [           1:0]                 ahb3_req_htrans,
     output [           3:0]                 ahb3_req_hprot,
+    output [           1:0]                 ahb3_req_htrans,
+    output                                  ahb3_req_hmastlock,
+
+    input  [DATA_WIDTH-1:0]                 ahb3_req_hrdata,
+    input                                   ahb3_req_hready,
 
     // Wishbone interface for L2R data fetch
-    input                                   ahb3_res_hready,
-    output                                  ahb3_res_hmastlock,
     output                                  ahb3_res_hsel,
-    output                                  ahb3_res_hwrite,
-    input  [DATA_WIDTH-1:0]                 ahb3_res_hrdata,
-    output [DATA_WIDTH-1:0]                 ahb3_res_hwdata,
     output [ADDR_WIDTH-1:0]                 ahb3_res_haddr,
+    output [DATA_WIDTH-1:0]                 ahb3_res_hwdata,
+    output                                  ahb3_res_hwrite,
     output [           2:0]                 ahb3_res_hburst,
+    output [           3:0]                 ahb3_res_hprot,
     output [           1:0]                 ahb3_res_htrans,
-    output [           3:0]                 ahb3_res_hprot
+    output                                  ahb3_res_hmastlock,
+
+    input  [DATA_WIDTH-1:0]                 ahb3_res_hrdata,
+    input                                   ahb3_res_hready
   );
 
   //////////////////////////////////////////////////////////////////
@@ -104,11 +106,11 @@ module mpsoc_dma_ahb3_initiator #(
   //
 
   // Beginning of automatic wires (for undeclared instantiated-module outputs)
-  wire [DATA_WIDTH-1:0]               req_data;
+  wire [DATA_WIDTH              -1:0] req_data;
   wire                                req_data_ready;
   wire                                req_data_valid;
   wire                                req_is_l2r;
-  wire [ADDR_WIDTH-1:0]               req_laddr;
+  wire [ADDR_WIDTH              -1:0] req_laddr;
   wire [`DMA_REQFIELD_SIZE_WIDTH-3:0] req_size;
   wire                                req_start;
 
@@ -118,28 +120,28 @@ module mpsoc_dma_ahb3_initiator #(
   // Module body
   //
 
-  mpsoc_dma_ahb3_initiator_req
-  ahb3_initiator_req (
-    // Outputs
-    .ahb3_req_hmastlock        (ahb3_req_hmastlock),
-    .ahb3_req_hsel             (ahb3_req_hsel),
-    .ahb3_req_hwrite           (ahb3_req_hwrite),
-    .ahb3_req_hwdata           (ahb3_req_hwdata[DATA_WIDTH-1:0]),
-    .ahb3_req_haddr            (ahb3_req_haddr[ADDR_WIDTH-1:0]),
-    .ahb3_req_hburst           (ahb3_req_hburst[2:0]),
-    .ahb3_req_htrans           (ahb3_req_htrans[1:0]),
-    .ahb3_req_hprot            (ahb3_req_hprot[3:0]),
-    .req_data_valid            (req_data_valid),
-    .req_data                  (req_data[DATA_WIDTH-1:0]),
-    // Inputs
+  mpsoc_dma_ahb3_initiator_req ahb3_initiator_req (
     .clk                       (clk),
     .rst                       (rst),
+
+    .ahb3_req_hsel             (ahb3_req_hsel),
+    .ahb3_req_haddr            (ahb3_req_haddr[ADDR_WIDTH-1:0]),
+    .ahb3_req_hwdata           (ahb3_req_hwdata[DATA_WIDTH-1:0]),
+    .ahb3_req_hwrite           (ahb3_req_hwrite),
+    .ahb3_req_hburst           (ahb3_req_hburst[2:0]),
+    .ahb3_req_hprot            (ahb3_req_hprot[3:0]),
+    .ahb3_req_htrans           (ahb3_req_htrans[1:0]),
+    .ahb3_req_hmastlock        (ahb3_req_hmastlock),
+
     .ahb3_req_hready           (ahb3_req_hready),
     .ahb3_req_hrdata           (ahb3_req_hrdata[DATA_WIDTH-1:0]),
+
     .req_start                 (req_start),
     .req_is_l2r                (req_is_l2r),
     .req_size                  (req_size[`DMA_REQFIELD_SIZE_WIDTH-3:0]),
     .req_laddr                 (req_laddr[ADDR_WIDTH-1:0]),
+    .req_data_valid            (req_data_valid),
+    .req_data                  (req_data[DATA_WIDTH-1:0]),
     .req_data_ready            (req_data_ready)
   );
 
@@ -148,49 +150,54 @@ module mpsoc_dma_ahb3_initiator #(
     .NOC_PACKET_SIZE (NOC_PACKET_SIZE)
   )
   initiator_nocreq (
-    // Outputs
-    .noc_out_flit               (noc_out_flit[`FLIT_WIDTH-1:0]),
-    .noc_out_valid              (noc_out_valid),
-    .ctrl_read_pos              (ctrl_read_pos[TABLE_ENTRIES_PTRWIDTH-1:0]),
-    .req_start                  (req_start),
-    .req_laddr                  (req_laddr[ADDR_WIDTH-1:0]),
-    .req_data_ready             (req_data_ready),
-    .req_is_l2r                 (req_is_l2r),
-    .req_size                   (req_size[`DMA_REQFIELD_SIZE_WIDTH-3:0]),
-    // Inputs
     .clk                        (clk),
     .rst                        (rst),
+
+    .noc_out_flit               (noc_out_flit[`FLIT_WIDTH-1:0]),
+    .noc_out_valid              (noc_out_valid),
     .noc_out_ready              (noc_out_ready),
+
+    .ctrl_read_pos              (ctrl_read_pos[TABLE_ENTRIES_PTRWIDTH-1:0]),
     .ctrl_read_req              (ctrl_read_req[`DMA_REQUEST_WIDTH-1:0]),
+
     .valid                      (valid[TABLE_ENTRIES-1:0]),
+
     .ctrl_done_pos              (ctrl_done_pos[TABLE_ENTRIES_PTRWIDTH-1:0]),
     .ctrl_done_en               (ctrl_done_en),
+
+    .req_start                  (req_start),
+    .req_laddr                  (req_laddr[ADDR_WIDTH-1:0]),
     .req_data_valid             (req_data_valid),
-    .req_data                   (req_data[DATA_WIDTH-1:0])
+    .req_data_ready             (req_data_ready),
+    .req_data                   (req_data[DATA_WIDTH-1:0]),
+    .req_is_l2r                 (req_is_l2r),
+    .req_size                   (req_size[`DMA_REQFIELD_SIZE_WIDTH-3:0])
   );
 
   mpsoc_dma_ahb3_initiator_nocres #(
     .NOC_PACKET_SIZE(NOC_PACKET_SIZE)
   )
   ahb3_initiator_nocres (
-    // Outputs
-    .noc_in_ready              (noc_in_ready),
-    .ahb3_hmastlock            (ahb3_res_hmastlock),               // Templated
-    .ahb3_hsel                 (ahb3_res_hsel),                    // Templated
-    .ahb3_hwrite               (ahb3_res_hwrite),                  // Templated
-    .ahb3_hwdata               (ahb3_res_hwdata[DATA_WIDTH-1:0]),  // Templated
-    .ahb3_haddr                (ahb3_res_haddr[ADDR_WIDTH-1:0]),   // Templated
-    .ahb3_hburst               (ahb3_res_hburst[2:0]),             // Templated
-    .ahb3_htrans               (ahb3_res_htrans[1:0]),             // Templated
-    .ahb3_hprot                (ahb3_res_hprot[3:0]),              // Templated
-    .ctrl_done_pos             (ctrl_done_pos[TABLE_ENTRIES_PTRWIDTH-1:0]),
-    .ctrl_done_en              (ctrl_done_en),
-    // Inputs
     .clk                       (clk),
     .rst                       (rst),
+
     .noc_in_flit               (noc_in_flit[`FLIT_WIDTH-1:0]),
     .noc_in_valid              (noc_in_valid),
-    .ahb3_hready               (ahb3_res_hready),                 // Templated
-    .ahb3_hrdata               (ahb3_res_hrdata[DATA_WIDTH-1:0])  // Templated
+    .noc_in_ready              (noc_in_ready),
+
+    .ahb3_hsel                 (ahb3_res_hsel),
+    .ahb3_haddr                (ahb3_res_haddr[ADDR_WIDTH-1:0]),
+    .ahb3_hwdata               (ahb3_res_hwdata[DATA_WIDTH-1:0]),
+    .ahb3_hwrite               (ahb3_res_hwrite),
+    .ahb3_hburst               (ahb3_res_hburst[2:0]),
+    .ahb3_hprot                (ahb3_res_hprot[3:0]),
+    .ahb3_htrans               (ahb3_res_htrans[1:0]),
+    .ahb3_hmastlock            (ahb3_res_hmastlock),
+
+    .ahb3_hrdata               (ahb3_res_hrdata[DATA_WIDTH-1:0]),
+    .ahb3_hready               (ahb3_res_hready),
+
+    .ctrl_done_pos             (ctrl_done_pos[TABLE_ENTRIES_PTRWIDTH-1:0]),
+    .ctrl_done_en              (ctrl_done_en) 
   );
 endmodule

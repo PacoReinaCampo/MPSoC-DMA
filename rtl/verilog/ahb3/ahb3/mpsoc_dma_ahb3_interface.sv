@@ -55,17 +55,18 @@ module mpsoc_dma_ahb3_interface #(
     input clk,
     input rst,
 
-    input      [ADDR_WIDTH-1:0] ahb3_if_haddr,
-    input      [DATA_WIDTH-1:0] ahb3_if_hrdata,
-    input                       ahb3_if_hmastlock,
     input                       ahb3_if_hsel,
+    input      [ADDR_WIDTH-1:0] ahb3_if_haddr,
+    input      [DATA_WIDTH-1:0] ahb3_if_hwdata,
     input                       ahb3_if_hwrite,
-    output reg [DATA_WIDTH-1:0] ahb3_if_hwdata,
+    input                       ahb3_if_hmastlock,
+
+    output reg [DATA_WIDTH-1:0] ahb3_if_hrdata,
     output                      ahb3_if_hready,
 
-    output [`DMA_REQUEST_WIDTH-1:0]     if_write_req,
+    output [`DMA_REQUEST_WIDTH    -1:0] if_write_req,
     output [TABLE_ENTRIES_PTRWIDTH-1:0] if_write_pos,
-    output [`DMA_REQMASK_WIDTH-1:0]     if_write_select,
+    output [`DMA_REQMASK_WIDTH    -1:0] if_write_select,
     output                              if_write_en,
 
     // Interface read (status) interface
@@ -89,11 +90,11 @@ module mpsoc_dma_ahb3_interface #(
   // Module body
   //
 
-  assign if_write_req = { ahb3_if_hrdata[`DMA_REQFIELD_LADDR_WIDTH -1:0],
-                          ahb3_if_hrdata[`DMA_REQFIELD_SIZE_WIDTH  -1:0],
-                          ahb3_if_hrdata[`DMA_REQFIELD_RTILE_WIDTH -1:0],
-                          ahb3_if_hrdata[`DMA_REQFIELD_RADDR_WIDTH -1:0],
-                          ahb3_if_hrdata[0] };
+  assign if_write_req = { ahb3_if_hwdata[`DMA_REQFIELD_LADDR_WIDTH -1:0],
+                          ahb3_if_hwdata[`DMA_REQFIELD_SIZE_WIDTH  -1:0],
+                          ahb3_if_hwdata[`DMA_REQFIELD_RTILE_WIDTH -1:0],
+                          ahb3_if_hwdata[`DMA_REQFIELD_RADDR_WIDTH -1:0],
+                          ahb3_if_hwdata[0] };
 
   assign if_write_pos = ahb3_if_haddr[TABLE_ENTRIES_PTRWIDTH+4:5]; // ptrwidth MUST be <= 7 (=128 entries)
   assign if_write_en  = ahb3_if_hmastlock & ahb3_if_hsel & ahb3_if_hwrite;
@@ -107,7 +108,7 @@ module mpsoc_dma_ahb3_interface #(
 
   always @(*) begin
     if (ahb3_if_haddr[4:0] == 5'h14) begin
-      ahb3_if_hwdata = {31'h0,done[if_valid_pos]};
+      ahb3_if_hrdata = {31'h0,done[if_valid_pos]};
     end
   end
 
@@ -117,4 +118,4 @@ module mpsoc_dma_ahb3_interface #(
       assign if_write_select[i] = (ahb3_if_haddr[4:2] == i);
     end
   endgenerate
-endmodule // lisnoc_dma_wbinterface
+endmodule

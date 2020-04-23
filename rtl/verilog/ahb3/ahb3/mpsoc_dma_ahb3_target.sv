@@ -77,16 +77,17 @@ module mpsoc_dma_ahb3_target #(
     output                       noc_in_ready,
 
     // Wishbone interface for L2R data store
-    input                        ahb3_hready,
-    output reg                   ahb3_hmastlock,
     output reg                   ahb3_hsel,
-    output reg                   ahb3_hwrite,
-    input      [DATA_WIDTH-1:0]  ahb3_hrdata,
-    output     [DATA_WIDTH-1:0]  ahb3_hwdata,
     output     [ADDR_WIDTH-1:0]  ahb3_haddr,
-    output     [3:0]             ahb3_hprot,
+    output     [DATA_WIDTH-1:0]  ahb3_hwdata,
+    output reg                   ahb3_hwrite,
     output reg [2:0]             ahb3_hburst,
-    output reg [1:0]             ahb3_htrans
+    output     [3:0]             ahb3_hprot,
+    output reg [1:0]             ahb3_htrans,
+    output reg                   ahb3_hmastlock,
+
+    input      [DATA_WIDTH-1:0]  ahb3_hrdata,
+    input                        ahb3_hready
   );
 
   //////////////////////////////////////////////////////////////////
@@ -119,8 +120,8 @@ module mpsoc_dma_ahb3_target #(
   reg [ADDR_WIDTH-1:0]         nxt_address;
   reg                          end_of_request;
   reg                          nxt_end_of_request;
-  reg [`SOURCE_WIDTH-1:0]      src_tile;
-  reg [`SOURCE_WIDTH-1:0]      nxt_src_tile;
+  reg [`SOURCE_WIDTH   -1:0]   src_tile;
+  reg [`SOURCE_WIDTH   -1:0]   nxt_src_tile;
   reg [`PACKET_ID_WIDTH-1:0]   packet_id;
   reg [`PACKET_ID_WIDTH-1:0]   nxt_packet_id;
 
@@ -137,22 +138,22 @@ module mpsoc_dma_ahb3_target #(
   reg [4:0]             nxt_noc_resp_packet_wsize;
 
   // TODO: correct define!
-  reg [`DMA_REQFIELD_SIZE_WIDTH-3:0]   resp_wsize;
-  reg [`DMA_REQFIELD_SIZE_WIDTH-3:0]   nxt_resp_wsize;
+  reg [`DMA_REQFIELD_SIZE_WIDTH -3:0]  resp_wsize;
+  reg [`DMA_REQFIELD_SIZE_WIDTH -3:0]  nxt_resp_wsize;
   reg [`DMA_RESPFIELD_SIZE_WIDTH-3:0]  wb_resp_count;
   reg [`DMA_RESPFIELD_SIZE_WIDTH-3:0]  nxt_ahb3_resp_count;
 
   //FIFO-Stuff
 
   wire                                data_fifo_valid;
-  reg [DATA_WIDTH-1:0]                data_fifo [0:2]; // data storage
+  reg  [DATA_WIDTH-1:0]               data_fifo [0:2]; // data storage
   reg                                 data_fifo_pop;   // NOC pushes
   reg                                 data_fifo_push;  // WB pops
 
   wire [DATA_WIDTH-1:0]               data_fifo_out; // Current first element
   wire [DATA_WIDTH-1:0]               data_fifo_in;  // Push element
   // Shift register for current position (4th bit is full mark)
-  reg [3:0]                           data_fifo_pos;
+  reg  [3:0]                          data_fifo_pos;
 
   wire        data_fifo_empty; // FIFO empty
   wire        data_fifo_ready; // FIFO accepts new elements
@@ -171,17 +172,20 @@ module mpsoc_dma_ahb3_target #(
     .FIFO_DEPTH (NOC_PACKET_SIZE)
   )
   packet_buffer (
-    // Outputs
-    .in_ready                      (noc_in_ready),             // Templated
-    .out_flit                      (buf_flit[FLIT_WIDTH-1:0]), // Templated
-    .out_valid                     (buf_valid),                // Templated
-    .out_size                      (),                         // Templated
-    // Inputs
     .clk                           (clk),
     .rst                           (rst),
-    .in_flit                       (noc_in_flit[FLIT_WIDTH-1:0]), // Templated
-    .in_valid                      (noc_in_valid),                // Templated
-    .out_ready                     (buf_ready)                    // Templated
+
+    // Out
+    .out_flit                      (buf_flit[FLIT_WIDTH-1:0]),
+    .out_valid                     (buf_valid),
+    .out_ready                     (buf_ready),
+
+    // In
+    .in_flit                       (noc_in_flit[FLIT_WIDTH-1:0]),
+    .in_valid                      (noc_in_valid),
+    .in_ready                      (noc_in_ready),
+
+    .out_size                      ()
   );
 
   // Is this the last flit of a packet?

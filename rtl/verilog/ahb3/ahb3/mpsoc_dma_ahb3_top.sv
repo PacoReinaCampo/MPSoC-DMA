@@ -72,26 +72,33 @@ module mpsoc_dma_ahb3_top #(
     output                   noc_out_res_valid,
     input                    noc_out_res_ready,
 
-    input  [ADDR_WIDTH-1:0]  ahb3_if_haddr,
-    input  [DATA_WIDTH-1:0]  ahb3_if_hrdata,
-    input                    ahb3_if_hmastlock,
     input                    ahb3_if_hsel,
+    input  [ADDR_WIDTH-1:0]  ahb3_if_haddr,
+    input  [DATA_WIDTH-1:0]  ahb3_if_hwdata,
     input                    ahb3_if_hwrite,
-    output [DATA_WIDTH-1:0]  ahb3_if_hwdata,
+    input  [           2:0]  ahb3_if_hsize,
+    input  [           2:0]  ahb3_if_hburst,
+    input  [           3:0]  ahb3_if_hprot,
+    input  [           1:0]  ahb3_if_htrans,
+    input                    ahb3_if_hmastlock,
+
+    output [DATA_WIDTH-1:0]  ahb3_if_hrdata,
     output                   ahb3_if_hready,
     output                   ahb3_if_hresp,
 
+    output reg                  ahb3_hsel,
     output reg [ADDR_WIDTH-1:0] ahb3_haddr,
     output reg [DATA_WIDTH-1:0] ahb3_hwdata,
-    output reg                  ahb3_hmastlock,
-    output reg                  ahb3_hsel,
-    output reg [3:0]            ahb3_hprot,
     output reg                  ahb3_hwrite,
     output     [2:0]            ahb3_hsize,
     output reg [2:0]            ahb3_hburst,
+    output reg [3:0]            ahb3_hprot,
     output reg [1:0]            ahb3_htrans,
+    output reg                  ahb3_hmastlock,
+
     input      [DATA_WIDTH-1:0] ahb3_hrdata,
     input                       ahb3_hready,
+    input                       ahb3_hresp,
 
     output [TABLE_ENTRIES-1:0] irq
   );
@@ -118,6 +125,7 @@ module mpsoc_dma_ahb3_top #(
   wire [3:0]               ahb3_req_hprot;
   wire [2:0]               ahb3_req_hburst;
   wire [1:0]               ahb3_req_htrans;
+
   reg  [DATA_WIDTH-1:0]    ahb3_req_hrdata;
   reg                      ahb3_req_hready;
 
@@ -129,6 +137,7 @@ module mpsoc_dma_ahb3_top #(
   wire [3:0]               ahb3_res_hprot;
   wire [2:0]               ahb3_res_hburst;
   wire [1:0]               ahb3_res_htrans;
+
   reg  [DATA_WIDTH-1:0]    ahb3_res_hrdata;
   reg                      ahb3_res_hready;
 
@@ -139,6 +148,7 @@ module mpsoc_dma_ahb3_top #(
   wire                     ahb3_target_hwrite;
   wire [2:0]               ahb3_target_hburst;
   wire [1:0]               ahb3_target_htrans;
+
   reg  [DATA_WIDTH-1:0]    ahb3_target_hrdata;
   reg                      ahb3_target_hready;
 
@@ -146,18 +156,18 @@ module mpsoc_dma_ahb3_top #(
   wire                              ctrl_done_en;       // From ctrl_initiator of lisnoc_dma_initiator.v
   wire [TABLE_ENTRIES_PTRWIDTH-1:0] ctrl_done_pos;      // From ctrl_initiator of lisnoc_dma_initiator.v
   wire [TABLE_ENTRIES_PTRWIDTH-1:0] ctrl_read_pos;      // From ctrl_initiator of lisnoc_dma_initiator.v
-  wire [`DMA_REQUEST_WIDTH-1:0]     ctrl_read_req;      // From request_table of lisnoc_dma_request_table.v
-  wire [TABLE_ENTRIES-1:0]          done;               // From request_table of lisnoc_dma_request_table.v
+  wire [`DMA_REQUEST_WIDTH    -1:0] ctrl_read_req;      // From request_table of lisnoc_dma_request_table.v
+  wire [TABLE_ENTRIES         -1:0] done;               // From request_table of lisnoc_dma_request_table.v
   wire                              if_valid_en;        // From wbinterface of lisnoc_dma_wbinterface.v
   wire [TABLE_ENTRIES_PTRWIDTH-1:0] if_valid_pos;       // From wbinterface of lisnoc_dma_wbinterface.v
   wire                              if_valid_set;       // From wbinterface of lisnoc_dma_wbinterface.v
   wire                              if_validrd_en;      // From wbinterface of lisnoc_dma_wbinterface.v
   wire                              if_write_en;        // From wbinterface of lisnoc_dma_wbinterface.v
   wire [TABLE_ENTRIES_PTRWIDTH-1:0] if_write_pos;       // From wbinterface of lisnoc_dma_wbinterface.v
-  wire [`DMA_REQUEST_WIDTH-1:0]     if_write_req;       // From wbinterface of lisnoc_dma_wbinterface.v
-  wire [`DMA_REQMASK_WIDTH-1:0]     if_write_select;    // From wbinterface of lisnoc_dma_wbinterface.v
-  wire [TABLE_ENTRIES-1:0]          valid;              // From request_table of lisnoc_dma_request_table.v
-  wire [3:0]                        ahb3_target_hprot;  // From target of lisnoc_dma_target.v
+  wire [`DMA_REQUEST_WIDTH    -1:0] if_write_req;       // From wbinterface of lisnoc_dma_wbinterface.v
+  wire [`DMA_REQMASK_WIDTH    -1:0] if_write_select;    // From wbinterface of lisnoc_dma_wbinterface.v
+  wire [TABLE_ENTRIES         -1:0] valid;              // From request_table of lisnoc_dma_request_table.v
+  wire [                       3:0] ahb3_target_hprot;  // From target of lisnoc_dma_target.v
   // End of automatics
 
   wire [TABLE_ENTRIES_PTRWIDTH-1:0] ctrl_out_read_pos;
@@ -184,25 +194,28 @@ module mpsoc_dma_ahb3_top #(
     .TILEID(TILEID)
   )
   ahb3_interface (
-    // Outputs
+    .clk                     (clk),
+    .rst                     (rst),
+
+    .ahb3_if_hsel            (ahb3_if_hsel),
+    .ahb3_if_haddr           (ahb3_if_haddr[ADDR_WIDTH-1:0]),
+    .ahb3_if_hrdata          (ahb3_if_hrdata[DATA_WIDTH-1:0]),
+    .ahb3_if_hmastlock       (ahb3_if_hmastlock),
+    .ahb3_if_hwrite          (ahb3_if_hwrite),
+
     .ahb3_if_hwdata          (ahb3_if_hwdata[DATA_WIDTH-1:0]),
     .ahb3_if_hready          (ahb3_if_hready),
+
     .if_write_req            (if_write_req[`DMA_REQUEST_WIDTH-1:0]),
     .if_write_pos            (if_write_pos[TABLE_ENTRIES_PTRWIDTH-1:0]),
     .if_write_select         (if_write_select[`DMA_REQMASK_WIDTH-1:0]),
     .if_write_en             (if_write_en),
+
     .if_valid_pos            (if_valid_pos[TABLE_ENTRIES_PTRWIDTH-1:0]),
     .if_valid_set            (if_valid_set),
     .if_valid_en             (if_valid_en),
     .if_validrd_en           (if_validrd_en),
-    // Inputs
-    .clk                     (clk),
-    .rst                     (rst),
-    .ahb3_if_haddr           (ahb3_if_haddr[ADDR_WIDTH-1:0]),
-    .ahb3_if_hrdata          (ahb3_if_hrdata[DATA_WIDTH-1:0]),
-    .ahb3_if_hmastlock       (ahb3_if_hmastlock),
-    .ahb3_if_hsel            (ahb3_if_hsel),
-    .ahb3_if_hwrite          (ahb3_if_hwrite),
+
     .done                    (done[TABLE_ENTRIES-1:0])
   );
 
@@ -210,91 +223,106 @@ module mpsoc_dma_ahb3_top #(
     .GENERATE_INTERRUPT(GENERATE_INTERRUPT)
   )
   request_table (
-    // Outputs
-    .ctrl_read_req         (ctrl_read_req[`DMA_REQUEST_WIDTH-1:0]),
-    .valid                 (valid[TABLE_ENTRIES-1:0]),
-    .done                  (done[TABLE_ENTRIES-1:0]),
-    .irq                   (irq[TABLE_ENTRIES-1:0]),
-    // Inputs
     .clk                   (clk),
     .rst                   (rst),
+
     .if_write_req          (if_write_req[`DMA_REQUEST_WIDTH-1:0]),
     .if_write_pos          (if_write_pos[TABLE_ENTRIES_PTRWIDTH-1:0]),
     .if_write_select       (if_write_select[`DMA_REQMASK_WIDTH-1:0]),
     .if_write_en           (if_write_en),
+
     .if_valid_pos          (if_valid_pos[TABLE_ENTRIES_PTRWIDTH-1:0]),
     .if_valid_set          (if_valid_set),
     .if_valid_en           (if_valid_en),
     .if_validrd_en         (if_validrd_en),
+
+    .ctrl_read_req         (ctrl_read_req[`DMA_REQUEST_WIDTH-1:0]),
     .ctrl_read_pos         (ctrl_read_pos[TABLE_ENTRIES_PTRWIDTH-1:0]),
+
     .ctrl_done_pos         (ctrl_done_pos[TABLE_ENTRIES_PTRWIDTH-1:0]),
-    .ctrl_done_en          (ctrl_done_en));
+    .ctrl_done_en          (ctrl_done_en),
+
+    .valid                 (valid[TABLE_ENTRIES-1:0]),
+    .done                  (done[TABLE_ENTRIES-1:0]),
+
+    .irq                   (irq[TABLE_ENTRIES-1:0])
+  );
 
   mpsoc_dma_ahb3_initiator #(
     .TILEID (TILEID)
   )
   ahb3_initiator (
-    // Outputs
-    .ctrl_read_pos        (ctrl_read_pos[TABLE_ENTRIES_PTRWIDTH-1:0]),
-    .ctrl_done_pos        (ctrl_done_pos[TABLE_ENTRIES_PTRWIDTH-1:0]),
-    .ctrl_done_en         (ctrl_done_en),
-    .noc_out_flit         (noc_out_req_flit[`FLIT_WIDTH-1:0]),  // Templated
-    .noc_out_valid        (noc_out_req_valid),                  // Templated
-    .noc_in_ready         (noc_in_res_ready),                   // Templated
-    .ahb3_req_hmastlock   (ahb3_req_hmastlock),
-    .ahb3_req_hsel        (ahb3_req_hsel),
-    .ahb3_req_hwrite      (ahb3_req_hwrite),
-    .ahb3_req_hwdata      (ahb3_req_hwdata[DATA_WIDTH-1:0]),
-    .ahb3_req_haddr       (ahb3_req_haddr[ADDR_WIDTH-1:0]),
-    .ahb3_req_hburst      (ahb3_req_hburst[2:0]),
-    .ahb3_req_htrans      (ahb3_req_htrans[1:0]),
-    .ahb3_req_hprot       (ahb3_req_hprot[3:0]),
-    .ahb3_res_hmastlock   (ahb3_res_hmastlock),
-    .ahb3_res_hsel        (ahb3_res_hsel),
-    .ahb3_res_hwrite      (ahb3_res_hwrite),
-    .ahb3_res_hwdata      (ahb3_res_hwdata[DATA_WIDTH-1:0]),
-    .ahb3_res_haddr       (ahb3_res_haddr[ADDR_WIDTH-1:0]),
-    .ahb3_res_hburst      (ahb3_res_hburst[2:0]),
-    .ahb3_res_htrans      (ahb3_res_htrans[1:0]),
-    .ahb3_res_hprot       (ahb3_res_hprot[3:0]),
-    // Inputs
     .clk                  (clk),
     .rst                  (rst),
+
+    .ctrl_read_pos        (ctrl_read_pos[TABLE_ENTRIES_PTRWIDTH-1:0]),
     .ctrl_read_req        (ctrl_read_req[`DMA_REQUEST_WIDTH-1:0]),
+
+    .ctrl_done_pos        (ctrl_done_pos[TABLE_ENTRIES_PTRWIDTH-1:0]),
+    .ctrl_done_en         (ctrl_done_en),
+
     .valid                (valid[TABLE_ENTRIES-1:0]),
-    .noc_out_ready        (noc_out_req_ready),                 // Templated
-    .noc_in_flit          (noc_in_res_flit[`FLIT_WIDTH-1:0]),  // Templated
-    .noc_in_valid         (noc_in_res_valid),                  // Templated
-    .ahb3_req_hready      (ahb3_req_hready),
+
+    .noc_out_flit         (noc_out_req_flit[`FLIT_WIDTH-1:0]),
+    .noc_out_valid        (noc_out_req_valid),
+    .noc_out_ready        (noc_out_req_ready),
+
+    .noc_in_flit          (noc_in_res_flit[`FLIT_WIDTH-1:0]),
+    .noc_in_valid         (noc_in_res_valid),
+    .noc_in_ready         (noc_in_res_ready),
+
+    .ahb3_req_hsel        (ahb3_req_hsel),
+    .ahb3_req_haddr       (ahb3_req_haddr[ADDR_WIDTH-1:0]),
+    .ahb3_req_hwdata      (ahb3_req_hwdata[DATA_WIDTH-1:0]),
+    .ahb3_req_hwrite      (ahb3_req_hwrite),
+    .ahb3_req_hburst      (ahb3_req_hburst[2:0]),
+    .ahb3_req_hprot       (ahb3_req_hprot[3:0]),
+    .ahb3_req_htrans      (ahb3_req_htrans[1:0]),
+    .ahb3_req_hmastlock   (ahb3_req_hmastlock),
+
     .ahb3_req_hrdata      (ahb3_req_hrdata[DATA_WIDTH-1:0]),
-    .ahb3_res_hready      (ahb3_res_hready),
-    .ahb3_res_hrdata      (ahb3_res_hrdata[DATA_WIDTH-1:0]));
+    .ahb3_req_hready      (ahb3_req_hready),
+
+    .ahb3_res_hsel        (ahb3_res_hsel),
+    .ahb3_res_haddr       (ahb3_res_haddr[ADDR_WIDTH-1:0]),
+    .ahb3_res_hwdata      (ahb3_res_hwdata[DATA_WIDTH-1:0]),
+    .ahb3_res_hwrite      (ahb3_res_hwrite),
+    .ahb3_res_hburst      (ahb3_res_hburst[2:0]),
+    .ahb3_res_hprot       (ahb3_res_hprot[3:0]),
+    .ahb3_res_htrans      (ahb3_res_htrans[1:0]),
+    .ahb3_res_hmastlock   (ahb3_res_hmastlock),
+
+    .ahb3_res_hrdata      (ahb3_res_hrdata[DATA_WIDTH-1:0]),
+    .ahb3_res_hready      (ahb3_res_hready)
+  );
 
   mpsoc_dma_ahb3_target #(
     .TILEID(TILEID),
     .NOC_PACKET_SIZE(NOC_PACKET_SIZE)
   )
   ahb3_target (
-    // Outputs
-    .noc_out_flit                 (noc_out_res_flit[`FLIT_WIDTH-1:0]),   // Templated
-    .noc_out_valid                (noc_out_res_valid),                   // Templated
-    .noc_in_ready                 (noc_in_req_ready),                    // Templated
-    .ahb3_hmastlock               (ahb3_target_hmastlock),               // Templated
-    .ahb3_hsel                    (ahb3_target_hsel),                    // Templated
-    .ahb3_hwrite                  (ahb3_target_hwrite),                  // Templated
-    .ahb3_hwdata                  (ahb3_target_hwdata[DATA_WIDTH-1:0]),  // Templated
-    .ahb3_haddr                   (ahb3_target_haddr[ADDR_WIDTH-1:0]),   // Templated
-    .ahb3_hprot                   (ahb3_target_hprot[3:0]),              // Templated
-    .ahb3_hburst                  (ahb3_target_hburst[2:0]),             // Templated
-    .ahb3_htrans                  (ahb3_target_htrans[1:0]),             // Templated
-    // Inputs
     .clk                          (clk),
     .rst                          (rst),
-    .noc_out_ready                (noc_out_res_ready),                  // Templated
-    .noc_in_flit                  (noc_in_req_flit[`FLIT_WIDTH-1:0]),   // Templated
-    .noc_in_valid                 (noc_in_req_valid),                   // Templated
-    .ahb3_hready                  (ahb3_target_hready),                 // Templated
-    .ahb3_hrdata                  (ahb3_target_hrdata[DATA_WIDTH-1:0])  // Templated
+
+    .noc_out_flit                 (noc_out_res_flit[`FLIT_WIDTH-1:0]),
+    .noc_out_valid                (noc_out_res_valid),
+    .noc_out_ready                (noc_out_res_ready),
+
+    .noc_in_flit                  (noc_in_req_flit[`FLIT_WIDTH-1:0]),
+    .noc_in_valid                 (noc_in_req_valid),
+    .noc_in_ready                 (noc_in_req_ready),
+
+    .ahb3_hsel                    (ahb3_target_hsel),
+    .ahb3_haddr                   (ahb3_target_haddr[ADDR_WIDTH-1:0]),
+    .ahb3_hwdata                  (ahb3_target_hwdata[DATA_WIDTH-1:0]),
+    .ahb3_hwrite                  (ahb3_target_hwrite),
+    .ahb3_hburst                  (ahb3_target_hburst[2:0]),
+    .ahb3_hprot                   (ahb3_target_hprot[3:0]),
+    .ahb3_htrans                  (ahb3_target_htrans[1:0]),
+    .ahb3_hmastlock               (ahb3_target_hmastlock),
+
+    .ahb3_hrdata                  (ahb3_target_hrdata[DATA_WIDTH-1:0]),
+    .ahb3_hready                  (ahb3_target_hready)
   );
 
   always @(posedge clk) begin
@@ -380,7 +408,7 @@ module mpsoc_dma_ahb3_top #(
       ahb3_target_hready = 1'b0;
       ahb3_target_hrdata = 32'hx;
     end
-    else begin // if (ahb3_arb == ahb3_arb_req)
+    else begin
       ahb3_haddr = 32'h0;
       ahb3_hwdata = 32'h0;
       ahb3_hmastlock = 1'b0;
@@ -397,4 +425,4 @@ module mpsoc_dma_ahb3_top #(
       ahb3_target_hrdata = 32'hx;
     end
   end
-endmodule // lisnoc_dma
+endmodule

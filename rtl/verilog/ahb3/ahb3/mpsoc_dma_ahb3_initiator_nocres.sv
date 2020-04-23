@@ -54,9 +54,10 @@ module mpsoc_dma_ahb3_initiator_nocres #(
   parameter NOC_PACKET_SIZE = 16,
 
   parameter STATE_WIDTH = 2,
-  parameter STATE_IDLE = 2'b00,
+
+  parameter STATE_IDLE     = 2'b00,
   parameter STATE_GET_ADDR = 2'b01,
-  parameter STATE_DATA = 2'b10,
+  parameter STATE_DATA     = 2'b10,
   parameter STATE_GET_SIZE = 2'b11
 )
   (
@@ -68,16 +69,17 @@ module mpsoc_dma_ahb3_initiator_nocres #(
     output                                  noc_in_ready,
 
     // Wishbone interface for L2R data fetch
-    input                                   ahb3_hready,
-    output reg                              ahb3_hmastlock,
     output reg                              ahb3_hsel,
-    output reg                              ahb3_hwrite,
-    input      [ADDR_WIDTH-1:0]             ahb3_hrdata,
-    output     [ADDR_WIDTH-1:0]             ahb3_hwdata,
     output     [ADDR_WIDTH-1:0]             ahb3_haddr,
+    output     [ADDR_WIDTH-1:0]             ahb3_hwdata,
+    output reg                              ahb3_hwrite,
     output reg [2:0]                        ahb3_hburst,
-    output reg [1:0]                        ahb3_htrans,
     output     [3:0]                        ahb3_hprot,
+    output reg [1:0]                        ahb3_htrans,
+    output reg                              ahb3_hmastlock,
+
+    input      [ADDR_WIDTH-1:0]             ahb3_hrdata,
+    input                                   ahb3_hready,
 
     output reg [TABLE_ENTRIES_PTRWIDTH-1:0] ctrl_done_pos,
     output reg                              ctrl_done_en
@@ -91,8 +93,8 @@ module mpsoc_dma_ahb3_initiator_nocres #(
   // State registers and next state logic
   reg [STATE_WIDTH-1:0]                   state;
   reg [STATE_WIDTH-1:0]                   nxt_state;
-  reg [ADDR_WIDTH-1:0]                    resp_address;
-  reg [ADDR_WIDTH-1:0]                    nxt_resp_address;
+  reg [ADDR_WIDTH -1:0]                   resp_address;
+  reg [ADDR_WIDTH -1:0]                   nxt_resp_address;
   reg                                     last_packet_of_response;
   reg                                     nxt_last_packet_of_response;
   reg [TABLE_ENTRIES_PTRWIDTH-1:0]        resp_id;
@@ -116,17 +118,20 @@ module mpsoc_dma_ahb3_initiator_nocres #(
     .FIFO_DEPTH (NOC_PACKET_SIZE)
   )
   packet_buffer (
-    // Outputs
-    .in_ready                      (noc_in_ready),             // Templated
-    .out_flit                      (buf_flit[FLIT_WIDTH-1:0]), // Templated
-    .out_valid                     (buf_valid),                // Templated
-    .out_size                      (),                         // Templated
-    // Inputs
     .clk                           (clk),
     .rst                           (rst),
-    .in_flit                       (noc_in_flit[FLIT_WIDTH-1:0]), // Templated
-    .in_valid                      (noc_in_valid),                // Templated
-    .out_ready                     (buf_ready)                    // Templated
+
+    // Outputs
+    .in_ready                      (noc_in_ready),
+    .out_flit                      (buf_flit[FLIT_WIDTH-1:0]),
+    .out_valid                     (buf_valid),
+
+    // Inputs
+    .in_flit                       (noc_in_flit[FLIT_WIDTH-1:0]),
+    .in_valid                      (noc_in_valid),
+    .out_ready                     (buf_ready),
+
+    .out_size                      ()                   
   );
 
   // Is this the last flit of a packet?

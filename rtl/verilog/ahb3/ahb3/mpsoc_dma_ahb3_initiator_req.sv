@@ -50,23 +50,24 @@ module mpsoc_dma_ahb3_initiator_req #(
     input clk,
     input rst,
 
-    input                       ahb3_req_hready,
-    output reg                  ahb3_req_hmastlock,
     output reg                  ahb3_req_hsel,
-    output                      ahb3_req_hwrite,
-    input      [DATA_WIDTH-1:0] ahb3_req_hrdata,
-    output     [DATA_WIDTH-1:0] ahb3_req_hwdata,
     output reg [ADDR_WIDTH-1:0] ahb3_req_haddr,
+    output     [DATA_WIDTH-1:0] ahb3_req_hwdata,
+    output                      ahb3_req_hwrite,
     output reg [2:0]            ahb3_req_hburst,
-    output     [1:0]            ahb3_req_htrans,
     output     [3:0]            ahb3_req_hprot,
+    output     [1:0]            ahb3_req_htrans,
+    output reg                  ahb3_req_hmastlock,
+
+    input      [DATA_WIDTH-1:0] ahb3_req_hrdata,
+    input                       ahb3_req_hready,
 
     input                                 req_start,
     input                                 req_is_l2r,
     input  [`DMA_REQFIELD_SIZE_WIDTH-3:0] req_size,
-    input  [ADDR_WIDTH-1:0]               req_laddr,
+    input  [ADDR_WIDTH              -1:0] req_laddr,
     output                                req_data_valid,
-    output [DATA_WIDTH-1:0]               req_data,
+    output [DATA_WIDTH              -1:0] req_data,
     input                                 req_data_ready
   );
 
