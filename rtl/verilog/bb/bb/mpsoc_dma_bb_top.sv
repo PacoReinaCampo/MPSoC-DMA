@@ -310,39 +310,39 @@ module mpsoc_dma_bb_top #(
   always @(*) begin
     if (bb_arb == bb_arb_target) begin
       bb_addr_o = bb_target_addr_o;
-      bb_din_o = bb_target_dat_o;
+      bb_din_o = bb_target_din_o;
       bb_en_o = bb_target_en_o;
       bb_we_o = bb_target_we_o;
-      bb_target_dat_i = bb_dout_i;
-      bb_req_dat_i = 32'hx;
-      bb_res_dat_i = 32'hx;
+      bb_target_dout_i = bb_dout_i;
+      bb_req_dout_i = 32'hx;
+      bb_res_dout_i = 32'hx;
     end
     else if (bb_arb == bb_arb_resp) begin
       bb_addr_o = bb_res_addr_o;
-      bb_din_o = bb_res_dat_o;
+      bb_din_o = bb_res_din_o;
       bb_en_o = bb_res_en_o;
       bb_we_o = bb_res_we_o;
-      bb_res_dat_i = bb_dout_i;
-      bb_req_dat_i = 32'hx;
-      bb_target_dat_i = 32'hx;
+      bb_res_dout_i = bb_dout_i;
+      bb_req_dout_i = 32'hx;
+      bb_target_dout_i = 32'hx;
     end
     else if (bb_arb == bb_arb_req) begin
       bb_addr_o = bb_req_addr_o;
-      bb_din_o = bb_req_dat_o;
+      bb_din_o = bb_req_din_o;
       bb_en_o = bb_req_en_o;
       bb_we_o = bb_req_we_o;
-      bb_req_dat_i = bb_dout_i;
-      bb_res_dat_i = 32'hx;
-      bb_target_dat_i = 32'hx;
+      bb_req_dout_i = bb_dout_i;
+      bb_res_dout_i = 32'hx;
+      bb_target_dout_i = 32'hx;
     end
     else begin
       bb_addr_o = 32'h0;
       bb_din_o = 32'h0;
       bb_en_o = 1'b0;
       bb_we_o = 1'b0;
-      bb_req_dat_i = 32'hx;
-      bb_res_dat_i = 32'hx;
-      bb_target_dat_i = 32'hx;
+      bb_req_dout_i = 32'hx;
+      bb_res_dout_i = 32'hx;
+      bb_target_dout_i = 32'hx;
     end
   end
 endmodule

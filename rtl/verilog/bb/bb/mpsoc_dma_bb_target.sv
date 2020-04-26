@@ -79,10 +79,9 @@ module mpsoc_dma_bb_target #(
     // Blackbone interface for L2R data store
     output     [ADDR_WIDTH-1:0]  bb_addr_o,
     output     [DATA_WIDTH-1:0]  bb_din_o,
-    output reg                   bb_we_o,
     output reg                   bb_en_o,
-    input      [DATA_WIDTH-1:0]  bb_dout_i,
-    input                        bb_ack_i
+    output reg                   bb_we_o,
+    input      [DATA_WIDTH-1:0]  bb_dout_i
   );
 
   //////////////////////////////////////////////////////////////////
@@ -446,9 +445,9 @@ module mpsoc_dma_bb_target #(
         //FIFO-handling
         if (bb_waiting) begin //hidden state
           //don't get data from the bus
-          bb_stb_o     = 1'b0;
-          bb_cyc_o     = 1'b0;
-          data_fifo_push   = 1'b0;
+          bb_en_o = 1'b0;
+
+          data_fifo_push = 1'b0;
           if (data_fifo_ready) begin
             nxt_bb_waiting = 1'b0;
           end
@@ -460,12 +459,10 @@ module mpsoc_dma_bb_target #(
           // Signal cycle and strobe. We do bursts, but don't insert
           // wait states, so both of them are always equal.
           if ((noc_resp_packet_wcount==noc_resp_packet_wsize) & noc_out_valid & noc_out_ready) begin
-            bb_stb_o = 1'b0;
-            bb_cyc_o = 1'b0;
+            bb_en_o = 1'b0;
           end
           else begin
-            bb_stb_o = 1'b1;
-            bb_cyc_o = 1'b1;
+            bb_en_o = 1'b1;
           end
           // TODO: why not generate address from the base address + counter<<2?
           // ..otherwise we still wait for the acknowledgement
