@@ -11,7 +11,7 @@
 //                                                                            //
 //              MPSoC-RISCV CPU                                               //
 //              Direct Access Memory Interface                                //
-//              Wishbone Bus Interface                                        //
+//              Blackbone Bus Interface                                       //
 //                                                                            //
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -42,7 +42,7 @@
 
 `include "mpsoc_dma_pkg.sv"
 
-module mpsoc_dma_wb_initiator #(
+module mpsoc_dma_bb_initiator #(
   //parameters
   parameter ADDR_WIDTH             = 32,
   parameter DATA_WIDTH             = 32,
@@ -73,29 +73,19 @@ module mpsoc_dma_wb_initiator #(
     input                                   noc_in_valid,
     output                                  noc_in_ready,
 
-    // Wishbone interface for L2R data fetch
-    output [ADDR_WIDTH-1:0]                 wb_req_adr_o,
-    output [DATA_WIDTH-1:0]                 wb_req_dat_o,
-    output [           3:0]                 wb_req_sel_o,
-    output                                  wb_req_we_o,
-    output                                  wb_req_cyc_o,
-    output                                  wb_req_stb_o,
-    output [           2:0]                 wb_req_cti_o,
-    output [           1:0]                 wb_req_bte_o,
-    input  [DATA_WIDTH-1:0]                 wb_req_dat_i,
-    input                                   wb_req_ack_i,
+    // Blackbone interface for L2R data fetch
+    output [ADDR_WIDTH-1:0]                 bb_req_addr_o,
+    output [DATA_WIDTH-1:0]                 bb_req_din_o,
+    output                                  bb_req_en_o,
+    output                                  bb_req_we_o,
+    input  [DATA_WIDTH-1:0]                 bb_req_dout_i,
 
-    // Wishbone interface for L2R data fetch
-    output [ADDR_WIDTH-1:0]                 wb_res_adr_o,
-    output [DATA_WIDTH-1:0]                 wb_res_dat_o,
-    output [           3:0]                 wb_res_sel_o,
-    output                                  wb_res_we_o,
-    output                                  wb_res_cyc_o,
-    output                                  wb_res_stb_o,
-    output [           2:0]                 wb_res_cti_o,
-    output [           1:0]                 wb_res_bte_o,
-    input  [DATA_WIDTH-1:0]                 wb_res_dat_i,
-    input                                   wb_res_ack_i
+    // Blackbone interface for L2R data fetch
+    output [ADDR_WIDTH-1:0]                 bb_res_addr_o,
+    output [DATA_WIDTH-1:0]                 bb_res_din_o,
+    output                                  bb_res_en_o,
+    output                                  bb_res_we_o,
+    input  [DATA_WIDTH-1:0]                 bb_res_dout_i
   );
 
   //////////////////////////////////////////////////////////////////
@@ -118,21 +108,16 @@ module mpsoc_dma_wb_initiator #(
   // Module body
   //
 
-  mpsoc_dma_wb_initiator_req wb_initiator_req (
+  mpsoc_dma_bb_initiator_req bb_initiator_req (
 
     .clk                       (clk),
     .rst                       (rst),
 
-    .wb_req_adr_o              (wb_req_adr_o[ADDR_WIDTH-1:0]),
-    .wb_req_dat_o              (wb_req_dat_o[DATA_WIDTH-1:0]),
-    .wb_req_sel_o              (wb_req_sel_o[3:0]),
-    .wb_req_we_o               (wb_req_we_o),
-    .wb_req_cyc_o              (wb_req_cyc_o),
-    .wb_req_stb_o              (wb_req_stb_o),
-    .wb_req_cti_o              (wb_req_cti_o[2:0]),
-    .wb_req_bte_o              (wb_req_bte_o[1:0]),
-    .wb_req_dat_i              (wb_req_dat_i[DATA_WIDTH-1:0]),
-    .wb_req_ack_i              (wb_req_ack_i),
+    .bb_req_addr_o             (bb_req_addr_o[ADDR_WIDTH-1:0]),
+    .bb_req_din_o              (bb_req_din_o[DATA_WIDTH-1:0]),
+    .bb_req_en_o               (bb_req_en_o),
+    .bb_req_we_o               (bb_req_we_o),
+    .bb_req_dout_i             (bb_req_dout_i[DATA_WIDTH-1:0]),
 
     .req_start                 (req_start),
     .req_is_l2r                (req_is_l2r),
@@ -172,10 +157,10 @@ module mpsoc_dma_wb_initiator #(
     .req_size                   (req_size[`DMA_REQFIELD_SIZE_WIDTH-3:0])
   );
 
-  mpsoc_dma_wb_initiator_nocres #(
+  mpsoc_dma_bb_initiator_nocres #(
     .NOC_PACKET_SIZE(NOC_PACKET_SIZE)
   )
-  wb_initiator_nocres (
+  bb_initiator_nocres (
     .clk                       (clk),
     .rst                       (rst),
 
@@ -184,16 +169,11 @@ module mpsoc_dma_wb_initiator #(
     .noc_in_ready              (noc_in_ready),
 
 
-    .wb_adr_o                  (wb_res_adr_o[ADDR_WIDTH-1:0]),
-    .wb_dat_o                  (wb_res_dat_o[DATA_WIDTH-1:0]),
-    .wb_sel_o                  (wb_res_sel_o[3:0]),
-    .wb_we_o                   (wb_res_we_o), 
-    .wb_cyc_o                  (wb_res_cyc_o),
-    .wb_stb_o                  (wb_res_stb_o),
-    .wb_cti_o                  (wb_res_cti_o[2:0]),
-    .wb_bte_o                  (wb_res_bte_o[1:0]),
-    .wb_dat_i                  (wb_res_dat_i[DATA_WIDTH-1:0]),
-    .wb_ack_i                  (wb_res_ack_i),
+    .bb_addr_o                 (bb_res_addr_o[ADDR_WIDTH-1:0]),
+    .bb_din_o                  (bb_res_din_o[DATA_WIDTH-1:0]),
+    .bb_en_o                   (bb_res_en_o),
+    .bb_we_o                   (bb_res_we_o),
+    .bb_dout_i                 (bb_res_dout_i[DATA_WIDTH-1:0]),
 
     .ctrl_done_pos             (ctrl_done_pos[TABLE_ENTRIES_PTRWIDTH-1:0]),
     .ctrl_done_en              (ctrl_done_en)

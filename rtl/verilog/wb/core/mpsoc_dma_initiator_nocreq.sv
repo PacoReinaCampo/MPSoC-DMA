@@ -10,8 +10,10 @@
 //                                                                            //
 //                                                                            //
 //              MPSoC-RISCV CPU                                               //
-//              Direct Access Memory Interface                                //
-//              WishBone Bus Interface                                        //
+//              Network on Chip                                               //
+//              AMBA3 AHB-Lite Bus Interface                                  //
+//              Wishbone Bus Interface                                        //
+//              Blackbone Bus Interface                                       //
 //                                                                            //
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -62,9 +64,9 @@ module mpsoc_dma_initiator_nocreq #(
 
     // Control read (request) interface
     output reg [TABLE_ENTRIES_PTRWIDTH-1:0] ctrl_read_pos,
-    input [`DMA_REQUEST_WIDTH         -1:0] ctrl_read_req,
+    input      [`DMA_REQUEST_WIDTH    -1:0] ctrl_read_req,
 
-    input [TABLE_ENTRIES-1:0]               valid,
+    input      [TABLE_ENTRIES         -1:0] valid,
 
     // Feedback from response path
     input [TABLE_ENTRIES_PTRWIDTH-1:0]      ctrl_done_pos,
@@ -73,10 +75,10 @@ module mpsoc_dma_initiator_nocreq #(
 
     // Interface to wishbone request
     output reg                              req_start,
-    output [ADDR_WIDTH-1:0]                 req_laddr,
+    output [ADDR_WIDTH              -1:0]   req_laddr,
     input                                   req_data_valid,
     output reg                              req_data_ready,
-    input  [DATA_WIDTH-1:0]                 req_data,
+    input  [DATA_WIDTH              -1:0]   req_data,
     output                                  req_is_l2r,
     output [`DMA_REQFIELD_SIZE_WIDTH-3:0]   req_size
   );
@@ -148,7 +150,7 @@ module mpsoc_dma_initiator_nocreq #(
   wire nxt_req_start;
 
   wire [`DMA_REQFIELD_RTILE_WIDTH-1:0] req_rtile;
-  wire [ADDR_WIDTH-1:0]                req_raddr;
+  wire [ADDR_WIDTH               -1:0] req_raddr;
 
   integer d;
 

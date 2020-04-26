@@ -11,7 +11,7 @@
 //                                                                            //
 //              MPSoC-RISCV CPU                                               //
 //              Direct Access Memory Interface                                //
-//              Wishbone Bus Interface                                        //
+//              Blackbone Bus Interface                                       //
 //                                                                            //
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -42,7 +42,7 @@
 
 `include "mpsoc_dma_pkg.sv"
 
-module mpsoc_dma_wb_initiator_nocres #(
+module mpsoc_dma_bb_initiator_nocres #(
   parameter ADDR_WIDTH = 32,
   parameter DATA_WIDTH = 32,
 
@@ -67,17 +67,12 @@ module mpsoc_dma_wb_initiator_nocres #(
     input                                   noc_in_valid,
     output                                  noc_in_ready,
 
-    // Wishbone interface for L2R data fetch
-    output     [ADDR_WIDTH-1:0]             wb_adr_o,
-    output     [ADDR_WIDTH-1:0]             wb_dat_o,
-    output     [           3:0]             wb_sel_o,
-    output reg                              wb_we_o,
-    output reg                              wb_cyc_o,
-    output reg                              wb_stb_o,
-    output reg [           2:0]             wb_cti_o,
-    output reg [           1:0]             wb_bte_o,
-    input      [ADDR_WIDTH-1:0]             wb_dat_i,
-    input                                   wb_ack_i,
+    // Blackbone interface for L2R data fetch
+    output     [ADDR_WIDTH-1:0]             bb_addr_o,
+    output     [ADDR_WIDTH-1:0]             bb_din_o,
+    output reg                              bb_en_o,
+    output reg                              bb_we_o,
+    input      [ADDR_WIDTH-1:0]             bb_dout_i,
 
     output reg [TABLE_ENTRIES_PTRWIDTH-1:0] ctrl_done_pos,
     output reg                              ctrl_done_en
@@ -133,21 +128,15 @@ module mpsoc_dma_wb_initiator_nocres #(
   assign buf_last_flit = (buf_flit[`FLIT_TYPE_MSB:`FLIT_TYPE_LSB]==`FLIT_TYPE_LAST) |
                          (buf_flit[`FLIT_TYPE_MSB:`FLIT_TYPE_LSB]==`FLIT_TYPE_SINGLE);
 
-  assign wb_adr_o = resp_address; //alias
+  assign bb_addr_o = resp_address; //alias
 
-  assign wb_dat_o = buf_flit[`FLIT_CONTENT_MSB:`FLIT_CONTENT_LSB];
-
-  // We only do word transfers
-  assign wb_sel_o = 4'hf;
+  assign bb_din_o = buf_flit[`FLIT_CONTENT_MSB:`FLIT_CONTENT_LSB];
 
   // Next state, wishbone combinatorial signals and counting
   always @(*) begin
     // Signal defaults
-    wb_stb_o = 1'b0;
-    wb_cyc_o = 1'b0;
-    wb_we_o  = 1'b0;
-    wb_bte_o = 2'b00;
-    wb_cti_o = 3'b000;
+    bb_en_o = 1'b0;
+    bb_we_o = 1'b0;
 
     ctrl_done_en  = 1'b0;
     ctrl_done_pos = 0;
@@ -193,34 +182,11 @@ module mpsoc_dma_wb_initiator_nocres #(
         nxt_state = STATE_DATA;
       end
       STATE_DATA: begin
-        if (buf_last_flit) begin
-          wb_cti_o = 3'b111;
-        end
-        else begin
-          wb_cti_o = 3'b010;
-        end
-        wb_bte_o = 2'b00;
-        wb_cyc_o = 1'b1;
-        wb_stb_o = 1'b1;
-        wb_we_o = 1'b1;
-        if (wb_ack_i) begin
-          nxt_resp_address = resp_address + 4;
-          buf_ready = 1'b1;
-          if (buf_last_flit) begin
-            nxt_state = STATE_IDLE;
-            if (last_packet_of_response) begin
-              ctrl_done_en = 1'b1;
-              ctrl_done_pos = resp_id;
-            end
-          end
-          else begin
-            nxt_state = STATE_DATA;
-          end
-        end
-        else begin
-          buf_ready = 1'b0;
-          nxt_state = STATE_DATA;
-        end
+        bb_en_o = 1'b1;
+        bb_we_o = 1'b1;
+
+        buf_ready = 1'b0;
+        nxt_state = STATE_DATA;
       end
       default: begin
         nxt_state = STATE_IDLE;

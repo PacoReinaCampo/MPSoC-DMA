@@ -11,7 +11,7 @@
 //                                                                            //
 //              MPSoC-RISCV CPU                                               //
 //              Direct Access Memory Interface                                //
-//              Wishbone Bus Interface                                        //
+//              Blackbone Bus Interface                                       //
 //                                                                            //
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -42,7 +42,7 @@
 
 `include "mpsoc_dma_pkg.sv"
 
-module mpsoc_dma_wb_top #(
+module mpsoc_dma_bb_top #(
   parameter ADDR_WIDTH = 32,
   parameter DATA_WIDTH = 32,
 
@@ -72,27 +72,17 @@ module mpsoc_dma_wb_top #(
     output                   noc_out_res_valid,
     input                    noc_out_res_ready,
 
-    input  [ADDR_WIDTH-1:0]  wb_if_addr_i,
-    input  [DATA_WIDTH-1:0]  wb_if_dat_i,
-    input                    wb_if_cyc_i,
-    input                    wb_if_stb_i,
-    input                    wb_if_we_i,
-    output [DATA_WIDTH-1:0]  wb_if_dat_o,
-    output                   wb_if_ack_o,
-    output                   wb_if_err_o,
-    output                   wb_if_rty_o,
+    input  [ADDR_WIDTH-1:0]  bb_if_addr_i,
+    input  [DATA_WIDTH-1:0]  bb_if_din_i,
+    input                    bb_if_en_i,
+    input                    bb_if_we_i,
+    output [DATA_WIDTH-1:0]  bb_if_dout_o,
 
-    output reg [ADDR_WIDTH-1:0] wb_adr_o,
-    output reg [DATA_WIDTH-1:0] wb_dat_o,
-    output reg                  wb_cyc_o,
-    output reg                  wb_stb_o,
-    output reg [           3:0] wb_sel_o,
-    output reg                  wb_we_o,
-    output                      wb_cab_o,
-    output reg [           2:0] wb_cti_o,
-    output reg [           1:0] wb_bte_o,
-    input      [DATA_WIDTH-1:0] wb_dat_i,
-    input                       wb_ack_i,
+    output reg [ADDR_WIDTH-1:0] bb_addr_o,
+    output reg [DATA_WIDTH-1:0] bb_din_o,
+    output reg                  bb_en_o,
+    output reg                  bb_we_o,
+    input      [DATA_WIDTH-1:0] bb_dout_i,
 
     output [TABLE_ENTRIES-1:0] irq
   );
@@ -102,46 +92,32 @@ module mpsoc_dma_wb_top #(
   // Constants
   //
 
-  localparam wb_arb_req    = 2'b00;
-  localparam wb_arb_resp   = 2'b01;
-  localparam wb_arb_target = 2'b10;
+  localparam bb_arb_req    = 2'b00;
+  localparam bb_arb_resp   = 2'b01;
+  localparam bb_arb_target = 2'b10;
 
   //////////////////////////////////////////////////////////////////
   //
   // Variables
   //
 
-  wire [ADDR_WIDTH-1:0]    wb_req_adr_o;
-  wire [DATA_WIDTH-1:0]    wb_req_dat_o;
-  wire                     wb_req_cyc_o;
-  wire                     wb_req_stb_o;
-  wire                     wb_req_we_o;
-  wire [           3:0]    wb_req_sel_o;
-  wire [           2:0]    wb_req_cti_o;
-  wire [           1:0]    wb_req_bte_o;
-  reg  [DATA_WIDTH-1:0]    wb_req_dat_i;
-  reg                      wb_req_ack_i;
+  wire [ADDR_WIDTH-1:0]    bb_req_addr_o;
+  wire [DATA_WIDTH-1:0]    bb_req_din_o;
+  wire                     bb_req_en_o;
+  wire                     bb_req_we_o;
+  reg  [DATA_WIDTH-1:0]    bb_req_dout_i;
 
-  wire [ADDR_WIDTH-1:0]    wb_res_adr_o;
-  wire [DATA_WIDTH-1:0]    wb_res_dat_o;
-  wire                     wb_res_cyc_o;
-  wire                     wb_res_stb_o;
-  wire                     wb_res_we_o;
-  wire [           3:0]    wb_res_sel_o;
-  wire [           2:0]    wb_res_cti_o;
-  wire [           1:0]    wb_res_bte_o;
-  reg  [DATA_WIDTH-1:0]    wb_res_dat_i;
-  reg                      wb_res_ack_i;
+  wire [ADDR_WIDTH-1:0]    bb_res_addr_o;
+  wire [DATA_WIDTH-1:0]    bb_res_din_o;
+  wire                     bb_res_en_o;
+  wire                     bb_res_we_o;
+  reg  [DATA_WIDTH-1:0]    bb_res_dout_i;
 
-  wire [ADDR_WIDTH-1:0]    wb_target_adr_o;
-  wire [DATA_WIDTH-1:0]    wb_target_dat_o;
-  wire                     wb_target_cyc_o;
-  wire                     wb_target_stb_o;
-  wire                     wb_target_we_o;
-  wire [           2:0]    wb_target_cti_o;
-  wire [           1:0]    wb_target_bte_o;
-  reg  [DATA_WIDTH-1:0]    wb_target_dat_i;
-  reg                      wb_target_ack_i;
+  wire [ADDR_WIDTH-1:0]    bb_target_addr_o;
+  wire [DATA_WIDTH-1:0]    bb_target_din_o;
+  wire                     bb_target_en_o;
+  wire                     bb_target_we_o;
+  reg  [DATA_WIDTH-1:0]    bb_target_dout_i;
 
   // Beginning of automatic wires (for undeclared instantiated-module outputs)
   wire                              ctrl_done_en;     // From initiator
@@ -149,53 +125,51 @@ module mpsoc_dma_wb_top #(
   wire [TABLE_ENTRIES_PTRWIDTH-1:0] ctrl_read_pos;    // From initiator
   wire [`DMA_REQUEST_WIDTH    -1:0] ctrl_read_req;    // From request_table
   wire [TABLE_ENTRIES         -1:0] done;             // From request_table
-  wire                              if_valid_en;      // From wb interface
-  wire [TABLE_ENTRIES_PTRWIDTH-1:0] if_valid_pos;     // From wb interface
-  wire                              if_valid_set;     // From wb interface
-  wire                              if_validrd_en;    // From wb interface
-  wire                              if_write_en;      // From wb interface
-  wire [TABLE_ENTRIES_PTRWIDTH-1:0] if_write_pos;     // From wb interface
-  wire [`DMA_REQUEST_WIDTH    -1:0] if_write_req;     // From wb interface
-  wire [`DMA_REQMASK_WIDTH    -1:0] if_write_select;  // From wb interface
+  wire                              if_valid_en;      // From bb interface
+  wire [TABLE_ENTRIES_PTRWIDTH-1:0] if_valid_pos;     // From bb interface
+  wire                              if_valid_set;     // From bb interface
+  wire                              if_validrd_en;    // From bb interface
+  wire                              if_write_en;      // From bb interface
+  wire [TABLE_ENTRIES_PTRWIDTH-1:0] if_write_pos;     // From bb interface
+  wire [`DMA_REQUEST_WIDTH    -1:0] if_write_req;     // From bb interface
+  wire [`DMA_REQMASK_WIDTH    -1:0] if_write_select;  // From bb interface
   wire [TABLE_ENTRIES         -1:0] valid;            // From request_table
-  wire [                       3:0] wb_target_sel_o;  // From target
+  wire [                       3:0] bb_target_sel_o;  // From target
   // End of automatics
 
   wire [TABLE_ENTRIES_PTRWIDTH-1:0] ctrl_out_read_pos;
   wire [TABLE_ENTRIES_PTRWIDTH-1:0] ctrl_in_read_pos;
   wire [TABLE_ENTRIES_PTRWIDTH-1:0] ctrl_write_pos;
 
-  reg [           1:0]              wb_arb;
-  reg [           1:0]              nxt_wb_arb;
+  reg [           1:0]              bb_arb;
+  reg [           1:0]              nxt_bb_arb;
 
-  wire wb_arb_active;
+  wire bb_arb_active;
 
   //////////////////////////////////////////////////////////////////
   //
   // Module body
   //
 
-  assign wb_if_err_o = 1'b0;
-  assign wb_if_rty_o = 1'b0;
+  assign bb_if_err_o = 1'b0;
+  assign bb_if_rty_o = 1'b0;
 
   assign ctrl_out_read_pos = 0;
   assign ctrl_in_read_pos  = 0;
   assign ctrl_write_pos    = 0;
 
-  mpsoc_dma_wb_interface #(
+  mpsoc_dma_bb_interface #(
     .TILEID(TILEID)
   )
-  wb_interface (
+  bb_interface (
     .clk                     (clk),
     .rst                     (rst),
 
-    .wb_if_addr_i            (wb_if_addr_i[ADDR_WIDTH-1:0]),
-    .wb_if_dat_i             (wb_if_dat_i[DATA_WIDTH-1:0]),
-    .wb_if_we_i              (wb_if_we_i),
-    .wb_if_cyc_i             (wb_if_cyc_i),
-    .wb_if_stb_i             (wb_if_stb_i),
-    .wb_if_dat_o             (wb_if_dat_o[DATA_WIDTH-1:0]),
-    .wb_if_ack_o             (wb_if_ack_o),
+    .bb_if_addr_i            (bb_if_addr_i[ADDR_WIDTH-1:0]),
+    .bb_if_din_i             (bb_if_din_i[DATA_WIDTH-1:0]),
+    .bb_if_en_i              (bb_if_en_i),
+    .bb_if_we_i              (bb_if_we_i),
+    .bb_if_dout_o            (bb_if_dout_o[DATA_WIDTH-1:0]),
 
     .if_write_req            (if_write_req[`DMA_REQUEST_WIDTH-1:0]),
     .if_write_pos            (if_write_pos[TABLE_ENTRIES_PTRWIDTH-1:0]),
@@ -239,10 +213,10 @@ module mpsoc_dma_wb_top #(
     .irq                   (irq[TABLE_ENTRIES-1:0])
   );
 
-  mpsoc_dma_wb_initiator #(
+  mpsoc_dma_bb_initiator #(
     .TILEID (TILEID)
   )
-  wb_initiator (
+  bb_initiator (
     .clk                  (clk),
     .rst                  (rst),
 
@@ -262,34 +236,24 @@ module mpsoc_dma_wb_top #(
     .noc_in_valid         (noc_in_res_valid),
     .noc_in_ready         (noc_in_res_ready),
 
-    .wb_res_adr_o         (wb_res_adr_o[ADDR_WIDTH-1:0]),
-    .wb_res_dat_o         (wb_res_dat_o[DATA_WIDTH-1:0]),
-    .wb_res_sel_o         (wb_res_sel_o[3:0]),
-    .wb_res_we_o          (wb_res_we_o),
-    .wb_res_cyc_o         (wb_res_cyc_o),
-    .wb_res_stb_o         (wb_res_stb_o),
-    .wb_res_cti_o         (wb_res_cti_o[2:0]),
-    .wb_res_bte_o         (wb_res_bte_o[1:0]),
-    .wb_req_dat_i         (wb_req_dat_i[DATA_WIDTH-1:0]),
-    .wb_req_ack_i         (wb_req_ack_i),
+    .bb_res_addr_o        (bb_res_addr_o[ADDR_WIDTH-1:0]),
+    .bb_res_din_o         (bb_res_din_o[DATA_WIDTH-1:0]),
+    .bb_res_en_o          (bb_res_en_o),
+    .bb_res_we_o          (bb_res_we_o),
+    .bb_req_dout_i        (bb_req_dout_i[DATA_WIDTH-1:0]),
 
-    .wb_req_adr_o         (wb_req_adr_o[ADDR_WIDTH-1:0]),
-    .wb_req_dat_o         (wb_req_dat_o[DATA_WIDTH-1:0]),
-    .wb_req_sel_o         (wb_req_sel_o[3:0]),
-    .wb_req_we_o          (wb_req_we_o),
-    .wb_req_cyc_o         (wb_req_cyc_o),
-    .wb_req_stb_o         (wb_req_stb_o),
-    .wb_req_cti_o         (wb_req_cti_o[2:0]),
-    .wb_req_bte_o         (wb_req_bte_o[1:0]),
-    .wb_res_dat_i         (wb_res_dat_i[DATA_WIDTH-1:0]),
-    .wb_res_ack_i         (wb_res_ack_i)
+    .bb_req_addr_o        (bb_req_addr_o[ADDR_WIDTH-1:0]),
+    .bb_req_din_o         (bb_req_din_o[DATA_WIDTH-1:0]),
+    .bb_req_en_o          (bb_req_en_o),
+    .bb_req_we_o          (bb_req_we_o),
+    .bb_res_dout_i        (bb_res_dout_i[DATA_WIDTH-1:0])
   );
 
-  mpsoc_dma_wb_target #(
+  mpsoc_dma_bb_target #(
     .TILEID(TILEID),
     .NOC_PACKET_SIZE(NOC_PACKET_SIZE)
   )
-  wb_target (
+  bb_target (
     // Outputs
     .clk                          (clk),
     .rst                          (rst),
@@ -302,116 +266,83 @@ module mpsoc_dma_wb_top #(
     .noc_in_valid                 (noc_in_req_valid),
     .noc_in_ready                 (noc_in_req_ready),
 
-    .wb_adr_o                     (wb_target_adr_o[ADDR_WIDTH-1:0]),
-    .wb_dat_o                     (wb_target_dat_o[DATA_WIDTH-1:0]),
-    .wb_sel_o                     (wb_target_sel_o[3:0]),
-    .wb_we_o                      (wb_target_we_o),
-    .wb_cyc_o                     (wb_target_cyc_o),
-    .wb_stb_o                     (wb_target_stb_o),
-    .wb_cti_o                     (wb_target_cti_o[2:0]),
-    .wb_bte_o                     (wb_target_bte_o[1:0]),
-    .wb_dat_i                     (wb_target_dat_i[DATA_WIDTH-1:0]),
-    .wb_ack_i                     (wb_target_ack_i)
+    .bb_addr_o                    (bb_target_addr_o[ADDR_WIDTH-1:0]),
+    .bb_din_o                     (bb_target_din_o[DATA_WIDTH-1:0]),
+    .bb_en_o                      (bb_target_en_o),
+    .bb_we_o                      (bb_target_we_o),
+    .bb_dout_i                    (bb_target_dout_i[DATA_WIDTH-1:0])
   );
 
   always @(posedge clk) begin
     if (rst) begin
-      wb_arb <= wb_arb_target;
+      bb_arb <= bb_arb_target;
     end
     else begin
-      wb_arb <= nxt_wb_arb;
+      bb_arb <= nxt_bb_arb;
     end
   end
 
-  assign wb_arb_active = ((wb_arb == wb_arb_req)    & wb_req_cyc_o) |
-                         ((wb_arb == wb_arb_resp)   & wb_res_cyc_o) |
-                         ((wb_arb == wb_arb_target) & wb_target_cyc_o);
+  assign bb_arb_active = ((bb_arb == bb_arb_req)    & bb_req_en_o) |
+                         ((bb_arb == bb_arb_resp)   & bb_res_en_o) |
+                         ((bb_arb == bb_arb_target) & bb_target_en_o);
 
   always @(*) begin
-    if (wb_arb_active) begin
-      nxt_wb_arb = wb_arb;
+    if (bb_arb_active) begin
+      nxt_bb_arb = bb_arb;
     end
     else begin
-      if (wb_target_cyc_o) begin
-        nxt_wb_arb = wb_arb_target;
+      if (bb_target_en_o) begin
+        nxt_bb_arb = bb_arb_target;
       end
-      else if (wb_res_cyc_o) begin
-        nxt_wb_arb = wb_arb_resp;
+      else if (bb_res_en_o) begin
+        nxt_bb_arb = bb_arb_resp;
       end
-      else if (wb_req_cyc_o) begin
-        nxt_wb_arb = wb_arb_req;
+      else if (bb_req_en_o) begin
+        nxt_bb_arb = bb_arb_req;
       end
       else begin
-        nxt_wb_arb = wb_arb_target;
+        nxt_bb_arb = bb_arb_target;
       end
     end
   end
 
-  assign wb_cab_o = 1'b0;
+  assign bb_cab_o = 1'b0;
   always @(*) begin
-    if (wb_arb == wb_arb_target) begin
-      wb_adr_o = wb_target_adr_o;
-      wb_dat_o = wb_target_dat_o;
-      wb_cyc_o = wb_target_cyc_o;
-      wb_stb_o = wb_target_stb_o;
-      wb_sel_o = wb_target_sel_o;
-      wb_we_o = wb_target_we_o;
-      wb_bte_o = wb_target_bte_o;
-      wb_cti_o = wb_target_cti_o;
-      wb_target_ack_i = wb_ack_i;
-      wb_target_dat_i = wb_dat_i;
-      wb_req_ack_i = 1'b0;
-      wb_req_dat_i = 32'hx;
-      wb_res_ack_i = 1'b0;
-      wb_res_dat_i = 32'hx;
+    if (bb_arb == bb_arb_target) begin
+      bb_addr_o = bb_target_addr_o;
+      bb_din_o = bb_target_dat_o;
+      bb_en_o = bb_target_en_o;
+      bb_we_o = bb_target_we_o;
+      bb_target_dat_i = bb_dout_i;
+      bb_req_dat_i = 32'hx;
+      bb_res_dat_i = 32'hx;
     end
-    else if (wb_arb == wb_arb_resp) begin
-      wb_adr_o = wb_res_adr_o;
-      wb_dat_o = wb_res_dat_o;
-      wb_cyc_o = wb_res_cyc_o;
-      wb_stb_o = wb_res_stb_o;
-      wb_sel_o = wb_res_sel_o;
-      wb_we_o = wb_res_we_o;
-      wb_bte_o = wb_res_bte_o;
-      wb_cti_o = wb_res_cti_o;
-      wb_res_ack_i = wb_ack_i;
-      wb_res_dat_i = wb_dat_i;
-      wb_req_ack_i = 1'b0;
-      wb_req_dat_i = 32'hx;
-      wb_target_ack_i = 1'b0;
-      wb_target_dat_i = 32'hx;
+    else if (bb_arb == bb_arb_resp) begin
+      bb_addr_o = bb_res_addr_o;
+      bb_din_o = bb_res_dat_o;
+      bb_en_o = bb_res_en_o;
+      bb_we_o = bb_res_we_o;
+      bb_res_dat_i = bb_dout_i;
+      bb_req_dat_i = 32'hx;
+      bb_target_dat_i = 32'hx;
     end
-    else if (wb_arb == wb_arb_req) begin
-      wb_adr_o = wb_req_adr_o;
-      wb_dat_o = wb_req_dat_o;
-      wb_cyc_o = wb_req_cyc_o;
-      wb_stb_o = wb_req_stb_o;
-      wb_sel_o = wb_req_sel_o;
-      wb_we_o = wb_req_we_o;
-      wb_bte_o = wb_req_bte_o;
-      wb_cti_o = wb_req_cti_o;
-      wb_req_ack_i = wb_ack_i;
-      wb_req_dat_i = wb_dat_i;
-      wb_res_ack_i = 1'b0;
-      wb_res_dat_i = 32'hx;
-      wb_target_ack_i = 1'b0;
-      wb_target_dat_i = 32'hx;
+    else if (bb_arb == bb_arb_req) begin
+      bb_addr_o = bb_req_addr_o;
+      bb_din_o = bb_req_dat_o;
+      bb_en_o = bb_req_en_o;
+      bb_we_o = bb_req_we_o;
+      bb_req_dat_i = bb_dout_i;
+      bb_res_dat_i = 32'hx;
+      bb_target_dat_i = 32'hx;
     end
     else begin
-      wb_adr_o = 32'h0;
-      wb_dat_o = 32'h0;
-      wb_cyc_o = 1'b0;
-      wb_stb_o = 1'b0;
-      wb_sel_o = 4'h0;
-      wb_we_o = 1'b0;
-      wb_bte_o = 2'b00;
-      wb_cti_o = 3'b000;
-      wb_req_ack_i = 1'b0;
-      wb_req_dat_i = 32'hx;
-      wb_res_ack_i = 1'b0;
-      wb_res_dat_i = 32'hx;
-      wb_target_ack_i = 1'b0;
-      wb_target_dat_i = 32'hx;
+      bb_addr_o = 32'h0;
+      bb_din_o = 32'h0;
+      bb_en_o = 1'b0;
+      bb_we_o = 1'b0;
+      bb_req_dat_i = 32'hx;
+      bb_res_dat_i = 32'hx;
+      bb_target_dat_i = 32'hx;
     end
   end
 endmodule

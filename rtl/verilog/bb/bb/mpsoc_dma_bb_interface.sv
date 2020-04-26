@@ -11,7 +11,7 @@
 //                                                                            //
 //              MPSoC-RISCV CPU                                               //
 //              Direct Access Memory Interface                                //
-//              Wishbone Bus Interface                                        //
+//              Blackbone Bus Interface                                       //
 //                                                                            //
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -42,7 +42,7 @@
 
 `include "mpsoc_dma_pkg.sv"
 
-module mpsoc_dma_wb_interface #(
+module mpsoc_dma_bb_interface #(
   parameter ADDR_WIDTH = 32,
   parameter DATA_WIDTH = 32,
 
@@ -55,13 +55,11 @@ module mpsoc_dma_wb_interface #(
     input clk,
     input rst,
 
-    input      [ADDR_WIDTH-1:0] wb_if_addr_i,
-    input      [DATA_WIDTH-1:0] wb_if_dat_i,
-    input                       wb_if_we_i,
-    input                       wb_if_cyc_i,
-    input                       wb_if_stb_i,
-    output reg [DATA_WIDTH-1:0] wb_if_dat_o,
-    output                      wb_if_ack_o,
+    input      [ADDR_WIDTH-1:0] bb_if_addr_i,
+    input      [DATA_WIDTH-1:0] bb_if_din_i,
+    input                       bb_if_en_i,
+    input                       bb_if_we_i,
+    output reg [DATA_WIDTH-1:0] bb_if_dout_o,
 
     output [`DMA_REQUEST_WIDTH    -1:0] if_write_req,
     output [TABLE_ENTRIES_PTRWIDTH-1:0] if_write_pos,
@@ -89,32 +87,30 @@ module mpsoc_dma_wb_interface #(
   // Module body
   //
 
-  assign if_write_req = { wb_if_dat_i[`DMA_REQFIELD_LADDR_WIDTH -1:0],
-                          wb_if_dat_i[`DMA_REQFIELD_SIZE_WIDTH  -1:0],
-                          wb_if_dat_i[`DMA_REQFIELD_RTILE_WIDTH -1:0],
-                          wb_if_dat_i[`DMA_REQFIELD_RADDR_WIDTH -1:0],
-                          wb_if_dat_i[0] };
+  assign if_write_req = { bb_if_din_i[`DMA_REQFIELD_LADDR_WIDTH -1:0],
+                          bb_if_din_i[`DMA_REQFIELD_SIZE_WIDTH  -1:0],
+                          bb_if_din_i[`DMA_REQFIELD_RTILE_WIDTH -1:0],
+                          bb_if_din_i[`DMA_REQFIELD_RADDR_WIDTH -1:0],
+                          bb_if_din_i[0] };
 
-  assign if_write_pos = wb_if_addr_i[TABLE_ENTRIES_PTRWIDTH+4:5]; // ptrwidth MUST be <= 7 (=128 entries)
-  assign if_write_en  = wb_if_cyc_i & wb_if_stb_i & wb_if_we_i;
+  assign if_write_pos = bb_if_addr_i[TABLE_ENTRIES_PTRWIDTH+4:5]; // ptrwidth MUST be <= 7 (=128 entries)
+  assign if_write_en  = bb_if_en_i & bb_if_we_i;
 
-  assign if_valid_pos = wb_if_addr_i[TABLE_ENTRIES_PTRWIDTH+4:5]; // ptrwidth MUST be <= 7 (=128 entries)
-  assign if_valid_en  = wb_if_cyc_i & wb_if_stb_i & (wb_if_addr_i[4:0] == 5'h14) & wb_if_we_i;
-  assign if_validrd_en  = wb_if_cyc_i & wb_if_stb_i & (wb_if_addr_i[4:0] == 5'h14) & ~wb_if_we_i;
-  assign if_valid_set = wb_if_we_i | (~wb_if_we_i & ~done[if_valid_pos]);
-
-  assign wb_if_ack_o = wb_if_cyc_i & wb_if_stb_i;
+  assign if_valid_pos  = bb_if_addr_i[TABLE_ENTRIES_PTRWIDTH+4:5]; // ptrwidth MUST be <= 7 (=128 entries)
+  assign if_valid_en   = bb_if_en_i & (bb_if_addr_i[4:0] == 5'h14) & bb_if_we_i;
+  assign if_validrd_en = bb_if_en_i & (bb_if_addr_i[4:0] == 5'h14) & ~bb_if_we_i;
+  assign if_valid_set  = bb_if_we_i | (~bb_if_we_i & ~done[if_valid_pos]);
 
   always @(*) begin
-    if (wb_if_addr_i[4:0] == 5'h14) begin
-      wb_if_dat_o = {31'h0,done[if_valid_pos]};
+    if (bb_if_addr_i[4:0] == 5'h14) begin
+      bb_if_dout_o = {31'h0,done[if_valid_pos]};
     end
   end
 
   // This assumes, that mask and address match
   generate
     for (i=0;i<`DMA_REQMASK_WIDTH;i=i+1) begin
-      assign if_write_select[i] = (wb_if_addr_i[4:2] == i);
+      assign if_write_select[i] = (bb_if_addr_i[4:2] == i);
     end
   endgenerate
 endmodule

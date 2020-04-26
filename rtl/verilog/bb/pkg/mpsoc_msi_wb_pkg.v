@@ -10,10 +10,8 @@
 //                                                                            //
 //                                                                            //
 //              MPSoC-RISCV CPU                                               //
-//              Network on Chip                                               //
-//              AMBA3 AHB-Lite Bus Interface                                  //
+//              Master Slave Interface                                        //
 //              Wishbone Bus Interface                                        //
-//              Blackbone Bus Interface                                       //
 //                                                                            //
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -42,61 +40,77 @@
  *   Francisco Javier Reina Campo <frareicam@gmail.com>
  */
 
-module arb_rr #(
-  parameter N = 2
-)
-  (
-    input  [N-1:0] req,
-    input          en,
-    input  [N-1:0] gnt,
-    output [N-1:0] nxt_gnt
-  );
+//////////////////////////////////////////////////////////////////
+//
+// Constants
+//
 
-  //////////////////////////////////////////////////////////////////
-  //
-  // Variables
-  //
+localparam CLASSIC_CYCLE = 1'b0;
+localparam BURST_CYCLE   = 1'b1;
 
-  // Mask net
-  reg [N-1:0] mask [0:N-1];
+localparam READ  = 1'b0;
+localparam WRITE = 1'b1;
 
-  integer i,j;
+localparam [2:0] CTI_CLASSIC      = 3'b000;
+localparam [2:0] CTI_CONST_BURST  = 3'b001;
+localparam [2:0] CTI_INC_BURST    = 3'b010;
+localparam [2:0] CTI_END_OF_BURST = 3'b111;
 
-  genvar k;
 
-  //////////////////////////////////////////////////////////////////
-  //
-  // Module Body
-  //
+localparam [1:0] BTE_LINEAR  = 2'd0;
+localparam [1:0] BTE_WRAP_4  = 2'd1;
+localparam [1:0] BTE_WRAP_8  = 2'd2;
+localparam [1:0] BTE_WRAP_16 = 2'd3;
 
-  // Calculate the mask
-  always @(*) begin : calc_mask
-    for (i=0;i<N;i=i+1) begin
-      // Initialize mask as 0
-      mask[i] = {N{1'b0}};
+//////////////////////////////////////////////////////////////////
+//
+// Functions
+//
 
-      if(i>0)
-        // For i=N:1 the next right is i-1
-        mask[i][i-1] = ~gnt[i-1];
-      else
-        // For i=0 the next right is N-1
-        mask[i][N-1] = ~gnt[N-1];
-
-      for (j=2;j<N;j=j+1) begin
-        if (i-j>=0)
-          mask[i][i-j] = mask[i][i-j+1] & ~gnt[i-j];
-        else if (i-j+1>=0)
-          mask[i][i-j+N] = mask[i][i-j+1] & ~gnt[i-j+N];
-        else
-          mask[i][i-j+N] = mask[i][i-j+N+1] & ~gnt[i-j+N];
-      end
-    end
+function get_cycle_type;
+  input [2:0] cti;
+  begin
+    get_cycle_type = (cti === CTI_CLASSIC) ? CLASSIC_CYCLE : BURST_CYCLE;
   end
+endfunction
 
-  // Calculate the nxt_gnt
-  generate
-    for (k=0;k<N;k=k+1) begin : gen_nxt_gnt         
-      assign nxt_gnt[k] = en ? (~|(mask[k] & req) & req[k]) | (~|req & gnt[k]) : gnt[k];
-    end
-  endgenerate
-endmodule
+function wb_is_last;
+  input [2:0] cti;
+  begin
+    case (cti)
+      CTI_CLASSIC      : wb_is_last = 1'b1;
+      CTI_CONST_BURST  : wb_is_last = 1'b0;
+      CTI_INC_BURST    : wb_is_last = 1'b0;
+      CTI_END_OF_BURST : wb_is_last = 1'b1;
+      default          : $display("%d : Illegal Wishbone B3 cycle type (%b)", $time, cti);
+    endcase
+  end
+endfunction
+
+function [31:0] wb_next_adr;
+  input [31:0] adr_i;
+  input [ 2:0] cti_i;
+  input [ 2:0] bte_i;
+
+  input integer dw;
+
+  reg [31:0] adr;
+
+  integer shift;
+
+  begin
+    if (dw == 64) shift = 3;
+    else if (dw == 32) shift = 2;
+    else if (dw == 16) shift = 1;
+    else shift = 0;
+    adr = adr_i >> shift;
+    if (cti_i == CTI_INC_BURST)
+      case (bte_i)
+        BTE_LINEAR   : adr = adr + 1;
+        BTE_WRAP_4   : adr = {adr[31:2], adr[1:0]+2'd1};
+        BTE_WRAP_8   : adr = {adr[31:3], adr[2:0]+3'd1};
+        BTE_WRAP_16  : adr = {adr[31:4], adr[3:0]+4'd1};
+      endcase // case (burst_type_i)
+    wb_next_adr = adr << shift;
+  end
+endfunction

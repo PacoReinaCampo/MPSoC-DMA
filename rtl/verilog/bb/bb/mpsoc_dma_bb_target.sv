@@ -11,7 +11,7 @@
 //                                                                            //
 //              MPSoC-RISCV CPU                                               //
 //              Direct Access Memory Interface                                //
-//              Wishbone Bus Interface                                        //
+//              Blackbone Bus Interface                                       //
 //                                                                            //
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -42,7 +42,7 @@
 
 `include "mpsoc_dma_pkg.sv"
 
-module mpsoc_dma_wb_target #(
+module mpsoc_dma_bb_target #(
   parameter ADDR_WIDTH = 32,
   parameter DATA_WIDTH = 32,
 
@@ -76,17 +76,13 @@ module mpsoc_dma_wb_target #(
     input                        noc_in_valid,
     output                       noc_in_ready,
 
-    // Wishbone interface for L2R data store
-    output     [ADDR_WIDTH-1:0]  wb_adr_o,
-    output     [DATA_WIDTH-1:0]  wb_dat_o,
-    output     [           3:0]  wb_sel_o,
-    output reg                   wb_we_o,
-    output reg                   wb_cyc_o,
-    output reg                   wb_stb_o,
-    output reg [           2:0]  wb_cti_o,
-    output reg [           1:0]  wb_bte_o,
-    input      [DATA_WIDTH-1:0]  wb_dat_i,
-    input                        wb_ack_i
+    // Blackbone interface for L2R data store
+    output     [ADDR_WIDTH-1:0]  bb_addr_o,
+    output     [DATA_WIDTH-1:0]  bb_din_o,
+    output reg                   bb_we_o,
+    output reg                   bb_en_o,
+    input      [DATA_WIDTH-1:0]  bb_dout_i,
+    input                        bb_ack_i
   );
 
   //////////////////////////////////////////////////////////////////
@@ -109,8 +105,8 @@ module mpsoc_dma_wb_target #(
   reg [STATE_WIDTH-1:0]        nxt_state;
 
   //FSM hidden state
-  reg                          wb_waiting;
-  reg                          nxt_wb_waiting;
+  reg                          bb_waiting;
+  reg                          nxt_bb_waiting;
 
   // Store request parameters: address, last packet and source
   reg [ADDR_WIDTH-1:0]         src_address;
@@ -139,8 +135,8 @@ module mpsoc_dma_wb_target #(
   // TODO: correct define!
   reg [`DMA_REQFIELD_SIZE_WIDTH -3:0]  resp_wsize;
   reg [`DMA_REQFIELD_SIZE_WIDTH -3:0]  nxt_resp_wsize;
-  reg [`DMA_RESPFIELD_SIZE_WIDTH-3:0]  wb_resp_count;
-  reg [`DMA_RESPFIELD_SIZE_WIDTH-3:0]  nxt_wb_resp_count;
+  reg [`DMA_RESPFIELD_SIZE_WIDTH-3:0]  bb_resp_count;
+  reg [`DMA_RESPFIELD_SIZE_WIDTH-3:0]  nxt_bb_resp_count;
 
   //FIFO-Stuff
 
@@ -203,7 +199,7 @@ module mpsoc_dma_wb_target #(
   assign data_fifo_valid = ~data_fifo_empty;
   assign data_fifo_empty = data_fifo_pos[0]; // Empty when pushing to first one
   assign data_fifo_ready = ~|data_fifo_pos[3:2]; //equal to not full
-  assign data_fifo_in = wb_dat_i;
+  assign data_fifo_in = bb_dout_i;
   assign data_fifo_out = data_fifo[0]; // First element is out
 
   // FIFO position pointer logic
@@ -257,16 +253,13 @@ module mpsoc_dma_wb_target #(
     end
   end
 
-  // Wishbone signal generation
-
-  // We only do word transfers
-  assign wb_sel_o = 4'hf;
+  // Blackbone signal generation
 
   // The data of the payload flits
-  assign wb_dat_o = buf_flit[`FLIT_CONTENT_MSB:`FLIT_CONTENT_LSB];
+  assign bb_din_o = buf_flit[`FLIT_CONTENT_MSB:`FLIT_CONTENT_LSB];
 
   // Assign stored (and incremented) address to wishbone interface
-  assign wb_adr_o = address;
+  assign bb_addr_o = address;
 
   //FSM
 
@@ -280,17 +273,14 @@ module mpsoc_dma_wb_target #(
     nxt_src_tile = src_tile;
     nxt_end_of_request = end_of_request;
     nxt_packet_id = packet_id;
-    nxt_wb_resp_count = wb_resp_count;
+    nxt_bb_resp_count = bb_resp_count;
     nxt_noc_resp_packet_wcount = noc_resp_packet_wcount;
     nxt_noc_resp_packet_wsize = noc_resp_packet_wsize;
-    nxt_wb_waiting = wb_waiting;
+    nxt_bb_waiting = bb_waiting;
     nxt_noc_resp_wcounter = noc_resp_wcounter;
     // Default control signals
-    wb_cyc_o = 1'b0;
-    wb_stb_o = 1'b0;
-    wb_we_o  = 1'b0;
-    wb_bte_o = 2'b00;
-    wb_cti_o = 3'b000;
+    bb_en_o = 1'b0;
+    bb_we_o = 1'b0;
     noc_out_valid = 1'b0;
     noc_out_flit  = 34'h0;
     data_fifo_push = 1'b0;
@@ -304,7 +294,7 @@ module mpsoc_dma_wb_target #(
         nxt_resp_wsize = buf_flit[`SIZE_MSB:`SIZE_LSB];
         nxt_packet_id = buf_flit[`PACKET_ID_MSB:`PACKET_ID_LSB];
         nxt_noc_resp_wcounter = 0;
-        nxt_wb_resp_count = 1;
+        nxt_bb_resp_count = 1;
         if (buf_valid) begin
           if (buf_flit[`PACKET_TYPE_MSB:`PACKET_TYPE_LSB] == `PACKET_TYPE_L2R_REQ) begin
             nxt_state = STATE_L2R_GETADDR;
@@ -333,32 +323,11 @@ module mpsoc_dma_wb_target #(
         end
       end
       STATE_L2R_DATA: begin
-        if (buf_last_flit)
-          wb_cti_o = 3'b111;
-        else
-          wb_cti_o = 3'b010;
-        wb_cyc_o = 1'b1;
-        wb_stb_o = 1'b1;
-        wb_we_o = 1'b1;
-        if (wb_ack_i) begin
-          nxt_address = address + 4;
-          buf_ready = 1'b1;
-          if (buf_last_flit) begin
-            if (end_of_request) begin
-              nxt_state = STATE_L2R_SENDRESP;
-            end
-            else begin
-              nxt_state = STATE_IDLE;
-            end
-          end
-          else begin
-            nxt_state = STATE_L2R_DATA;
-          end
-        end
-        else begin
-          buf_ready = 1'b0;
-          nxt_state = STATE_L2R_DATA;
-        end
+        bb_en_o = 1'b1;
+        bb_we_o = 1'b1;
+
+        buf_ready = 1'b0;
+        nxt_state = STATE_L2R_DATA;
       end // case: STATE_L2R_DATA
       STATE_L2R_SENDRESP: begin
         noc_out_valid = 1'b1;
@@ -475,61 +444,41 @@ module mpsoc_dma_wb_target #(
           nxt_state = STATE_R2L_DATA;
         end
         //FIFO-handling
-        if (wb_waiting) begin //hidden state
+        if (bb_waiting) begin //hidden state
           //don't get data from the bus
-          wb_stb_o     = 1'b0;
-          wb_cyc_o     = 1'b0;
+          bb_stb_o     = 1'b0;
+          bb_cyc_o     = 1'b0;
           data_fifo_push   = 1'b0;
           if (data_fifo_ready) begin
-            nxt_wb_waiting = 1'b0;
+            nxt_bb_waiting = 1'b0;
           end
           else begin
-            nxt_wb_waiting = 1'b1;
+            nxt_bb_waiting = 1'b1;
           end
         end
-        else begin //not wb_waiting
+        else begin //not bb_waiting
           // Signal cycle and strobe. We do bursts, but don't insert
           // wait states, so both of them are always equal.
           if ((noc_resp_packet_wcount==noc_resp_packet_wsize) & noc_out_valid & noc_out_ready) begin
-            wb_stb_o = 1'b0;
-            wb_cyc_o = 1'b0;
+            bb_stb_o = 1'b0;
+            bb_cyc_o = 1'b0;
           end
           else begin
-            wb_stb_o = 1'b1;
-            wb_cyc_o = 1'b1;
+            bb_stb_o = 1'b1;
+            bb_cyc_o = 1'b1;
           end
           // TODO: why not generate address from the base address + counter<<2?
-          if (~data_fifo_ready | (wb_resp_count==resp_wsize)) begin
-            wb_cti_o = 3'b111;
-          end
-          else begin
-            wb_cti_o = 3'b111;
-          end
-          if (wb_ack_i) begin
-            // When this was successfull..
-            if (~data_fifo_ready | (wb_resp_count==resp_wsize)) begin
-              nxt_wb_waiting = 1'b1;
-            end
-            else begin
-              nxt_wb_waiting = 1'b0;
-            end
-            nxt_wb_resp_count = wb_resp_count + 1;
-            nxt_address = address + 4;
-            data_fifo_push = 1'b1;
-          end
-          else begin
-            // ..otherwise we still wait for the acknowledgement
-            nxt_wb_resp_count = wb_resp_count;
-            nxt_address = address;
-            data_fifo_push = 1'b0;
-            nxt_wb_waiting = 1'b0;
-          end
-        end // else: !if(wb_waiting)
-      end // case: STATE_R2L_DATA
+          // ..otherwise we still wait for the acknowledgement
+          nxt_bb_resp_count = bb_resp_count;
+          nxt_address = address;
+          data_fifo_push = 1'b0;
+          nxt_bb_waiting = 1'b0;
+        end
+      end
       default: begin
         nxt_state = STATE_IDLE;
       end
-    endcase // case (state)
+    endcase
   end
 
   always @(posedge clk) begin
@@ -545,8 +494,8 @@ module mpsoc_dma_wb_target #(
       noc_resp_packet_wsize <= 5'h0;
       noc_resp_packet_wcount <= 5'h0;
       noc_resp_packet_wcount <= 0;
-      wb_resp_count <= 0;
-      wb_waiting <= 0;
+      bb_resp_count <= 0;
+      bb_waiting <= 0;
     end
     else begin
       state <= nxt_state;
@@ -559,8 +508,8 @@ module mpsoc_dma_wb_target #(
       noc_resp_wcounter <= nxt_noc_resp_wcounter;
       noc_resp_packet_wsize <= nxt_noc_resp_packet_wsize;
       noc_resp_packet_wcount <= nxt_noc_resp_packet_wcount;
-      wb_resp_count <= nxt_wb_resp_count;
-      wb_waiting <= nxt_wb_waiting;
+      bb_resp_count <= nxt_bb_resp_count;
+      bb_waiting <= nxt_bb_waiting;
     end
   end
 endmodule // lisnoc_dma_target
