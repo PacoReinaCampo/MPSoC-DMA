@@ -121,17 +121,17 @@ module mpsoc_dma_ahb3_initiator_nocres #(
     .clk                           (clk),
     .rst                           (rst),
 
-    // Outputs
-    .in_ready                      (noc_in_ready),
-    .out_flit                      (buf_flit[FLIT_WIDTH-1:0]),
-    .out_valid                     (buf_valid),
-
     // Inputs
     .in_flit                       (noc_in_flit[FLIT_WIDTH-1:0]),
     .in_valid                      (noc_in_valid),
+    .in_ready                      (noc_in_ready),
+
+    // Outputs
+    .out_flit                      (buf_flit[FLIT_WIDTH-1:0]),
+    .out_valid                     (buf_valid),
     .out_ready                     (buf_ready),
 
-    .out_size                      ()                   
+    .out_size                      ()
   );
 
   // Is this the last flit of a packet?
@@ -229,8 +229,8 @@ module mpsoc_dma_ahb3_initiator_nocres #(
       default: begin
         nxt_state = STATE_IDLE;
       end
-    endcase // case (state)
-  end // always @ (*)
+    endcase
+  end
 
   always @(posedge clk) begin
     if (rst) begin

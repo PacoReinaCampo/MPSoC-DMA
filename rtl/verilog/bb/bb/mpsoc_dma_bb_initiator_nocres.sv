@@ -111,17 +111,20 @@ module mpsoc_dma_bb_initiator_nocres #(
     .FIFO_DEPTH (NOC_PACKET_SIZE)
   )
   packet_buffer (
-    // Outputs
-    .in_ready                      (noc_in_ready),
-    .out_flit                      (buf_flit[FLIT_WIDTH-1:0]),
-    .out_valid                     (buf_valid),
-    .out_size                      (),
-    // Inputs
     .clk                           (clk),
     .rst                           (rst),
+
+    // Inputs
     .in_flit                       (noc_in_flit[FLIT_WIDTH-1:0]),
     .in_valid                      (noc_in_valid),
-    .out_ready                     (buf_ready)
+    .in_ready                      (noc_in_ready),
+
+    // Outputs
+    .out_flit                      (buf_flit[FLIT_WIDTH-1:0]),
+    .out_valid                     (buf_valid),
+    .out_ready                     (buf_ready),
+
+    .out_size                      ()
   );
 
   // Is this the last flit of a packet?
