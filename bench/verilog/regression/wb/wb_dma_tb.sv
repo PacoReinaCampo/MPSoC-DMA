@@ -127,7 +127,7 @@ module wb_dma_tb #(
   always #5 wbm_clk <= ~wbm_clk;
   always #3 wbs_clk <= ~wbs_clk;
 
-  mpsoc_msi_wb_bfm_transactor #(
+  mpsoc_wb_bfm_transactor #(
     .MEM_HIGH (MEM_SIZE-1),
     .AUTORUN  (0),
     .VERBOSE  (0)
@@ -202,7 +202,7 @@ module wb_dma_tb #(
     .irq ()
   );
 
-  mpsoc_msi_wb_bfm_memory #(
+  mpsoc_wb_bfm_memory #(
     .DEBUG (0),
     .MEM_SIZE_BYTES (MEM_SIZE)
   )

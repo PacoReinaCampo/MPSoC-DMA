@@ -330,21 +330,21 @@ architecture RTL of mpsoc_dma_wb_top is
   signal wb_target_ack_i : std_logic;
 
   -- Beginning of automatic wires (for undeclared instantiated-module outputs)
-  signal ctrl_done_en    : std_logic;  -- From ctrl_initiator of lisnoc_dma_initiator.v
-  signal ctrl_done_pos   : std_logic_vector(TABLE_ENTRIES_PTRWIDTH-1 downto 0);  -- From ctrl_initiator of lisnoc_dma_initiator.v
-  signal ctrl_read_pos   : std_logic_vector(TABLE_ENTRIES_PTRWIDTH-1 downto 0);  -- From ctrl_initiator of lisnoc_dma_initiator.v
-  signal ctrl_read_req   : std_logic_vector(DMA_REQUEST_WIDTH-1 downto 0);  -- From request_table of lisnoc_dma_request_table.v
-  signal done            : std_logic_vector(TABLE_ENTRIES-1 downto 0);  -- From request_table of lisnoc_dma_request_table.v
-  signal if_valid_en     : std_logic;  -- From wbinterface of lisnoc_dma_wbinterface.v
-  signal if_valid_pos    : std_logic_vector(TABLE_ENTRIES_PTRWIDTH-1 downto 0);  -- From wbinterface of lisnoc_dma_wbinterface.v
-  signal if_valid_set    : std_logic;  -- From wbinterface of lisnoc_dma_wbinterface.v
-  signal if_validrd_en   : std_logic;  -- From wbinterface of lisnoc_dma_wbinterface.v
-  signal if_write_en     : std_logic;  -- From wbinterface of lisnoc_dma_wbinterface.v
-  signal if_write_pos    : std_logic_vector(TABLE_ENTRIES_PTRWIDTH-1 downto 0);  -- From wbinterface of lisnoc_dma_wbinterface.v
-  signal if_write_req    : std_logic_vector(DMA_REQUEST_WIDTH-1 downto 0);  -- From wbinterface of lisnoc_dma_wbinterface.v
-  signal if_write_select : std_logic_vector(DMA_REQMASK_WIDTH-1 downto 0);  -- From wbinterface of lisnoc_dma_wbinterface.v
-  signal valid           : std_logic_vector(TABLE_ENTRIES-1 downto 0);  -- From request_table of lisnoc_dma_request_table.v
-  signal wb_target_sel_o : std_logic_vector(3 downto 0);  -- From target of lisnoc_dma_target.v
+  signal ctrl_done_en    : std_logic;  -- From ctrl_initiator
+  signal ctrl_done_pos   : std_logic_vector(TABLE_ENTRIES_PTRWIDTH-1 downto 0);  -- From ctrl_initiator
+  signal ctrl_read_pos   : std_logic_vector(TABLE_ENTRIES_PTRWIDTH-1 downto 0);  -- From ctrl_initiator
+  signal ctrl_read_req   : std_logic_vector(DMA_REQUEST_WIDTH-1 downto 0);  -- From request_table
+  signal done            : std_logic_vector(TABLE_ENTRIES-1 downto 0);  -- From request_table
+  signal if_valid_en     : std_logic;  -- From wb interface
+  signal if_valid_pos    : std_logic_vector(TABLE_ENTRIES_PTRWIDTH-1 downto 0);  -- From wb interface
+  signal if_valid_set    : std_logic;  -- From wb interface
+  signal if_validrd_en   : std_logic;  -- From wb interface
+  signal if_write_en     : std_logic;  -- From wb interface
+  signal if_write_pos    : std_logic_vector(TABLE_ENTRIES_PTRWIDTH-1 downto 0);  -- From wb interface
+  signal if_write_req    : std_logic_vector(DMA_REQUEST_WIDTH-1 downto 0);  -- From wb interface
+  signal if_write_select : std_logic_vector(DMA_REQMASK_WIDTH-1 downto 0);  -- From wb interface
+  signal valid           : std_logic_vector(TABLE_ENTRIES-1 downto 0);  -- From request_table
+  signal wb_target_sel_o : std_logic_vector(3 downto 0);  -- From target
   -- End of automatics
 
   signal ctrl_out_read_pos : std_logic_vector(TABLE_ENTRIES_PTRWIDTH-1 downto 0);
@@ -430,9 +430,9 @@ begin
       ctrl_read_pos => ctrl_read_pos(TABLE_ENTRIES_PTRWIDTH-1 downto 0),
       ctrl_done_pos => ctrl_done_pos(TABLE_ENTRIES_PTRWIDTH-1 downto 0),
       ctrl_done_en  => ctrl_done_en,
-      noc_out_flit  => noc_out_req_flit(FLIT_WIDTH-1 downto 0),  -- Templated
-      noc_out_valid => noc_out_req_valid,                        -- Templated
-      noc_in_ready  => noc_in_res_ready,                         -- Templated
+      noc_out_flit  => noc_out_req_flit(FLIT_WIDTH-1 downto 0),
+      noc_out_valid => noc_out_req_valid,
+      noc_in_ready  => noc_in_res_ready,
       wb_req_cyc_o  => wb_req_cyc_o,
       wb_req_stb_o  => wb_req_stb_o,
       wb_req_we_o   => wb_req_we_o,
@@ -454,9 +454,9 @@ begin
       rst           => rst,
       ctrl_read_req => ctrl_read_req(DMA_REQUEST_WIDTH-1 downto 0),
       valid         => valid(TABLE_ENTRIES-1 downto 0),
-      noc_out_ready => noc_out_req_ready,                        -- Templated
-      noc_in_flit   => noc_in_res_flit(FLIT_WIDTH-1 downto 0),   -- Templated
-      noc_in_valid  => noc_in_res_valid,                         -- Templated
+      noc_out_ready => noc_out_req_ready,
+      noc_in_flit   => noc_in_res_flit(FLIT_WIDTH-1 downto 0),
+      noc_in_valid  => noc_in_res_valid,
       wb_req_ack_i  => wb_req_ack_i,
       wb_req_dat_i  => wb_req_dat_i(DATA_WIDTH-1 downto 0),
       wb_res_ack_i  => wb_res_ack_i,
@@ -470,25 +470,25 @@ begin
       )
     port map (
       -- Outputs
-      noc_out_flit  => noc_out_res_flit(FLIT_WIDTH-1 downto 0),  -- Templated
-      noc_out_valid => noc_out_res_valid,                        -- Templated
-      noc_in_ready  => noc_in_req_ready,                         -- Templated
-      wb_cyc_o      => wb_target_cyc_o,                          -- Templated
-      wb_stb_o      => wb_target_stb_o,                          -- Templated
-      wb_we_o       => wb_target_we_o,                           -- Templated
-      wb_dat_o      => wb_target_dat_o(DATA_WIDTH-1 downto 0),   -- Templated
-      wb_adr_o      => wb_target_adr_o(ADDR_WIDTH-1 downto 0),   -- Templated
-      wb_sel_o      => wb_target_sel_o(3 downto 0),              -- Templated
-      wb_cti_o      => wb_target_cti_o(2 downto 0),              -- Templated
-      wb_bte_o      => wb_target_bte_o(1 downto 0),              -- Templated
+      noc_out_flit  => noc_out_res_flit(FLIT_WIDTH-1 downto 0),
+      noc_out_valid => noc_out_res_valid,
+      noc_in_ready  => noc_in_req_ready,
+      wb_cyc_o      => wb_target_cyc_o,
+      wb_stb_o      => wb_target_stb_o,
+      wb_we_o       => wb_target_we_o,
+      wb_dat_o      => wb_target_dat_o(DATA_WIDTH-1 downto 0),
+      wb_adr_o      => wb_target_adr_o(ADDR_WIDTH-1 downto 0),
+      wb_sel_o      => wb_target_sel_o(3 downto 0),
+      wb_cti_o      => wb_target_cti_o(2 downto 0),
+      wb_bte_o      => wb_target_bte_o(1 downto 0),
       -- Inputs
       clk           => clk,
       rst           => rst,
-      noc_out_ready => noc_out_res_ready,                        -- Templated
-      noc_in_flit   => noc_in_req_flit(FLIT_WIDTH-1 downto 0),   -- Templated
-      noc_in_valid  => noc_in_req_valid,                         -- Templated
-      wb_ack_i      => wb_target_ack_i,                          -- Templated
-      wb_dat_i      => wb_target_dat_i(DATA_WIDTH-1 downto 0)    -- Templated
+      noc_out_ready => noc_out_res_ready,
+      noc_in_flit   => noc_in_req_flit(FLIT_WIDTH-1 downto 0),
+      noc_in_valid  => noc_in_req_valid,
+      wb_ack_i      => wb_target_ack_i,
+      wb_dat_i      => wb_target_dat_i(DATA_WIDTH-1 downto 0)
       );
 
   processing_0 : process (clk)
@@ -570,7 +570,7 @@ begin
       wb_res_dat_i    <= (others => 'X');
       wb_target_ack_i <= '0';
       wb_target_dat_i <= (others => 'X');
-    else  -- if (wb_arb == wb_arb_req)
+    else
       wb_adr_o        <= (others => '0');
       wb_dat_o        <= (others => '0');
       wb_cyc_o        <= '0';

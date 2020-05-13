@@ -123,18 +123,18 @@ module mpsoc_dma_initiator_nocreq #(
   reg [4:0]             nxt_noc_req_packet_size;
 
   /*
-    * Table entry selection logic
-    *
-    * The request table signals all open requests on the 'valid' bit vector.
-    * The selection logic arbitrates among those entries to determine the
-    * request to be handled next.
-    *
-    * The arbitration is not done for all entries marked as valid but only
-    * for those, that are additionally not marked in the open_responses
-    * bit vector.
-    *
-    * The selection signals only change after a transfer is started.
-    */
+   * Table entry selection logic
+   *
+   * The request table signals all open requests on the 'valid' bit vector.
+   * The selection logic arbitrates among those entries to determine the
+   * request to be handled next.
+   *
+   * The arbitration is not done for all entries marked as valid but only
+   * for those, that are additionally not marked in the open_responses
+   * bit vector.
+   *
+   * The selection signals only change after a transfer is started.
+   */
 
   // Selects the next entry from the table
   reg  [TABLE_ENTRIES-1:0]           select;     // current grant of arbiter
@@ -267,13 +267,13 @@ module mpsoc_dma_initiator_nocreq #(
           nxt_noc_req_packet_size = req_size - noc_req_counter;
           // count is the current transfer number
           nxt_noc_req_packet_count = 5'd1;
-        end // else: !if((noc_req_counter + (NOC_PACKET_SIZE-2)) < req_size)
+        end
         // change to next state if successful
         if (noc_out_ready)
           nxt_noc_req_state = NOC_REQ_L2R_GENADDR;
         else
           nxt_noc_req_state = NOC_REQ_L2R_GENHDR;
-      end // case: NOC_REQ_GENHDR
+      end
       NOC_REQ_L2R_GENADDR: begin
         noc_out_valid = 1'b1;
         noc_out_flit[`FLIT_TYPE_MSB:`FLIT_TYPE_LSB] = `FLIT_TYPE_PAYLOAD;
@@ -326,16 +326,16 @@ module mpsoc_dma_initiator_nocreq #(
               nxt_noc_req_counter = noc_req_counter + noc_req_packet_count;
             end
           end
-          else begin // if (noc_req_packet_count == noc_req_packet_size)
+          else begin
             // we transfered a flit inside the packet
             nxt_noc_req_state = NOC_REQ_L2R_DATA;
           end
         end
-        else begin // if (noc_out_ready & noc_out_valid)
+        else begin
           // no success
           nxt_noc_req_state = NOC_REQ_L2R_DATA;
         end
-      end // case: NOC_REQ_L2R_DATA
+      end
       NOC_REQ_R2L_GENHDR: begin
         noc_out_valid = 1'b1;
         noc_out_flit[`FLIT_TYPE_MSB:`FLIT_TYPE_LSB]       = `FLIT_TYPE_HEADER;
@@ -354,7 +354,7 @@ module mpsoc_dma_initiator_nocreq #(
           nxt_noc_req_state = NOC_REQ_R2L_GENSIZE;
         else
           nxt_noc_req_state = NOC_REQ_R2L_GENHDR;
-      end // case: NOC_REQ_GENHDR
+      end
       NOC_REQ_R2L_GENSIZE: begin
         noc_out_valid = 1'b1;
         noc_out_flit[`SIZE_MSB:`SIZE_LSB] = req_size;
@@ -364,7 +364,7 @@ module mpsoc_dma_initiator_nocreq #(
           nxt_noc_req_state = NOC_REQ_R2L_GENRADDR;
         else
           nxt_noc_req_state = NOC_REQ_R2L_GENSIZE;
-      end // case: NOC_REQ_R2L_GENSIZE
+      end
 
       NOC_REQ_R2L_GENRADDR: begin
         noc_out_valid = 1'b1;
@@ -377,7 +377,7 @@ module mpsoc_dma_initiator_nocreq #(
         else begin
           nxt_noc_req_state = NOC_REQ_R2L_GENRADDR;
         end
-      end // case: NOC_REQ_R2L_GENRADDR
+      end
       NOC_REQ_R2L_GENLADDR: begin
         noc_out_valid = 1'b1;
         noc_out_flit[`FLIT_TYPE_MSB:`FLIT_TYPE_LSB] = `FLIT_TYPE_LAST;
@@ -390,11 +390,11 @@ module mpsoc_dma_initiator_nocreq #(
         else begin
           nxt_noc_req_state = NOC_REQ_R2L_GENLADDR;
         end
-      end // case: NOC_REQ_R2L_GENLADDR
+      end
       default: begin
         nxt_noc_req_state = NOC_REQ_IDLE;
       end
-    endcase // case (noc_req_state)
+    endcase
     // Process done information from response
     if (ctrl_done_en) begin
       nxt_open_responses[ctrl_done_pos] = 1'b0;
@@ -420,4 +420,4 @@ module mpsoc_dma_initiator_nocreq #(
       req_start            <= nxt_req_start;
     end
   end
-endmodule // lisnoc_dma_initiator_noc_req
+endmodule

@@ -179,7 +179,7 @@ module mpsoc_dma_wb_initiator_nocres #(
             nxt_state = STATE_IDLE;
           end
         end
-        else begin // if (buf_valid)
+        else begin
           nxt_state = STATE_IDLE;
         end
       end

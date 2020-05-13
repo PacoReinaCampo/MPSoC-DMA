@@ -1,0 +1,50 @@
+# vsim -c -do "run.do" work.wb_top_tb 
+# Start time: 19:05:35 on May 13,2020
+# Loading sv_std.std
+# Loading work.wb_top_tb
+# Loading work.vlog_tb_utils
+# Loading work.vlog_tap_generator
+# Loading work.wb_dma_tb
+# Loading work.mpsoc_wb_bfm_transactor
+# Loading work.mpsoc_wb_bfm_master
+# Loading work.mpsoc_dma_wb_top
+# Loading work.mpsoc_dma_wb_interface
+# Loading work.mpsoc_dma_request_table
+# Loading work.mpsoc_dma_wb_initiator
+# Loading work.mpsoc_dma_wb_initiator_req
+# Loading work.mpsoc_dma_initiator_nocreq
+# Loading work.arb_rr
+# Loading work.mpsoc_dma_wb_initiator_nocres
+# Loading work.mpsoc_dma_packet_buffer
+# Loading work.mpsoc_dma_wb_target
+# Loading work.mpsoc_wb_bfm_memory
+# Loading work.mpsoc_wb_bfm_slave
+# do run.do
+##############################################################
+############# Wishbone Master Test Configuration #############
+##############################################################
+# 
+# wb_top_tb.wb_dma_tb.transactor.display_settings:
+#   Memory High Address   : 000000ff
+#   Memory Low Address    : 00000000
+#   Transactions          : 1000
+#   Subtransactions       : 100
+#   Max Burst Length      : 32
+#   Max Wait States       : 8
+#   Classic Cycle Prob    : 33
+#   Const Addr Cycle Prob : 33
+#   Incr Addr Cycle Prob  : 34
+#   Write Data            : Random
+#   Buffer Data           : Mirrors RAM
+#   $random Seed          : 0
+#   Verbosity             : 0
+# 
+############# Starting Wishbone Master Tests...  #############
+# 
+# Read data mismatch during iteration 0 at address 00000028
+# Expected 8484d609
+# Got      00000000
+# ** Note: $finish    : ../../../../../bench/verilog/regression/wb/bfm/mpsoc_wb_bfm_master.sv(244)
+#    Time: 423 ps  Iteration: 0  Instance: /wb_top_tb
+# End time: 19:05:35 on May 13,2020, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0

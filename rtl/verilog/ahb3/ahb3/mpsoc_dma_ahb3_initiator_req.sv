@@ -150,7 +150,8 @@ module mpsoc_dma_ahb3_initiator_req #(
       if (data_fifo_push & ~data_fifo_pop) begin
         // push and no pop
         data_fifo_pos <= data_fifo_pos << 1;
-      end else if (~data_fifo_push & data_fifo_pop) begin
+      end
+      else if (~data_fifo_push & data_fifo_pop) begin
         // pop and no push
         data_fifo_pos <= data_fifo_pos >> 1;
       end
@@ -178,7 +179,8 @@ module mpsoc_dma_ahb3_initiator_req #(
         else
           // the last stays static
           data_fifo[i] <= data_fifo[i];
-      end else if (data_fifo_push & data_fifo_pos[i]) begin
+      end
+      else if (data_fifo_push & data_fifo_pos[i]) begin
         // when pushing only and this is the current write
         // position
         data_fifo[i] <= data_fifo_in;
@@ -272,7 +274,7 @@ module mpsoc_dma_ahb3_initiator_req #(
             // .. otherwise we wait for FIFO to become ready
             nxt_ahb3_req_state = `WB_REQ_WAIT;
         end
-        else begin // if (ahb3_req_hready)
+        else begin
           // ..otherwise we still wait for the acknowledgement
           nxt_ahb3_req_state = `WB_REQ_DATA;
         end
@@ -303,4 +305,4 @@ module mpsoc_dma_ahb3_initiator_req #(
       wb_req_count <= nxt_ahb3_req_count;
     end
   end
-endmodule // lisnoc_dma_initiator_wbreq
+endmodule

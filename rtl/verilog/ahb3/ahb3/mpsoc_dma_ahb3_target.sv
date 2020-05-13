@@ -110,7 +110,7 @@ module mpsoc_dma_ahb3_target #(
   reg [STATE_WIDTH-1:0]        nxt_state;
 
   //FSM hidden state
-  reg                          wb_waiting;
+  reg                          ahb3_waiting;
   reg                          nxt_ahb3_waiting;
 
   // Store request parameters: address, last packet and source
@@ -140,7 +140,7 @@ module mpsoc_dma_ahb3_target #(
   // TODO: correct define!
   reg [`DMA_REQFIELD_SIZE_WIDTH -3:0]  resp_wsize;
   reg [`DMA_REQFIELD_SIZE_WIDTH -3:0]  nxt_resp_wsize;
-  reg [`DMA_RESPFIELD_SIZE_WIDTH-3:0]  wb_resp_count;
+  reg [`DMA_RESPFIELD_SIZE_WIDTH-3:0]  ahb3_resp_count;
   reg [`DMA_RESPFIELD_SIZE_WIDTH-3:0]  nxt_ahb3_resp_count;
 
   //FIFO-Stuff
@@ -148,7 +148,7 @@ module mpsoc_dma_ahb3_target #(
   wire                                data_fifo_valid;
   reg  [DATA_WIDTH-1:0]               data_fifo [0:2]; // data storage
   reg                                 data_fifo_pop;   // NOC pushes
-  reg                                 data_fifo_push;  // WB pops
+  reg                                 data_fifo_push;  // AHB3 pops
 
   wire [DATA_WIDTH-1:0]               data_fifo_out; // Current first element
   wire [DATA_WIDTH-1:0]               data_fifo_in;  // Push element
@@ -283,10 +283,10 @@ module mpsoc_dma_ahb3_target #(
     nxt_src_tile = src_tile;
     nxt_end_of_request = end_of_request;
     nxt_packet_id = packet_id;
-    nxt_ahb3_resp_count = wb_resp_count;
+    nxt_ahb3_resp_count = ahb3_resp_count;
     nxt_noc_resp_packet_wcount = noc_resp_packet_wcount;
     nxt_noc_resp_packet_wsize = noc_resp_packet_wsize;
-    nxt_ahb3_waiting = wb_waiting;
+    nxt_ahb3_waiting = ahb3_waiting;
     nxt_noc_resp_wcounter = noc_resp_wcounter;
     // Default control signals
     ahb3_hmastlock = 1'b0;
@@ -323,7 +323,7 @@ module mpsoc_dma_ahb3_target #(
         else begin
           nxt_state = STATE_IDLE;
         end
-      end // case: STATE_IDLE
+      end
       //L2R-handling
       STATE_L2R_GETADDR: begin
         buf_ready = 1'b1;
@@ -362,7 +362,7 @@ module mpsoc_dma_ahb3_target #(
           buf_ready = 1'b0;
           nxt_state = STATE_L2R_DATA;
         end
-      end // case: STATE_L2R_DATA
+      end
       STATE_L2R_SENDRESP: begin
         noc_out_valid = 1'b1;
         noc_out_flit[`FLIT_TYPE_MSB:`FLIT_TYPE_LSB]       = `FLIT_TYPE_SINGLE;
@@ -376,7 +376,7 @@ module mpsoc_dma_ahb3_target #(
         else begin
           nxt_state = STATE_L2R_SENDRESP;
         end
-      end // case: STATE_L2R_SENDRESP
+      end
       //R2L handling
       STATE_R2L_GETLADDR: begin
         buf_ready = 1'b1;
@@ -412,7 +412,7 @@ module mpsoc_dma_ahb3_target #(
           // Only (NOC_PACKET_SIZE -2) flits are availabel for the payload,
           // because we need a header-flit and an address-flit, too.
           noc_out_flit[`SIZE_MSB:`SIZE_LSB] = 7'd120;
-          noc_out_flit[`PACKET_RESP_LAST]     = 1'b0;
+          noc_out_flit[`PACKET_RESP_LAST]   = 1'b0;
           nxt_noc_resp_packet_wsize = NOC_PACKET_SIZE -2;
           // count is the current transfer number
           nxt_noc_resp_packet_wcount = 5'd1;
@@ -424,13 +424,13 @@ module mpsoc_dma_ahb3_target #(
           nxt_noc_resp_packet_wsize = resp_wsize - noc_resp_wcounter;
           // count is the current transfer number
           nxt_noc_resp_packet_wcount = 5'd1;
-        end // else: !if((noc_resp_wcounter + (NOC_PACKET_SIZE -2)) < resp_wsize)
+        end
         // change to next state if successful
         if (noc_out_ready)
           nxt_state = STATE_R2L_GENADDR;
         else
           nxt_state = STATE_R2L_GENHDR;
-      end // case: STATE_R2L_GENHDR
+      end
       STATE_R2L_GENADDR: begin
         noc_out_valid = 1'b1;
         noc_out_flit[`FLIT_TYPE_MSB:`FLIT_TYPE_LSB] = `FLIT_TYPE_PAYLOAD;
@@ -441,7 +441,7 @@ module mpsoc_dma_ahb3_target #(
         else begin
           nxt_state = STATE_R2L_GENADDR;
         end
-      end // case: `NOC_RESP_R2L_GENADDR
+      end
       STATE_R2L_DATA: begin
         // NOC-handling
         // transfer data to noc if available
@@ -469,7 +469,7 @@ module mpsoc_dma_ahb3_target #(
             nxt_state = STATE_R2L_DATA;
           end
         end
-        else begin //not LAST
+        else begin
           noc_out_flit[`FLIT_TYPE_MSB:`FLIT_TYPE_LSB] = `FLIT_TYPE_PAYLOAD;
           if (noc_out_valid & noc_out_ready) begin
             data_fifo_pop = 1'b1;
@@ -478,11 +478,11 @@ module mpsoc_dma_ahb3_target #(
           nxt_state = STATE_R2L_DATA;
         end
         //FIFO-handling
-        if (wb_waiting) begin //hidden state
+        if (ahb3_waiting) begin
           //don't get data from the bus
-          ahb3_hsel     = 1'b0;
-          ahb3_hmastlock     = 1'b0;
-          data_fifo_push   = 1'b0;
+          ahb3_hsel      = 1'b0;
+          ahb3_hmastlock = 1'b0;
+          data_fifo_push = 1'b0;
           if (data_fifo_ready) begin
             nxt_ahb3_waiting = 1'b0;
           end
@@ -490,7 +490,7 @@ module mpsoc_dma_ahb3_target #(
             nxt_ahb3_waiting = 1'b1;
           end
         end
-        else begin //not wb_waiting
+        else begin
           // Signal cycle and strobe. We do bursts, but don't insert
           // wait states, so both of them are always equal.
           if ((noc_resp_packet_wcount==noc_resp_packet_wsize) & noc_out_valid & noc_out_ready) begin
@@ -502,7 +502,7 @@ module mpsoc_dma_ahb3_target #(
             ahb3_hmastlock = 1'b1;
           end
           // TODO: why not generate address from the base address + counter<<2?
-          if (~data_fifo_ready | (wb_resp_count==resp_wsize)) begin
+          if (~data_fifo_ready | (ahb3_resp_count==resp_wsize)) begin
             ahb3_hburst = 3'b111;
           end
           else begin
@@ -510,29 +510,29 @@ module mpsoc_dma_ahb3_target #(
           end
           if (ahb3_hready) begin
             // When this was successfull..
-            if (~data_fifo_ready | (wb_resp_count==resp_wsize)) begin
+            if (~data_fifo_ready | (ahb3_resp_count==resp_wsize)) begin
               nxt_ahb3_waiting = 1'b1;
             end
             else begin
               nxt_ahb3_waiting = 1'b0;
             end
-            nxt_ahb3_resp_count = wb_resp_count + 1;
+            nxt_ahb3_resp_count = ahb3_resp_count + 1;
             nxt_address = address + 4;
             data_fifo_push = 1'b1;
           end
           else begin
             // ..otherwise we still wait for the acknowledgement
-            nxt_ahb3_resp_count = wb_resp_count;
+            nxt_ahb3_resp_count = ahb3_resp_count;
             nxt_address = address;
             data_fifo_push = 1'b0;
             nxt_ahb3_waiting = 1'b0;
           end
-        end // else: !if(wb_waiting)
-      end // case: STATE_R2L_DATA
+        end
+      end
       default: begin
         nxt_state = STATE_IDLE;
       end
-    endcase // case (state)
+    endcase
   end
 
   always @(posedge clk) begin
@@ -548,8 +548,8 @@ module mpsoc_dma_ahb3_target #(
       noc_resp_packet_wsize <= 5'h0;
       noc_resp_packet_wcount <= 5'h0;
       noc_resp_packet_wcount <= 0;
-      wb_resp_count <= 0;
-      wb_waiting <= 0;
+      ahb3_resp_count <= 0;
+      ahb3_waiting <= 0;
     end
     else begin
       state <= nxt_state;
@@ -562,8 +562,8 @@ module mpsoc_dma_ahb3_target #(
       noc_resp_wcounter <= nxt_noc_resp_wcounter;
       noc_resp_packet_wsize <= nxt_noc_resp_packet_wsize;
       noc_resp_packet_wcount <= nxt_noc_resp_packet_wcount;
-      wb_resp_count <= nxt_ahb3_resp_count;
-      wb_waiting <= nxt_ahb3_waiting;
+      ahb3_resp_count <= nxt_ahb3_resp_count;
+      ahb3_waiting <= nxt_ahb3_waiting;
     end
   end
-endmodule // lisnoc_dma_target
+endmodule

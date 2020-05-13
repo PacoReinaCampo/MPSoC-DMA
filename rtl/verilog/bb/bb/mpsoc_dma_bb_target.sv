@@ -297,7 +297,8 @@ module mpsoc_dma_bb_target #(
         if (buf_valid) begin
           if (buf_flit[`PACKET_TYPE_MSB:`PACKET_TYPE_LSB] == `PACKET_TYPE_L2R_REQ) begin
             nxt_state = STATE_L2R_GETADDR;
-          end  else if(buf_flit[`PACKET_TYPE_MSB:`PACKET_TYPE_LSB] == `PACKET_TYPE_R2L_REQ) begin
+          end
+          else if(buf_flit[`PACKET_TYPE_MSB:`PACKET_TYPE_LSB] == `PACKET_TYPE_R2L_REQ) begin
             nxt_state = STATE_R2L_GETLADDR;
           end
           else begin
@@ -509,4 +510,4 @@ module mpsoc_dma_bb_target #(
       bb_waiting <= nxt_bb_waiting;
     end
   end
-endmodule // lisnoc_dma_target
+endmodule

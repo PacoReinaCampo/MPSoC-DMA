@@ -153,21 +153,21 @@ module mpsoc_dma_ahb3_top #(
   reg                      ahb3_target_hready;
 
   // Beginning of automatic wires (for undeclared instantiated-module outputs)
-  wire                              ctrl_done_en;       // From ctrl_initiator of lisnoc_dma_initiator.v
-  wire [TABLE_ENTRIES_PTRWIDTH-1:0] ctrl_done_pos;      // From ctrl_initiator of lisnoc_dma_initiator.v
-  wire [TABLE_ENTRIES_PTRWIDTH-1:0] ctrl_read_pos;      // From ctrl_initiator of lisnoc_dma_initiator.v
-  wire [`DMA_REQUEST_WIDTH    -1:0] ctrl_read_req;      // From request_table of lisnoc_dma_request_table.v
-  wire [TABLE_ENTRIES         -1:0] done;               // From request_table of lisnoc_dma_request_table.v
-  wire                              if_valid_en;        // From wbinterface of lisnoc_dma_wbinterface.v
-  wire [TABLE_ENTRIES_PTRWIDTH-1:0] if_valid_pos;       // From wbinterface of lisnoc_dma_wbinterface.v
-  wire                              if_valid_set;       // From wbinterface of lisnoc_dma_wbinterface.v
-  wire                              if_validrd_en;      // From wbinterface of lisnoc_dma_wbinterface.v
-  wire                              if_write_en;        // From wbinterface of lisnoc_dma_wbinterface.v
-  wire [TABLE_ENTRIES_PTRWIDTH-1:0] if_write_pos;       // From wbinterface of lisnoc_dma_wbinterface.v
-  wire [`DMA_REQUEST_WIDTH    -1:0] if_write_req;       // From wbinterface of lisnoc_dma_wbinterface.v
-  wire [`DMA_REQMASK_WIDTH    -1:0] if_write_select;    // From wbinterface of lisnoc_dma_wbinterface.v
-  wire [TABLE_ENTRIES         -1:0] valid;              // From request_table of lisnoc_dma_request_table.v
-  wire [                       3:0] ahb3_target_hprot;  // From target of lisnoc_dma_target.v
+  wire                              ctrl_done_en;       // From ctrl_initiator
+  wire [TABLE_ENTRIES_PTRWIDTH-1:0] ctrl_done_pos;      // From ctrl_initiator
+  wire [TABLE_ENTRIES_PTRWIDTH-1:0] ctrl_read_pos;      // From ctrl_initiator
+  wire [`DMA_REQUEST_WIDTH    -1:0] ctrl_read_req;      // From request_table
+  wire [TABLE_ENTRIES         -1:0] done;               // From request_table
+  wire                              if_valid_en;        // From wb interface
+  wire [TABLE_ENTRIES_PTRWIDTH-1:0] if_valid_pos;       // From wb interface
+  wire                              if_valid_set;       // From wb interface
+  wire                              if_validrd_en;      // From wb interface
+  wire                              if_write_en;        // From wb interface
+  wire [TABLE_ENTRIES_PTRWIDTH-1:0] if_write_pos;       // From wb interface
+  wire [`DMA_REQUEST_WIDTH    -1:0] if_write_req;       // From wb interface
+  wire [`DMA_REQMASK_WIDTH    -1:0] if_write_select;    // From wb interface
+  wire [TABLE_ENTRIES         -1:0] valid;              // From request_table
+  wire [                       3:0] ahb3_target_hprot;  // From target
   // End of automatics
 
   wire [TABLE_ENTRIES_PTRWIDTH-1:0] ctrl_out_read_pos;

@@ -329,21 +329,21 @@ architecture RTL of mpsoc_dma_ahb3_top is
   signal ahb3_target_hready    : std_logic;
 
   -- Beginning of automatic wires (for undeclared instantiated-module outputs)
-  signal ctrl_done_en      : std_logic;  -- From ctrl_initiator of lisnoc_dma_initiator.v
-  signal ctrl_done_pos     : std_logic_vector(TABLE_ENTRIES_PTRWIDTH-1 downto 0);  -- From ctrl_initiator of lisnoc_dma_initiator.v
-  signal ctrl_read_pos     : std_logic_vector(TABLE_ENTRIES_PTRWIDTH-1 downto 0);  -- From ctrl_initiator of lisnoc_dma_initiator.v
-  signal ctrl_read_req     : std_logic_vector(DMA_REQUEST_WIDTH-1 downto 0);  -- From request_table of lisnoc_dma_request_table.v
-  signal done              : std_logic_vector(TABLE_ENTRIES-1 downto 0);  -- From request_table of lisnoc_dma_request_table.v
-  signal if_valid_en       : std_logic;  -- From wbinterface of lisnoc_dma_wbinterface.v
-  signal if_valid_pos      : std_logic_vector(TABLE_ENTRIES_PTRWIDTH-1 downto 0);  -- From wbinterface of lisnoc_dma_wbinterface.v
-  signal if_valid_set      : std_logic;  -- From wbinterface of lisnoc_dma_wbinterface.v
-  signal if_validrd_en     : std_logic;  -- From wbinterface of lisnoc_dma_wbinterface.v
-  signal if_write_en       : std_logic;  -- From wbinterface of lisnoc_dma_wbinterface.v
-  signal if_write_pos      : std_logic_vector(TABLE_ENTRIES_PTRWIDTH-1 downto 0);  -- From wbinterface of lisnoc_dma_wbinterface.v
-  signal if_write_req      : std_logic_vector(DMA_REQUEST_WIDTH-1 downto 0);  -- From wbinterface of lisnoc_dma_wbinterface.v
-  signal if_write_select   : std_logic_vector(DMA_REQMASK_WIDTH-1 downto 0);  -- From wbinterface of lisnoc_dma_wbinterface.v
-  signal valid             : std_logic_vector(TABLE_ENTRIES-1 downto 0);  -- From request_table of lisnoc_dma_request_table.v
-  signal ahb3_target_hprot : std_logic_vector(3 downto 0);  -- From target of lisnoc_dma_target.v
+  signal ctrl_done_en      : std_logic;  -- From ctrl_initiator
+  signal ctrl_done_pos     : std_logic_vector(TABLE_ENTRIES_PTRWIDTH-1 downto 0);  -- From ctrl_initiator
+  signal ctrl_read_pos     : std_logic_vector(TABLE_ENTRIES_PTRWIDTH-1 downto 0);  -- From ctrl_initiator
+  signal ctrl_read_req     : std_logic_vector(DMA_REQUEST_WIDTH-1 downto 0);  -- From request_table
+  signal done              : std_logic_vector(TABLE_ENTRIES-1 downto 0);  -- From request_table
+  signal if_valid_en       : std_logic;  -- From wb interface
+  signal if_valid_pos      : std_logic_vector(TABLE_ENTRIES_PTRWIDTH-1 downto 0);  -- From wb interface
+  signal if_valid_set      : std_logic;  -- From wb interface
+  signal if_validrd_en     : std_logic;  -- From wb interface
+  signal if_write_en       : std_logic;  -- From wb interface
+  signal if_write_pos      : std_logic_vector(TABLE_ENTRIES_PTRWIDTH-1 downto 0);  -- From wb interface
+  signal if_write_req      : std_logic_vector(DMA_REQUEST_WIDTH-1 downto 0);  -- From wb interface
+  signal if_write_select   : std_logic_vector(DMA_REQMASK_WIDTH-1 downto 0);  -- From wb interface
+  signal valid             : std_logic_vector(TABLE_ENTRIES-1 downto 0);  -- From request_table
+  signal ahb3_target_hprot : std_logic_vector(3 downto 0);  -- From target
   -- End of automatics
 
   signal ctrl_out_read_pos : std_logic_vector(TABLE_ENTRIES_PTRWIDTH-1 downto 0);
@@ -428,9 +428,9 @@ begin
       ctrl_read_pos      => ctrl_read_pos(TABLE_ENTRIES_PTRWIDTH-1 downto 0),
       ctrl_done_pos      => ctrl_done_pos(TABLE_ENTRIES_PTRWIDTH-1 downto 0),
       ctrl_done_en       => ctrl_done_en,
-      noc_out_flit       => noc_out_req_flit(FLIT_WIDTH-1 downto 0),  -- Templated
-      noc_out_valid      => noc_out_req_valid,  -- Templated
-      noc_in_ready       => noc_in_res_ready,   -- Templated
+      noc_out_flit       => noc_out_req_flit(FLIT_WIDTH-1 downto 0),
+      noc_out_valid      => noc_out_req_valid,
+      noc_in_ready       => noc_in_res_ready,
       ahb3_req_hmastlock => ahb3_req_hmastlock,
       ahb3_req_hsel      => ahb3_req_hsel,
       ahb3_req_hwrite    => ahb3_req_hwrite,
@@ -452,9 +452,9 @@ begin
       rst                => rst,
       ctrl_read_req      => ctrl_read_req(DMA_REQUEST_WIDTH-1 downto 0),
       valid              => valid(TABLE_ENTRIES-1 downto 0),
-      noc_out_ready      => noc_out_req_ready,  -- Templated
-      noc_in_flit        => noc_in_res_flit(FLIT_WIDTH-1 downto 0),  -- Templated
-      noc_in_valid       => noc_in_res_valid,   -- Templated
+      noc_out_ready      => noc_out_req_ready,
+      noc_in_flit        => noc_in_res_flit(FLIT_WIDTH-1 downto 0),
+      noc_in_valid       => noc_in_res_valid,
       ahb3_req_hready    => ahb3_req_hready,
       ahb3_req_hrdata    => ahb3_req_hrdata(DATA_WIDTH-1 downto 0),
       ahb3_res_hready    => ahb3_res_hready,
@@ -468,25 +468,25 @@ begin
       )
     port map (
       -- Outputs
-      noc_out_flit   => noc_out_res_flit(FLIT_WIDTH-1 downto 0),   -- Templated
-      noc_out_valid  => noc_out_res_valid,                         -- Templated
-      noc_in_ready   => noc_in_req_ready,                          -- Templated
-      ahb3_hmastlock => ahb3_target_hmastlock,                     -- Templated
-      ahb3_hsel      => ahb3_target_hsel,                          -- Templated
-      ahb3_hwrite    => ahb3_target_hwrite,                        -- Templated
-      ahb3_hwdata    => ahb3_target_hwdata(DATA_WIDTH-1 downto 0),  -- Templated
-      ahb3_haddr     => ahb3_target_haddr(ADDR_WIDTH-1 downto 0),  -- Templated
-      ahb3_hprot     => ahb3_target_hprot(3 downto 0),             -- Templated
-      ahb3_hburst    => ahb3_target_hburst(2 downto 0),            -- Templated
-      ahb3_htrans    => ahb3_target_htrans(1 downto 0),            -- Templated
+      noc_out_flit   => noc_out_res_flit(FLIT_WIDTH-1 downto 0),
+      noc_out_valid  => noc_out_res_valid,
+      noc_in_ready   => noc_in_req_ready,
+      ahb3_hmastlock => ahb3_target_hmastlock,
+      ahb3_hsel      => ahb3_target_hsel,
+      ahb3_hwrite    => ahb3_target_hwrite,
+      ahb3_hwdata    => ahb3_target_hwdata(DATA_WIDTH-1 downto 0),
+      ahb3_haddr     => ahb3_target_haddr(ADDR_WIDTH-1 downto 0),
+      ahb3_hprot     => ahb3_target_hprot(3 downto 0),
+      ahb3_hburst    => ahb3_target_hburst(2 downto 0),
+      ahb3_htrans    => ahb3_target_htrans(1 downto 0),
       -- Inputs
       clk            => clk,
       rst            => rst,
-      noc_out_ready  => noc_out_res_ready,                         -- Templated
-      noc_in_flit    => noc_in_req_flit(FLIT_WIDTH-1 downto 0),    -- Templated
-      noc_in_valid   => noc_in_req_valid,                          -- Templated
-      ahb3_hready    => ahb3_target_hready,                        -- Templated
-      ahb3_hrdata    => ahb3_target_hrdata(DATA_WIDTH-1 downto 0)  -- Templated
+      noc_out_ready  => noc_out_res_ready,
+      noc_in_flit    => noc_in_req_flit(FLIT_WIDTH-1 downto 0),
+      noc_in_valid   => noc_in_req_valid,
+      ahb3_hready    => ahb3_target_hready,
+      ahb3_hrdata    => ahb3_target_hrdata(DATA_WIDTH-1 downto 0)
       );
 
   processing_0 : process (clk)
@@ -568,7 +568,7 @@ begin
       ahb3_res_hrdata    <= (others => 'X');
       ahb3_target_hready <= '0';
       ahb3_target_hrdata <= (others => 'X');
-    else  -- if (ahb3_arb == ahb3_arb_req)
+    else
       ahb3_haddr         <= (others => 'X');
       ahb3_hwdata        <= (others => 'X');
       ahb3_hmastlock     <= '0';

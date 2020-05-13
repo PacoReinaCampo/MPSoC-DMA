@@ -40,7 +40,7 @@
  *   Francisco Javier Reina Campo <frareicam@gmail.com>
  */
 
-module mpsoc_msi_wb_bfm_master #(
+module mpsoc_wb_bfm_master #(
   parameter AW              = 32,
   parameter DW              = 32,
   parameter TP              = 0,
@@ -70,7 +70,7 @@ module mpsoc_msi_wb_bfm_master #(
   // Constants
   //
 
-  `include "mpsoc_msi_wb_pkg.v"
+  `include "mpsoc_bfm_wb_pkg.sv"
 
   parameter BUFFER_WIDTH = $clog2(MAX_BURST_LEN);
   parameter ADR_LSB      = $clog2(DW/8);

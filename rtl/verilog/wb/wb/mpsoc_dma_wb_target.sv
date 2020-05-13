@@ -308,7 +308,8 @@ module mpsoc_dma_wb_target #(
         if (buf_valid) begin
           if (buf_flit[`PACKET_TYPE_MSB:`PACKET_TYPE_LSB] == `PACKET_TYPE_L2R_REQ) begin
             nxt_state = STATE_L2R_GETADDR;
-          end  else if(buf_flit[`PACKET_TYPE_MSB:`PACKET_TYPE_LSB] == `PACKET_TYPE_R2L_REQ) begin
+          end
+          else if(buf_flit[`PACKET_TYPE_MSB:`PACKET_TYPE_LSB] == `PACKET_TYPE_R2L_REQ) begin
             nxt_state = STATE_R2L_GETLADDR;
           end
           else begin
@@ -320,7 +321,7 @@ module mpsoc_dma_wb_target #(
         else begin
           nxt_state = STATE_IDLE;
         end
-      end // case: STATE_IDLE
+      end
       //L2R-handling
       STATE_L2R_GETADDR: begin
         buf_ready = 1'b1;
@@ -359,7 +360,7 @@ module mpsoc_dma_wb_target #(
           buf_ready = 1'b0;
           nxt_state = STATE_L2R_DATA;
         end
-      end // case: STATE_L2R_DATA
+      end
       STATE_L2R_SENDRESP: begin
         noc_out_valid = 1'b1;
         noc_out_flit[`FLIT_TYPE_MSB:`FLIT_TYPE_LSB]       = `FLIT_TYPE_SINGLE;
@@ -373,7 +374,7 @@ module mpsoc_dma_wb_target #(
         else begin
           nxt_state = STATE_L2R_SENDRESP;
         end
-      end // case: STATE_L2R_SENDRESP
+      end
       //R2L handling
       STATE_R2L_GETLADDR: begin
         buf_ready = 1'b1;
@@ -421,13 +422,13 @@ module mpsoc_dma_wb_target #(
           nxt_noc_resp_packet_wsize = resp_wsize - noc_resp_wcounter;
           // count is the current transfer number
           nxt_noc_resp_packet_wcount = 5'd1;
-        end // else: !if((noc_resp_wcounter + (NOC_PACKET_SIZE -2)) < resp_wsize)
+        end
         // change to next state if successful
         if (noc_out_ready)
           nxt_state = STATE_R2L_GENADDR;
         else
           nxt_state = STATE_R2L_GENHDR;
-      end // case: STATE_R2L_GENHDR
+      end
       STATE_R2L_GENADDR: begin
         noc_out_valid = 1'b1;
         noc_out_flit[`FLIT_TYPE_MSB:`FLIT_TYPE_LSB] = `FLIT_TYPE_PAYLOAD;
@@ -438,7 +439,7 @@ module mpsoc_dma_wb_target #(
         else begin
           nxt_state = STATE_R2L_GENADDR;
         end
-      end // case: `NOC_RESP_R2L_GENADDR
+      end
       STATE_R2L_DATA: begin
         // NOC-handling
         // transfer data to noc if available
@@ -466,7 +467,7 @@ module mpsoc_dma_wb_target #(
             nxt_state = STATE_R2L_DATA;
           end
         end
-        else begin //not LAST
+        else begin
           noc_out_flit[`FLIT_TYPE_MSB:`FLIT_TYPE_LSB] = `FLIT_TYPE_PAYLOAD;
           if (noc_out_valid & noc_out_ready) begin
             data_fifo_pop = 1'b1;
@@ -475,7 +476,7 @@ module mpsoc_dma_wb_target #(
           nxt_state = STATE_R2L_DATA;
         end
         //FIFO-handling
-        if (wb_waiting) begin //hidden state
+        if (wb_waiting) begin
           //don't get data from the bus
           wb_stb_o     = 1'b0;
           wb_cyc_o     = 1'b0;
@@ -487,7 +488,7 @@ module mpsoc_dma_wb_target #(
             nxt_wb_waiting = 1'b1;
           end
         end
-        else begin //not wb_waiting
+        else begin
           // Signal cycle and strobe. We do bursts, but don't insert
           // wait states, so both of them are always equal.
           if ((noc_resp_packet_wcount==noc_resp_packet_wsize) & noc_out_valid & noc_out_ready) begin
@@ -524,12 +525,12 @@ module mpsoc_dma_wb_target #(
             data_fifo_push = 1'b0;
             nxt_wb_waiting = 1'b0;
           end
-        end // else: !if(wb_waiting)
-      end // case: STATE_R2L_DATA
+        end
+      end
       default: begin
         nxt_state = STATE_IDLE;
       end
-    endcase // case (state)
+    endcase
   end
 
   always @(posedge clk) begin
@@ -563,4 +564,4 @@ module mpsoc_dma_wb_target #(
       wb_waiting <= nxt_wb_waiting;
     end
   end
-endmodule // lisnoc_dma_target
+endmodule
