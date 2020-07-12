@@ -37,7 +37,9 @@
  *
  * =============================================================================
  * Author(s):
- *   Francisco Javier Reina Campo <frareicam@gmail.com>
+ *   Michael Tempelmeier <michael.tempelmeier@tum.de>
+ *   Stefan Wallentowitz <stefan.wallentowitz@tum.de>
+ *   Paco Reina Campo <pacoreinacampo@queenfield.tech>
  */
 
 `include "mpsoc_dma_pkg.sv"
