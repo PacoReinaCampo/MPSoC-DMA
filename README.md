@@ -349,6 +349,48 @@ A Direct Memory Access (DMA) is a feature of computer systems that allows hardwa
 
 #### 2.3.1.1. Organization
 
+| Core                                   | Module description   |
+| -------------------------------------- | -------------------- |
+| `mpsoc_dma_ahb3_top`                   | Direct Access Memory |
+| `...mpsoc_dma_ahb3_interface`          | Direct Access Memory |
+| `...mpsoc_dma_request_table`           | Direct Access Memory |
+| `...mpsoc_dma_ahb3_initiator`          | Direct Access Memory |
+| `.....mpsoc_dma_ahb3_initiator_req`    | Direct Access Memory |
+| `.....mpsoc_dma_initiator_nocreq`      | Direct Access Memory |
+| `.......arb_rr`                        | Direct Access Memory |
+| `.....mpsoc_dma_ahb3_initiator_nocres` | Direct Access Memory |
+| `.......mpsoc_dma_packet_buffer`       | Direct Access Memory |
+| `...mpsoc_dma_ahb3_target`             | Direct Access Memory |
+| `.....mpsoc_dma_packet_buffer`         | Direct Access Memory |
+
+| Core                                 | Module description   |
+| ------------------------------------ | -------------------- |
+| `mpsoc_dma_wb_top`                   | Direct Access Memory |
+| `...mpsoc_dma_wb_interface`          | Direct Access Memory |
+| `...mpsoc_dma_request_table`         | Direct Access Memory |
+| `...mpsoc_dma_wb_initiator`          | Direct Access Memory |
+| `.....mpsoc_dma_wb_initiator_req`    | Direct Access Memory |
+| `.....mpsoc_dma_initiator_nocreq`    | Direct Access Memory |
+| `.......arb_rr`                      | Direct Access Memory |
+| `.....mpsoc_dma_wb_initiator_nocres` | Direct Access Memory |
+| `.......mpsoc_dma_packet_buffer`     | Direct Access Memory |
+| `...mpsoc_dma_wb_target`             | Direct Access Memory |
+| `.....mpsoc_dma_packet_buffer`       | Direct Access Memory |
+
+| Core                                 | Module description   |
+| ------------------------------------ | -------------------- |
+| `mpsoc_dma_bb_top`                   | Direct Access Memory |
+| `...mpsoc_dma_bb_interface`          | Direct Access Memory |
+| `...mpsoc_dma_request_table`         | Direct Access Memory |
+| `...mpsoc_dma_bb_initiator`          | Direct Access Memory |
+| `.....mpsoc_dma_bb_initiator_req`    | Direct Access Memory |
+| `.....mpsoc_dma_initiator_nocreq`    | Direct Access Memory |
+| `.......arb_rr`                      | Direct Access Memory |
+| `.....mpsoc_dma_bb_initiator_nocres` | Direct Access Memory |
+| `.......mpsoc_dma_packet_buffer`     | Direct Access Memory |
+| `...mpsoc_dma_bb_target`             | Direct Access Memory |
+| `.....mpsoc_dma_packet_buffer`       | Direct Access Memory |
+
 #### 2.3.1.2. Parameters
 
 ### 2.3.2. Interface
