@@ -319,9 +319,9 @@ A Direct Memory Access (DMA) is a feature of computer systems that allows hardwa
 
 ### 2.1.1. Functionality
 
-#### 2.1.1.1. Organization
+#### 2.1.1.1. Structure
 
-#### 2.1.1.2. Pipeline
+#### 2.1.1.2. Behavior
 
 ### 2.1.2. Interface
 
@@ -337,9 +337,9 @@ A Direct Memory Access (DMA) is a feature of computer systems that allows hardwa
 
 ### 2.2.1. Functionality
 
-#### 2.2.1.1. Organization
+#### 2.2.1.1. Structure
 
-#### 2.2.1.2. Pipeline
+#### 2.2.1.2. Behavior
 
 ### 2.2.2. Interface
 
@@ -355,7 +355,7 @@ A Direct Memory Access (DMA) is a feature of computer systems that allows hardwa
 
 ### 2.3.1. Functionality
 
-#### 2.3.1.1. Organization
+#### 2.3.1.1. Structure
 
 | Core                                   | Module description   |
 | -------------------------------------- | -------------------- |
@@ -399,7 +399,7 @@ A Direct Memory Access (DMA) is a feature of computer systems that allows hardwa
 | `...mpsoc_dma_bb_target`             | Direct Access Memory |
 | `.....mpsoc_dma_packet_buffer`       | Direct Access Memory |
 
-#### 2.3.1.2. Pipeline
+#### 2.3.1.2. Behavior
 
 ### 2.3.2. Interface
 
