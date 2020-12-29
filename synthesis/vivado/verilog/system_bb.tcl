@@ -42,7 +42,7 @@
 ##                                                                               ##
 ###################################################################################
 
-read_verilog -sv ../../../rtl/verilog/bb/msp430_ram.sv
+read_verilog -sv ../../../rtl/verilog/bb/core/msp430_ram.sv
 
 read_xdc system_bb.xdc
 

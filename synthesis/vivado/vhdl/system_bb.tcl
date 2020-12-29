@@ -42,7 +42,9 @@
 ##                                                                               ##
 ###################################################################################
 
-read_verilog -sv ../../../rtl/verilog/bb/msp430_ram.sv
+read_vhdl -vhdl2008 ../../../rtl/vhdl/bb/core/msp430_ram.vhd
+
+read_vhdl -vhdl2008 ../../../rtl/vhdl/bb/pkg/msp430_pkg.vhd
 
 read_xdc system_bb.xdc
 
@@ -55,5 +57,5 @@ route_design
 report_utilization
 report_timing
 
-write_verilog -force system_bb.v
+write_vhdl -force system_bb.vhd
 write_bitstream -force system_bb.bit

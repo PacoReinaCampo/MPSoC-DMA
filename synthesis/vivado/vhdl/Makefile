@@ -59,4 +59,4 @@ implementation_bb:
 	rm -rf .Xil usage_statistics_webtalk.*
 
 clean:
-	rm -rf .Xil/ *.log *.v *.bit
+	rm -rf .Xil/ *.log *.vhd *.bit

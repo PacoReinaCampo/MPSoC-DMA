@@ -42,14 +42,11 @@
 ##                                                                               ##
 ###################################################################################
 
-read_vhdl -vhdl2008 ../../../rtl/vhdl/wb/core/mpsoc_wb_ram_generic.vhd
-read_vhdl -vhdl2008 ../../../rtl/vhdl/wb/core/mpsoc_wb_spram.vhd
+read_verilog -sv ../../../rtl/verilog/axi4/mpsoc_axi4_spram.sv
 
-read_vhdl -vhdl2008 ../../../rtl/vhdl/wb/pkg/mpsoc_spram_wb_pkg.vhd
+read_xdc system_axi4.xdc
 
-read_xdc system_wb.xdc
-
-synth_design -part xc7z020-clg484-1 -top mpsoc_wb_spram
+synth_design -part xc7z020-clg484-1 -top mpsoc_axi4_spram
 
 opt_design
 place_design
@@ -58,5 +55,5 @@ route_design
 report_utilization
 report_timing
 
-write_vhdl -force system_wb.vhd
-write_bitstream -force system_wb.bit
+write_verilog -force system_axi4.v
+write_bitstream -force system_axi4.bit

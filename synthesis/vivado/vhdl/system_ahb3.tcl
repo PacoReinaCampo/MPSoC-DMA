@@ -42,13 +42,13 @@
 ##                                                                               ##
 ###################################################################################
 
-read_verilog -sv ../../../rtl/verilog/ahb3/core/mpsoc_ahb3_spram.sv
-read_verilog -sv ../../../rtl/verilog/ahb3/core/mpsoc_ram_1r1w.sv
-read_verilog -sv ../../../rtl/verilog/ahb3/core/mpsoc_ram_1r1w_generic.sv
+read_verilog -vhdl2008 ../../../rtl/verilog/ahb3/core/mpsoc_ahb3_spram.sv
+read_verilog -vhdl2008 ../../../rtl/verilog/ahb3/core/mpsoc_ram_1r1w.sv
+read_verilog -vhdl2008 ../../../rtl/verilog/ahb3/core/mpsoc_ram_1r1w_generic.sv
 
 read_xdc system_ahb3.xdc
 
-synth_design -part xc7z020-clg484-1 -include_dirs ../../../rtl/verilog/ahb3/pkg -top mpsoc_ahb3_spram
+synth_design -part xc7z020-clg484-1 -top mpsoc_ahb3_spram
 
 opt_design
 place_design
