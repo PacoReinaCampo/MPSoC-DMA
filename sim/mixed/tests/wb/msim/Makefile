@@ -7,3 +7,6 @@ build:
 
 simulate:
 	vsim -c -do run.do work.mpsoc_dma_testbench
+
+clean:
+	rm -rf work transcript
