@@ -18,4 +18,3 @@
 ../../../../../bench/verilog/tests/wb/vlog_tb_utils.sv
 ../../../../../bench/verilog/tests/wb/wb_dma_tb.sv
 ../../../../../bench/verilog/tests/wb/wb_top_tb.sv
-

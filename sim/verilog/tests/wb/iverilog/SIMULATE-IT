@@ -1,4 +1,2 @@
-rm -rf system.vvp
-iverilog -g2012 -o system.vvp -c system.vc -s wb_top_tb \
--I ../../../../../rtl/verilog/wb/pkg
-vvp system.vvp
+make clean
+make
