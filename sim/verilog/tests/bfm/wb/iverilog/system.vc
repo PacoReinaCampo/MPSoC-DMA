@@ -1,0 +1,8 @@
+../../../../../../bench/verilog/tests/core/wb/vlog_tap_generator.sv
+../../../../../../bench/verilog/tests/core/wb/vlog_tb_utils.sv
+
+../../../../../../bench/verilog/tests/bfm/wb/mpsoc_msi_wb_bfm_master.sv
+../../../../../../bench/verilog/tests/bfm/wb/mpsoc_msi_wb_bfm_memory.sv
+../../../../../../bench/verilog/tests/bfm/wb/mpsoc_msi_wb_bfm_slave.sv
+../../../../../../bench/verilog/tests/bfm/wb/mpsoc_msi_wb_bfm_transactor.sv
+../../../../../../bench/verilog/tests/bfm/wb/wb_bfm_tb.sv
