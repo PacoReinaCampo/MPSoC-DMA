@@ -1,3 +1,5 @@
++incdir+../../../../../../rtl/verilog/wb/pkg
+
 ../../../../../../rtl/verilog/wb/wb/mpsoc_dma_wb_initiator.sv
 ../../../../../../rtl/verilog/wb/wb/mpsoc_dma_wb_initiator_nocres.sv
 ../../../../../../rtl/verilog/wb/wb/mpsoc_dma_wb_initiator_req.sv

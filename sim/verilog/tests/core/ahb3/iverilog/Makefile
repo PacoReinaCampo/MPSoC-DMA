@@ -1,7 +1,7 @@
 all: build simulate
 
 build:
-	iverilog -g2012 -o system.vvp -c system.vc -s mpsoc_dma_testbench -I ../../../../../../rtl/verilog/ahb3/pkg
+	iverilog -g2012 -o system.vvp -c system.vc -s mpsoc_dma_testbench
 
 simulate:
 	vvp system.vvp

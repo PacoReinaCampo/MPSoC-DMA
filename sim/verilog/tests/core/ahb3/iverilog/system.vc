@@ -1,3 +1,5 @@
++incdir+../../../../../../rtl/verilog/ahb3/pkg
+
 ../../../../../../rtl/verilog/ahb3/ahb3/mpsoc_dma_ahb3_initiator.sv
 ../../../../../../rtl/verilog/ahb3/ahb3/mpsoc_dma_ahb3_initiator_nocres.sv
 ../../../../../../rtl/verilog/ahb3/ahb3/mpsoc_dma_ahb3_initiator_req.sv

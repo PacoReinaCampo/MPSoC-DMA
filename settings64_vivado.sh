@@ -2,4 +2,4 @@
 # Copyright (c) 1986-2020 Xilinx, Inc.  All rights reserved. #
 ##############################################################
 
-source ../../../../../../settings64_vivado.sh
+export PATH=$PATH:/opt/Xilinx/Vivado/2020.2/bin/

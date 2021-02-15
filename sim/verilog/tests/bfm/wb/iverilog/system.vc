@@ -1,3 +1,5 @@
++incdir+../../../../../../rtl/verilog/wb/pkg
+
 ../../../../../../bench/verilog/tests/core/wb/vlog_tap_generator.sv
 ../../../../../../bench/verilog/tests/core/wb/vlog_tb_utils.sv
 

@@ -1,1 +1,3 @@
++incdir+../../../../../../rtl/verilog/wb/pkg
+
 ../../../../../../bench/verilog/tests/core/ahb3/mpsoc_dma_testbench.sv
