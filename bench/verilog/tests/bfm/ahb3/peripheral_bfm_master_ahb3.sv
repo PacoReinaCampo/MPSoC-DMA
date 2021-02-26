@@ -42,7 +42,7 @@
 
 import peripheral_ahb3_pkg::*;
 
-module ahb3lite_master_bfm #(
+module peripheral_bfm_master_ahb3 #(
   parameter HADDR_SIZE = 16,
   parameter HDATA_SIZE = 32
 )
@@ -102,7 +102,7 @@ module ahb3lite_master_bfm #(
 
   task automatic write (
     input     [HADDR_SIZE-1:0] address,
-    const ref [HDATA_SIZE-1:0] data[],
+    ref       [HDATA_SIZE-1:0] data[],
     input     [           2:0] size,
     input     [           2:0] burst
   );
@@ -276,4 +276,4 @@ module ahb3lite_master_bfm #(
       default      : next_address = HADDR + get_bytes_per_beat(hsize);
     endcase
   endfunction : next_address
-endmodule : ahb3lite_master_bfm
+endmodule : peripheral_bfm_master_ahb3

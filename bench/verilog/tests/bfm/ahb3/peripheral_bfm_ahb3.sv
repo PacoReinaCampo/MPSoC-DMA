@@ -42,7 +42,7 @@
 
 import peripheral_ahb3_pkg::*;
 
-module test #(
+module peripheral_bfm_ahb3 #(
   parameter TIMERS = 2,       //Number of timers
 
   parameter HADDR_SIZE = 16,
@@ -97,7 +97,7 @@ module test #(
   //
   // Instantiate the AHB-Master
   //
-  ahb3lite_master_bfm #(
+  peripheral_bfm_master_ahb3 #(
     .HADDR_SIZE ( HADDR_SIZE ),
     .HDATA_SIZE ( HDATA_SIZE )
   )
@@ -296,11 +296,11 @@ module test #(
           if (HSIZE == HSIZE_BYTE) rbuffer[n][beat] &= 'hff;
 
           if (n == 1) begin  //IENABLE
-            wbuffer[n][beat] &= {{32'h0-TIMERS{1'b0}},{TIMERS{1'b1}}};
+            wbuffer[n][beat] &= {{32-TIMERS{1'b0}},{TIMERS{1'b1}}};
             wbuffer[n][beat] >>= 8*beat; 
           end
 
-          if (rbuffer[n][beat] !== wbuffer[n][beat]) begin
+          if (rbuffer[n][beat] != wbuffer[n][beat]) begin
             $display ("%0d,%0d: got %x, expected %x", n, beat, rbuffer[n][beat], wbuffer[n][beat]);
             error = 1;
             errors++;
@@ -350,7 +350,7 @@ module test #(
 
   task test_timer0();
     int cnt;
-    int timecmp_value = 12;
+    localparam timecmp_value = 12;
 
     //create buffer
     logic [HDATA_SIZE-1:0] buffer [];
@@ -427,4 +427,4 @@ module test #(
     //discard buffer
     buffer.delete();
   endtask : test_timer0
-endmodule : test
+endmodule : peripheral_bfm_ahb3

@@ -9,13 +9,13 @@
 //                  |_|                                                       //
 //                                                                            //
 //                                                                            //
-//              Peripheral-GPIO for MPSoC                                     //
-//              General Purpose Input Output for MPSoC                        //
+//              MPSoC-RISCV CPU                                               //
+//              RISC-V Package                                                //
 //              AMBA3 AHB-Lite Bus Interface                                  //
 //                                                                            //
 ////////////////////////////////////////////////////////////////////////////////
 
-/* Copyright (c) 2018-2019 by the author(s)
+/* Copyright (c) 2017-2018 by the author(s)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -40,77 +40,53 @@
  *   Paco Reina Campo <pacoreinacampo@queenfield.tech>
  */
 
-module peripheral_bfm_testbench;
-  parameter TIMERS = 3;  //Number of timers
+package peripheral_ahb3_pkg;
 
-  parameter HADDR_SIZE = 16;
-  parameter HDATA_SIZE = 32;
+  localparam HADDR_SIZE = 64;
+  localparam HDATA_SIZE = 64;
 
-  /////////////////////////////////////////////////////////
-  //
-  // Variables
-  //
+  //HTRANS
+  localparam HTRANS_IDLE   = 2'b00;
+  localparam HTRANS_BUSY   = 2'b01;
+  localparam HTRANS_NONSEQ = 2'b10;
+  localparam HTRANS_SEQ    = 2'b11;
 
-  //AHB signals
-  logic                   HSEL;
-  logic [HADDR_SIZE -1:0] HADDR;
-  logic [HDATA_SIZE -1:0] HWDATA;
-  logic [HDATA_SIZE -1:0] HRDATA;
-  logic                   HWRITE;
-  logic [            2:0] HSIZE;
-  logic [            2:0] HBURST;
-  logic [            3:0] HPROT;
-  logic [            1:0] HTRANS;
-  logic                   HMASTLOCK;
-  logic                   HREADY;
-  logic                   HREADYOUT;
-  logic                   HRESP;
+  //HSIZE
+  localparam HSIZE_B8    = 3'b000;
+  localparam HSIZE_B16   = 3'b001;
+  localparam HSIZE_B32   = 3'b010;
+  localparam HSIZE_B64   = 3'b011;
+  localparam HSIZE_B128  = 3'b100;  //4-word line
+  localparam HSIZE_B256  = 3'b101;  //8-word line
+  localparam HSIZE_B512  = 3'b110;
+  localparam HSIZE_B1024 = 3'b111;
+  localparam HSIZE_BYTE  = HSIZE_B8;
+  localparam HSIZE_HWORD = HSIZE_B16;
+  localparam HSIZE_WORD  = HSIZE_B32;
+  localparam HSIZE_DWORD = HSIZE_B64;
 
-  //Timer Interrupt
-  logic                   tint;
+  //HBURST
+  localparam HBURST_SINGLE = 3'b000;
+  localparam HBURST_INCR   = 3'b001;
+  localparam HBURST_WRAP4  = 3'b010;
+  localparam HBURST_INCR4  = 3'b011;
+  localparam HBURST_WRAP8  = 3'b100;
+  localparam HBURST_INCR8  = 3'b101;
+  localparam HBURST_WRAP16 = 3'b110;
+  localparam HBURST_INCR16 = 3'b111;
 
-  /////////////////////////////////////////////////////////
-  //
-  // Clock & Reset
-  //
+  //HPROT
+  localparam HPROT_OPCODE         = 4'b0000;
+  localparam HPROT_DATA           = 4'b0001;
+  localparam HPROT_USER           = 4'b0000;
+  localparam HPROT_PRIVILEGED     = 4'b0010;
+  localparam HPROT_NON_BUFFERABLE = 4'b0000;
+  localparam HPROT_BUFFERABLE     = 4'b0100;
+  localparam HPROT_NON_CACHEABLE  = 4'b0000;
+  localparam HPROT_CACHEABLE      = 4'b1000;
 
-  bit HCLK, HRESETn;
-  initial begin : gen_HCLK
-    HCLK <= 1'b0;
-    forever #10 HCLK = ~ HCLK;
-  end : gen_HCLK
+  //HRESP
+  localparam HRESP_OKAY  = 1'b0;
+  localparam HRESP_ERROR = 1'b1;
 
-  initial begin : gen_HRESETn;
-    HRESETn = 1'b1;
-    //ensure falling edge of HRESETn
-    #10;
-    HRESETn = 1'b0;
-    #32;
-    HRESETn = 1'b1;
-  end : gen_HRESETn;
-
-  /////////////////////////////////////////////////////////
-  //
-  // TB and DUT
-  //
-
-  peripheral_bfm_ahb3 #(
-    .TIMERS     ( TIMERS     ),
-    .HADDR_SIZE ( HADDR_SIZE ),
-    .HDATA_SIZE ( HDATA_SIZE )
-  )
-  tb (
-    .*
-  );
-
-  peripheral_timer_ahb3 #(
-    .TIMERS     ( TIMERS     ),
-    .HADDR_SIZE ( HADDR_SIZE ),
-    .HDATA_SIZE ( HDATA_SIZE )
-  )
-  dut (
-    .*
-  );
-
-  assign HREADY = HREADYOUT;
-endmodule : peripheral_bfm_testbench
+endpackage
