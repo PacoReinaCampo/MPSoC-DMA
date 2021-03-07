@@ -9,8 +9,8 @@
 //                  |_|                                                       //
 //                                                                            //
 //                                                                            //
-//              Peripheral-GPIO for MPSoC                                     //
-//              General Purpose Input Output for MPSoC                        //
+//              Peripheral-BFM for MPSoC                                      //
+//              Bus Functional Model for MPSoC                                //
 //              AMBA4 AXI-Lite Bus Interface                                  //
 //                                                                            //
 ////////////////////////////////////////////////////////////////////////////////
@@ -64,39 +64,39 @@ module peripheral_bfm_testbench;
   reg test_passed;
 
   wire [31:0]          araddr;
-  wire [3:0]           arcache;
-  wire [3:0]           arid;
-  wire [3:0]           arlen;
-  wire [1:0]           arlock;
-  wire [2:0]           arprot;
+  wire [ 3:0]          arcache;
+  wire [ 3:0]          arid;
+  wire [ 3:0]          arlen;
+  wire [ 1:0]          arlock;
+  wire [ 2:0]          arprot;
   wire                 arready;
-  wire [2:0]           arsize;
+  wire [ 2:0]          arsize;
   wire                 arvalid;
   wire [31:0]          awadr;
-  wire [1:0]           awburst;
-  wire [3:0]           awcache;
-  wire [3:0]           awid;
-  wire [3:0]           awlen;
-  wire [1:0]           awlock;
-  wire [2:0]           awprot;
+  wire [ 1:0]          awburst;
+  wire [ 3:0]          awcache;
+  wire [ 3:0]          awid;
+  wire [ 3:0]          awlen;
+  wire [ 1:0]          awlock;
+  wire [ 2:0]          awprot;
   wire                 awready;
-  wire [2:0]           awsize;
+  wire [ 2:0]          awsize;
   wire                 awvalid;
-  wire [3:0]           bid;
-  wire [1:0]           bresp;
+  wire [ 3:0]          bid;
+  wire [ 1:0]          bresp;
   wire                 bvalid;
   wire [31:0]          rdata;
-  wire [3:0]           rid;
+  wire [ 3:0]          rid;
   wire                 rlast;
   wire                 rready;
-  wire [1:0]           rresp;
+  wire [ 1:0]          rresp;
   wire                 rvalid;
   wire                 test_fail;
-  wire [3:0]           wid;
+  wire [ 3:0]          wid;
   wire                 wlast;
   wire [31:0]          wrdata;
   wire                 wready;
-  wire [3:0]           wstrb;
+  wire [ 3:0]          wstrb;
   wire                 wvalid;
 
   peripheral_bfm_master_generic_axi4 master(

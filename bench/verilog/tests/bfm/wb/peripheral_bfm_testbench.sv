@@ -9,8 +9,8 @@
 //                  |_|                                                       //
 //                                                                            //
 //                                                                            //
-//              MPSoC-RISCV CPU                                               //
-//              Master Slave Interface                                        //
+//              Peripheral-BFM for MPSoC                                      //
+//              Bus Functional Model for MPSoC                                //
 //              Wishbone Bus Interface                                        //
 //                                                                            //
 ////////////////////////////////////////////////////////////////////////////////
@@ -41,7 +41,7 @@
  *   Paco Reina Campo <pacoreinacampo@queenfield.tech>
  */
 
-module wb_bfm_tb;
+module peripheral_bfm_testbench;
   //////////////////////////////////////////////////////////////////
   //
   // Constants
@@ -79,18 +79,18 @@ module wb_bfm_tb;
   //
   // Module Body
   //
-  vlog_tb_utils vlog_tb_utils0();
-  vlog_tap_generator #("wb_bfm.tap", 1) vtg();
+  peripheral_testbench_utils testbench_utils ();
+  peripheral_tap_generator #("wb_bfm.tap", 1) tap_generator();
 
   always #5 wb_clk <= ~wb_clk;
   initial  #100 wb_rst <= 0;
 
-  mpsoc_msi_wb_bfm_transactor #(
+  peripheral_bfm_transactor_wb #(
     .MEM_HIGH (32'h00007fff),
     .AUTORUN (0),
     .VERBOSE (0)
   )
-  master (
+  bfm_transactor_wb (
     .wb_clk_i (wb_clk),
     .wb_rst_i (wb_rst),
     .wb_adr_o (wb_m2s_adr),
@@ -108,10 +108,10 @@ module wb_bfm_tb;
     .done     (done)
   );
 
-  mpsoc_msi_wb_bfm_memory #(
+  peripheral_bfm_memory_wb #(
     .DEBUG (0)
   )
-  wb_mem_model (
+  bfm_memory_wb (
     .wb_clk_i (wb_clk),
     .wb_rst_i (wb_rst),
     .wb_adr_i (wb_m2s_adr),
@@ -131,19 +131,19 @@ module wb_bfm_tb;
   initial begin
     //Grab CLI parameters
     if($value$plusargs("transactions=%d", TRANSACTIONS))
-      master.set_transactions(TRANSACTIONS);
+      bfm_transactor_wb.set_transactions(TRANSACTIONS);
     if($value$plusargs("subtransactions=%d", SUBTRANSACTIONS))
-      master.set_subtransactions(SUBTRANSACTIONS);
+      bfm_transactor_wb.set_subtransactions(SUBTRANSACTIONS);
     if($value$plusargs("seed=%d", SEED))
-      master.SEED = SEED;
+      bfm_transactor_wb.SEED = SEED;
 
-    master.display_settings;
-    master.run;
-    master.display_stats;
+    bfm_transactor_wb.display_settings;
+    bfm_transactor_wb.run;
+    bfm_transactor_wb.display_stats;
   end
 
   always @(posedge done) begin
-    vtg.ok("All tests complete");
+    tap_generator.ok("All tests complete");
     $display("All tests complete");
     $finish;
   end

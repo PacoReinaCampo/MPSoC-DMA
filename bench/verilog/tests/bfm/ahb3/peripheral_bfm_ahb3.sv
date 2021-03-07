@@ -9,8 +9,8 @@
 //                  |_|                                                       //
 //                                                                            //
 //                                                                            //
-//              Peripheral-GPIO for MPSoC                                     //
-//              General Purpose Input Output for MPSoC                        //
+//              Peripheral-BFM for MPSoC                                      //
+//              Bus Functional Model for MPSoC                                //
 //              AMBA3 AHB-Lite Bus Interface                                  //
 //                                                                            //
 ////////////////////////////////////////////////////////////////////////////////
@@ -43,7 +43,7 @@
 import peripheral_ahb3_pkg::*;
 
 module peripheral_bfm_ahb3 #(
-  parameter TIMERS = 2,       //Number of timers
+  parameter TIMERS = 2,  //Number of timers
 
   parameter HADDR_SIZE = 16,
   parameter HDATA_SIZE = 32

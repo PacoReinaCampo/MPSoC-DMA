@@ -9,9 +9,9 @@
 //                  |_|                                                       //
 //                                                                            //
 //                                                                            //
-//              MPSoC-RISCV CPU                                               //
-//              Master Slave Interface                                        //
-//              Wishbone Bus Interface                                        //
+//              Peripheral-BFM for MPSoC                                      //
+//              Bus Functional Model for MPSoC                                //
+//              WishBone Bus Interface                                        //
 //                                                                            //
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -41,7 +41,9 @@
  *   Paco Reina Campo <pacoreinacampo@queenfield.tech>
  */
 
-module mpsoc_msi_wb_bfm_slave #(
+import peripheral_wb_pkg::*;
+
+module peripheral_bfm_slave_wb #(
   parameter DW = 32,
   parameter AW = 32,
   parameter DEBUG = 0
@@ -68,14 +70,13 @@ module mpsoc_msi_wb_bfm_slave #(
   // Constants
   //
 
-  `include "mpsoc_bfm_wb_pkg.sv"
-
   localparam TP = 1;
 
   //////////////////////////////////////////////////////////////////
   //
   // Variables
   //
+
   reg            has_next = 1'b0;
 
   reg            op = READ;
