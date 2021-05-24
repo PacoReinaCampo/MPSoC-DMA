@@ -5,7 +5,7 @@ build:
 	vlog -sv -f system.vc
 
 simulate:
-	vsim -c -do run.do work.wb_top_tb
+	vsim -c -do run.do work.peripheral_dma_testbench
 
 clean:
 	rm -rf work transcript

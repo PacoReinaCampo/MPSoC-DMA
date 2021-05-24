@@ -1,16 +1,16 @@
 +incdir+../../../../../../rtl/verilog/wb/pkg
 
-../../../../../../rtl/verilog/wb/wb/mpsoc_dma_wb_initiator.sv
-../../../../../../rtl/verilog/wb/wb/mpsoc_dma_wb_initiator_nocres.sv
-../../../../../../rtl/verilog/wb/wb/mpsoc_dma_wb_initiator_req.sv
-../../../../../../rtl/verilog/wb/wb/mpsoc_dma_wb_interface.sv
-../../../../../../rtl/verilog/wb/wb/mpsoc_dma_wb_target.sv
-../../../../../../rtl/verilog/wb/wb/mpsoc_dma_wb_top.sv
+../../../../../../rtl/verilog/wb/wb/peripheral_dma_wb_initiator.sv
+../../../../../../rtl/verilog/wb/wb/peripheral_dma_wb_initiator_nocres.sv
+../../../../../../rtl/verilog/wb/wb/peripheral_dma_wb_initiator_req.sv
+../../../../../../rtl/verilog/wb/wb/peripheral_dma_wb_interface.sv
+../../../../../../rtl/verilog/wb/wb/peripheral_dma_wb_target.sv
+../../../../../../rtl/verilog/wb/wb/peripheral_dma_wb_top.sv
 
-../../../../../../rtl/verilog/wb/core/arb_rr.sv
-../../../../../../rtl/verilog/wb/core/mpsoc_dma_initiator_nocreq.sv
-../../../../../../rtl/verilog/wb/core/mpsoc_dma_packet_buffer.sv
-../../../../../../rtl/verilog/wb/core/mpsoc_dma_request_table.sv
+../../../../../../rtl/verilog/wb/core/peripheral_arb_rr.sv
+../../../../../../rtl/verilog/wb/core/peripheral_dma_initiator_nocreq.sv
+../../../../../../rtl/verilog/wb/core/peripheral_dma_packet_buffer.sv
+../../../../../../rtl/verilog/wb/core/peripheral_dma_request_table.sv
 
-../../../../../../bench/verilog/tests/core/wb/main/mpsoc_dma_testbench.sv
+../../../../../../bench/verilog/tests/core/wb/main/peripheral_dma_testbench.sv
 

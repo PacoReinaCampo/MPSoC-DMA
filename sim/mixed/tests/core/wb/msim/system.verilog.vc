@@ -1,3 +1,3 @@
 +incdir+../../../../../../rtl/verilog/wb/pkg
 
-../../../../../../bench/verilog/tests/core/wb/main/mpsoc_dma_testbench.sv
+../../../../../../bench/verilog/tests/core/wb/main/peripheral_dma_testbench.sv
