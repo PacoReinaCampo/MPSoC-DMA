@@ -43,9 +43,9 @@
  *   Paco Reina Campo <pacoreinacampo@queenfield.tech>
  */
 
-`include "mpsoc_dma_pkg.sv"
+`include "peripheral_dma_pkg.sv"
 
-module mpsoc_dma_packet_buffer #(
+module peripheral_dma_packet_buffer #(
   parameter DATA_WIDTH = 32,
   parameter FLIT_WIDTH = DATA_WIDTH+2,
 

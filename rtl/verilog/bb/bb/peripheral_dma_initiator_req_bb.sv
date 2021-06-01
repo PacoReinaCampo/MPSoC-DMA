@@ -41,9 +41,9 @@
  *   Paco Reina Campo <pacoreinacampo@queenfield.tech>
  */
 
-`include "mpsoc_dma_pkg.sv"
+`include "peripheral_dma_pkg.sv"
 
-module mpsoc_dma_bb_initiator_req #(
+module peripheral_dma_initiator_req_bb #(
   parameter ADDR_WIDTH = 32,
   parameter DATA_WIDTH = 32
 )

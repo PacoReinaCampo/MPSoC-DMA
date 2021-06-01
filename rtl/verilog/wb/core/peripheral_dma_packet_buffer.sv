@@ -43,9 +43,9 @@
  *   Paco Reina Campo <pacoreinacampo@queenfield.tech>
  */
 
-`include "mpsoc_dma_pkg.sv"
+`include "peripheral_dma_pkg.sv"
 
-module mpsoc_dma_packet_buffer #(
+module peripheral_dma_packet_buffer #(
   parameter DATA_WIDTH = 32,
   parameter FLIT_WIDTH = DATA_WIDTH+2,
 
@@ -87,9 +87,9 @@ module mpsoc_dma_packet_buffer #(
 
   wire [1:0] in_flit_type;
 
-  wire                        in_is_last;
+  wire in_is_last;
 
-  reg [FIFO_DEPTH-1:0]        valid_flits;
+  reg [FIFO_DEPTH-1:0] valid_flits;
 
   reg [SIZE_WIDTH-1:0] k;
   reg [SIZE_WIDTH-1:0] s;

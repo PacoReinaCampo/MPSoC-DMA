@@ -11,7 +11,7 @@
 //                                                                            //
 //              MPSoC-RISCV CPU                                               //
 //              Direct Access Memory Interface                                //
-//              Wishbone Bus Interface                                        //
+//              AMBA3 AHB-Lite Bus Interface                                  //
 //                                                                            //
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -41,16 +41,16 @@
  *   Paco Reina Campo <pacoreinacampo@queenfield.tech>
  */
 
-`include "mpsoc_dma_pkg.sv"
+`include "peripheral_dma_pkg.sv"
 
-module mpsoc_dma_wb_initiator #(
+module peripheral_dma_initiator_ahb3 #(
   //parameters
-  parameter ADDR_WIDTH             = 32,
-  parameter DATA_WIDTH             = 32,
-  parameter TABLE_ENTRIES          = 4,
+  parameter ADDR_WIDTH = 32,
+  parameter DATA_WIDTH = 32,
+  parameter TABLE_ENTRIES = 4,
   parameter TABLE_ENTRIES_PTRWIDTH = $clog2(4),
-  parameter TILEID                 = 0,
-  parameter NOC_PACKET_SIZE        = 16
+  parameter TILEID = 0,
+  parameter NOC_PACKET_SIZE = 16
 )
   (
     input  clk,
@@ -58,12 +58,12 @@ module mpsoc_dma_wb_initiator #(
  
     // Control read (request) interface
     output [TABLE_ENTRIES_PTRWIDTH-1:0] ctrl_read_pos,
-    input  [`DMA_REQUEST_WIDTH    -1:0] ctrl_read_req,
+    input  [`DMA_REQUEST_WIDTH-1:0]     ctrl_read_req,
 
     output [TABLE_ENTRIES_PTRWIDTH-1:0] ctrl_done_pos,
     output                              ctrl_done_en,
 
-    input  [TABLE_ENTRIES         -1:0] valid,
+    input  [TABLE_ENTRIES-1:0]          valid,
 
     // NOC-Interface
     output [`FLIT_WIDTH-1:0]                noc_out_flit,
@@ -75,28 +75,30 @@ module mpsoc_dma_wb_initiator #(
     output                                  noc_in_ready,
 
     // Wishbone interface for L2R data fetch
-    output [ADDR_WIDTH-1:0]                 wb_req_adr_o,
-    output [DATA_WIDTH-1:0]                 wb_req_dat_o,
-    output [           3:0]                 wb_req_sel_o,
-    output                                  wb_req_we_o,
-    output                                  wb_req_cyc_o,
-    output                                  wb_req_stb_o,
-    output [           2:0]                 wb_req_cti_o,
-    output [           1:0]                 wb_req_bte_o,
-    input  [DATA_WIDTH-1:0]                 wb_req_dat_i,
-    input                                   wb_req_ack_i,
+    output                                  ahb3_req_hsel,
+    output [ADDR_WIDTH-1:0]                 ahb3_req_haddr,
+    output [DATA_WIDTH-1:0]                 ahb3_req_hwdata,
+    output                                  ahb3_req_hwrite,
+    output [           2:0]                 ahb3_req_hburst,
+    output [           3:0]                 ahb3_req_hprot,
+    output [           1:0]                 ahb3_req_htrans,
+    output                                  ahb3_req_hmastlock,
+
+    input  [DATA_WIDTH-1:0]                 ahb3_req_hrdata,
+    input                                   ahb3_req_hready,
 
     // Wishbone interface for L2R data fetch
-    output [ADDR_WIDTH-1:0]                 wb_res_adr_o,
-    output [DATA_WIDTH-1:0]                 wb_res_dat_o,
-    output [           3:0]                 wb_res_sel_o,
-    output                                  wb_res_we_o,
-    output                                  wb_res_cyc_o,
-    output                                  wb_res_stb_o,
-    output [           2:0]                 wb_res_cti_o,
-    output [           1:0]                 wb_res_bte_o,
-    input  [DATA_WIDTH-1:0]                 wb_res_dat_i,
-    input                                   wb_res_ack_i
+    output                                  ahb3_res_hsel,
+    output [ADDR_WIDTH-1:0]                 ahb3_res_haddr,
+    output [DATA_WIDTH-1:0]                 ahb3_res_hwdata,
+    output                                  ahb3_res_hwrite,
+    output [           2:0]                 ahb3_res_hburst,
+    output [           3:0]                 ahb3_res_hprot,
+    output [           1:0]                 ahb3_res_htrans,
+    output                                  ahb3_res_hmastlock,
+
+    input  [DATA_WIDTH-1:0]                 ahb3_res_hrdata,
+    input                                   ahb3_res_hready
   );
 
   //////////////////////////////////////////////////////////////////
@@ -119,21 +121,21 @@ module mpsoc_dma_wb_initiator #(
   // Module body
   //
 
-  mpsoc_dma_wb_initiator_req wb_initiator_req (
-
+  peripheral_dma_initiator_req_ahb3 dma_initiator_req_ahb3 (
     .clk                       (clk),
     .rst                       (rst),
 
-    .wb_req_adr_o              (wb_req_adr_o[ADDR_WIDTH-1:0]),
-    .wb_req_dat_o              (wb_req_dat_o[DATA_WIDTH-1:0]),
-    .wb_req_sel_o              (wb_req_sel_o[3:0]),
-    .wb_req_we_o               (wb_req_we_o),
-    .wb_req_cyc_o              (wb_req_cyc_o),
-    .wb_req_stb_o              (wb_req_stb_o),
-    .wb_req_cti_o              (wb_req_cti_o[2:0]),
-    .wb_req_bte_o              (wb_req_bte_o[1:0]),
-    .wb_req_dat_i              (wb_req_dat_i[DATA_WIDTH-1:0]),
-    .wb_req_ack_i              (wb_req_ack_i),
+    .ahb3_req_hsel             (ahb3_req_hsel),
+    .ahb3_req_haddr            (ahb3_req_haddr[ADDR_WIDTH-1:0]),
+    .ahb3_req_hwdata           (ahb3_req_hwdata[DATA_WIDTH-1:0]),
+    .ahb3_req_hwrite           (ahb3_req_hwrite),
+    .ahb3_req_hburst           (ahb3_req_hburst[2:0]),
+    .ahb3_req_hprot            (ahb3_req_hprot[3:0]),
+    .ahb3_req_htrans           (ahb3_req_htrans[1:0]),
+    .ahb3_req_hmastlock        (ahb3_req_hmastlock),
+
+    .ahb3_req_hready           (ahb3_req_hready),
+    .ahb3_req_hrdata           (ahb3_req_hrdata[DATA_WIDTH-1:0]),
 
     .req_start                 (req_start),
     .req_is_l2r                (req_is_l2r),
@@ -144,11 +146,11 @@ module mpsoc_dma_wb_initiator #(
     .req_data_ready            (req_data_ready)
   );
 
-  mpsoc_dma_initiator_nocreq #(
+  peripheral_dma_initiator_nocreq #(
     .TILEID          (TILEID),
     .NOC_PACKET_SIZE (NOC_PACKET_SIZE)
   )
-  initiator_nocreq (
+  dma_initiator_nocreq (
     .clk                        (clk),
     .rst                        (rst),
 
@@ -168,15 +170,15 @@ module mpsoc_dma_wb_initiator #(
     .req_laddr                  (req_laddr[ADDR_WIDTH-1:0]),
     .req_data_valid             (req_data_valid),
     .req_data_ready             (req_data_ready),
-    .req_is_l2r                 (req_is_l2r),
     .req_data                   (req_data[DATA_WIDTH-1:0]),
+    .req_is_l2r                 (req_is_l2r),
     .req_size                   (req_size[`DMA_REQFIELD_SIZE_WIDTH-3:0])
   );
 
-  mpsoc_dma_wb_initiator_nocres #(
+  peripheral_dma_initiator_nocres_ahb3 #(
     .NOC_PACKET_SIZE(NOC_PACKET_SIZE)
   )
-  wb_initiator_nocres (
+  dma_initiator_nocres_ahb3 (
     .clk                       (clk),
     .rst                       (rst),
 
@@ -184,19 +186,19 @@ module mpsoc_dma_wb_initiator #(
     .noc_in_valid              (noc_in_valid),
     .noc_in_ready              (noc_in_ready),
 
+    .ahb3_hsel                 (ahb3_res_hsel),
+    .ahb3_haddr                (ahb3_res_haddr[ADDR_WIDTH-1:0]),
+    .ahb3_hwdata               (ahb3_res_hwdata[DATA_WIDTH-1:0]),
+    .ahb3_hwrite               (ahb3_res_hwrite),
+    .ahb3_hburst               (ahb3_res_hburst[2:0]),
+    .ahb3_hprot                (ahb3_res_hprot[3:0]),
+    .ahb3_htrans               (ahb3_res_htrans[1:0]),
+    .ahb3_hmastlock            (ahb3_res_hmastlock),
 
-    .wb_adr_o                  (wb_res_adr_o[ADDR_WIDTH-1:0]),
-    .wb_dat_o                  (wb_res_dat_o[DATA_WIDTH-1:0]),
-    .wb_sel_o                  (wb_res_sel_o[3:0]),
-    .wb_we_o                   (wb_res_we_o), 
-    .wb_cyc_o                  (wb_res_cyc_o),
-    .wb_stb_o                  (wb_res_stb_o),
-    .wb_cti_o                  (wb_res_cti_o[2:0]),
-    .wb_bte_o                  (wb_res_bte_o[1:0]),
-    .wb_dat_i                  (wb_res_dat_i[DATA_WIDTH-1:0]),
-    .wb_ack_i                  (wb_res_ack_i),
+    .ahb3_hrdata               (ahb3_res_hrdata[DATA_WIDTH-1:0]),
+    .ahb3_hready               (ahb3_res_hready),
 
     .ctrl_done_pos             (ctrl_done_pos[TABLE_ENTRIES_PTRWIDTH-1:0]),
-    .ctrl_done_en              (ctrl_done_en)
+    .ctrl_done_en              (ctrl_done_en) 
   );
 endmodule

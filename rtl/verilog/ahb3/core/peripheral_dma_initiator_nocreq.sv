@@ -43,9 +43,9 @@
  *   Paco Reina Campo <pacoreinacampo@queenfield.tech>
  */
 
-`include "mpsoc_dma_pkg.sv"
+`include "peripheral_dma_pkg.sv"
 
-module mpsoc_dma_initiator_nocreq #(
+module peripheral_dma_initiator_nocreq #(
   parameter ADDR_WIDTH = 32,
   parameter DATA_WIDTH = 32,
 
@@ -163,7 +163,7 @@ module mpsoc_dma_initiator_nocreq #(
   assign requests = valid & ~open_responses & {TABLE_ENTRIES{(noc_req_state == NOC_REQ_IDLE)}};
 
   // Round Robin (rr) arbiter
-  arb_rr #(
+  peripheral_arb_rr #(
     .N(TABLE_ENTRIES)
   )
   arbiter_rr (

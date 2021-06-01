@@ -43,7 +43,7 @@
  *   Paco Reina Campo <pacoreinacampo@queenfield.tech>
  */
 
-module arb_rr #(
+module peripheral_arb_rr #(
   parameter N = 2
 )
   (

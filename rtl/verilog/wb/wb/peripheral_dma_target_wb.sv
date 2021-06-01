@@ -41,9 +41,9 @@
  *   Paco Reina Campo <pacoreinacampo@queenfield.tech>
  */
 
-`include "mpsoc_dma_pkg.sv"
+`include "peripheral_dma_pkg.sv"
 
-module mpsoc_dma_wb_target #(
+module peripheral_dma_target_wb #(
   parameter ADDR_WIDTH = 32,
   parameter DATA_WIDTH = 32,
 
@@ -168,10 +168,10 @@ module mpsoc_dma_wb_target #(
   //
 
   // Input buffer that stores flits until we have one complete packet
-  mpsoc_dma_packet_buffer #(
+  peripheral_dma_packet_buffer #(
     .FIFO_DEPTH (NOC_PACKET_SIZE)
   )
-  packet_buffer (
+  dma_packet_buffer (
     .clk                           (clk),
     .rst                           (rst),
 

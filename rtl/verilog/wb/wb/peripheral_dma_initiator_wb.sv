@@ -11,7 +11,7 @@
 //                                                                            //
 //              MPSoC-RISCV CPU                                               //
 //              Direct Access Memory Interface                                //
-//              Blackbone Bus Interface                                       //
+//              Wishbone Bus Interface                                        //
 //                                                                            //
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -41,9 +41,9 @@
  *   Paco Reina Campo <pacoreinacampo@queenfield.tech>
  */
 
-`include "mpsoc_dma_pkg.sv"
+`include "peripheral_dma_pkg.sv"
 
-module mpsoc_dma_bb_initiator #(
+module peripheral_dma_initiator_wb #(
   //parameters
   parameter ADDR_WIDTH             = 32,
   parameter DATA_WIDTH             = 32,
@@ -74,19 +74,29 @@ module mpsoc_dma_bb_initiator #(
     input                                   noc_in_valid,
     output                                  noc_in_ready,
 
-    // Blackbone interface for L2R data fetch
-    output [ADDR_WIDTH-1:0]                 bb_req_addr_o,
-    output [DATA_WIDTH-1:0]                 bb_req_din_o,
-    output                                  bb_req_en_o,
-    output                                  bb_req_we_o,
-    input  [DATA_WIDTH-1:0]                 bb_req_dout_i,
+    // Wishbone interface for L2R data fetch
+    output [ADDR_WIDTH-1:0]                 wb_req_adr_o,
+    output [DATA_WIDTH-1:0]                 wb_req_dat_o,
+    output [           3:0]                 wb_req_sel_o,
+    output                                  wb_req_we_o,
+    output                                  wb_req_cyc_o,
+    output                                  wb_req_stb_o,
+    output [           2:0]                 wb_req_cti_o,
+    output [           1:0]                 wb_req_bte_o,
+    input  [DATA_WIDTH-1:0]                 wb_req_dat_i,
+    input                                   wb_req_ack_i,
 
-    // Blackbone interface for L2R data fetch
-    output [ADDR_WIDTH-1:0]                 bb_res_addr_o,
-    output [DATA_WIDTH-1:0]                 bb_res_din_o,
-    output                                  bb_res_en_o,
-    output                                  bb_res_we_o,
-    input  [DATA_WIDTH-1:0]                 bb_res_dout_i
+    // Wishbone interface for L2R data fetch
+    output [ADDR_WIDTH-1:0]                 wb_res_adr_o,
+    output [DATA_WIDTH-1:0]                 wb_res_dat_o,
+    output [           3:0]                 wb_res_sel_o,
+    output                                  wb_res_we_o,
+    output                                  wb_res_cyc_o,
+    output                                  wb_res_stb_o,
+    output [           2:0]                 wb_res_cti_o,
+    output [           1:0]                 wb_res_bte_o,
+    input  [DATA_WIDTH-1:0]                 wb_res_dat_i,
+    input                                   wb_res_ack_i
   );
 
   //////////////////////////////////////////////////////////////////
@@ -109,16 +119,21 @@ module mpsoc_dma_bb_initiator #(
   // Module body
   //
 
-  mpsoc_dma_bb_initiator_req bb_initiator_req (
+  peripheral_dma_initiator_req_wb dma_initiator_req_wb (
 
     .clk                       (clk),
     .rst                       (rst),
 
-    .bb_req_addr_o             (bb_req_addr_o[ADDR_WIDTH-1:0]),
-    .bb_req_din_o              (bb_req_din_o[DATA_WIDTH-1:0]),
-    .bb_req_en_o               (bb_req_en_o),
-    .bb_req_we_o               (bb_req_we_o),
-    .bb_req_dout_i             (bb_req_dout_i[DATA_WIDTH-1:0]),
+    .wb_req_adr_o              (wb_req_adr_o[ADDR_WIDTH-1:0]),
+    .wb_req_dat_o              (wb_req_dat_o[DATA_WIDTH-1:0]),
+    .wb_req_sel_o              (wb_req_sel_o[3:0]),
+    .wb_req_we_o               (wb_req_we_o),
+    .wb_req_cyc_o              (wb_req_cyc_o),
+    .wb_req_stb_o              (wb_req_stb_o),
+    .wb_req_cti_o              (wb_req_cti_o[2:0]),
+    .wb_req_bte_o              (wb_req_bte_o[1:0]),
+    .wb_req_dat_i              (wb_req_dat_i[DATA_WIDTH-1:0]),
+    .wb_req_ack_i              (wb_req_ack_i),
 
     .req_start                 (req_start),
     .req_is_l2r                (req_is_l2r),
@@ -129,11 +144,11 @@ module mpsoc_dma_bb_initiator #(
     .req_data_ready            (req_data_ready)
   );
 
-  mpsoc_dma_initiator_nocreq #(
+  peripheral_dma_initiator_nocreq #(
     .TILEID          (TILEID),
     .NOC_PACKET_SIZE (NOC_PACKET_SIZE)
   )
-  initiator_nocreq (
+  dma_initiator_nocreq (
     .clk                        (clk),
     .rst                        (rst),
 
@@ -158,10 +173,10 @@ module mpsoc_dma_bb_initiator #(
     .req_size                   (req_size[`DMA_REQFIELD_SIZE_WIDTH-3:0])
   );
 
-  mpsoc_dma_bb_initiator_nocres #(
+  peripheral_dma_initiator_nocres_wb #(
     .NOC_PACKET_SIZE(NOC_PACKET_SIZE)
   )
-  bb_initiator_nocres (
+  dma_initiator_nocres_wb (
     .clk                       (clk),
     .rst                       (rst),
 
@@ -170,11 +185,16 @@ module mpsoc_dma_bb_initiator #(
     .noc_in_ready              (noc_in_ready),
 
 
-    .bb_addr_o                 (bb_res_addr_o[ADDR_WIDTH-1:0]),
-    .bb_din_o                  (bb_res_din_o[DATA_WIDTH-1:0]),
-    .bb_en_o                   (bb_res_en_o),
-    .bb_we_o                   (bb_res_we_o),
-    .bb_dout_i                 (bb_res_dout_i[DATA_WIDTH-1:0]),
+    .wb_adr_o                  (wb_res_adr_o[ADDR_WIDTH-1:0]),
+    .wb_dat_o                  (wb_res_dat_o[DATA_WIDTH-1:0]),
+    .wb_sel_o                  (wb_res_sel_o[3:0]),
+    .wb_we_o                   (wb_res_we_o), 
+    .wb_cyc_o                  (wb_res_cyc_o),
+    .wb_stb_o                  (wb_res_stb_o),
+    .wb_cti_o                  (wb_res_cti_o[2:0]),
+    .wb_bte_o                  (wb_res_bte_o[1:0]),
+    .wb_dat_i                  (wb_res_dat_i[DATA_WIDTH-1:0]),
+    .wb_ack_i                  (wb_res_ack_i),
 
     .ctrl_done_pos             (ctrl_done_pos[TABLE_ENTRIES_PTRWIDTH-1:0]),
     .ctrl_done_en              (ctrl_done_en)

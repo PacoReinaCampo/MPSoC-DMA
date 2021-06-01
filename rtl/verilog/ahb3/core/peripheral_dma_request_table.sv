@@ -43,9 +43,9 @@
  *   Paco Reina Campo <pacoreinacampo@queenfield.tech>
  */
 
-`include "mpsoc_dma_pkg.sv"
+`include "peripheral_dma_pkg.sv"
 
-module mpsoc_dma_request_table #(
+module peripheral_dma_request_table #(
   parameter TABLE_ENTRIES          = 4,
   parameter TABLE_ENTRIES_PTRWIDTH = $clog2(4),
 
@@ -75,10 +75,10 @@ module mpsoc_dma_request_table #(
     input                              ctrl_done_en,
 
     // All valid bits of the entries
-    output [TABLE_ENTRIES-1:0]         valid,
-    output [TABLE_ENTRIES-1:0]         done,
+    output [TABLE_ENTRIES-1:0] valid,
+    output [TABLE_ENTRIES-1:0] done,
 
-    output [TABLE_ENTRIES-1:0] 	      irq
+    output [TABLE_ENTRIES-1:0] irq
   );
 
   //////////////////////////////////////////////////////////////////

@@ -1,11 +1,11 @@
 +incdir+../../../../../../rtl/verilog/ahb3/pkg
 
-../../../../../../rtl/verilog/ahb3/ahb3/peripheral_dma_ahb3_initiator.sv
-../../../../../../rtl/verilog/ahb3/ahb3/peripheral_dma_ahb3_initiator_nocres.sv
-../../../../../../rtl/verilog/ahb3/ahb3/peripheral_dma_ahb3_initiator_req.sv
-../../../../../../rtl/verilog/ahb3/ahb3/peripheral_dma_ahb3_interface.sv
-../../../../../../rtl/verilog/ahb3/ahb3/peripheral_dma_ahb3_target.sv
-../../../../../../rtl/verilog/ahb3/ahb3/peripheral_dma_ahb3_top.sv
+../../../../../../rtl/verilog/ahb3/ahb3/peripheral_dma_initiator_ahb3.sv
+../../../../../../rtl/verilog/ahb3/ahb3/peripheral_dma_initiator_nocres_ahb3.sv
+../../../../../../rtl/verilog/ahb3/ahb3/peripheral_dma_initiator_req_ahb3.sv
+../../../../../../rtl/verilog/ahb3/ahb3/peripheral_dma_interface_ahb3.sv
+../../../../../../rtl/verilog/ahb3/ahb3/peripheral_dma_target_ahb3.sv
+../../../../../../rtl/verilog/ahb3/ahb3/peripheral_dma_top_ahb3.sv
 
 ../../../../../../rtl/verilog/ahb3/core/peripheral_arb_rr.sv
 ../../../../../../rtl/verilog/ahb3/core/peripheral_dma_initiator_nocreq.sv

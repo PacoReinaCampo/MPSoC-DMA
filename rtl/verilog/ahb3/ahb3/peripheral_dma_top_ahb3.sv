@@ -42,9 +42,9 @@
  *   Paco Reina Campo <pacoreinacampo@queenfield.tech>
  */
 
-`include "mpsoc_dma_pkg.sv"
+`include "peripheral_dma_pkg.sv"
 
-module mpsoc_dma_ahb3_top #(
+module peripheral_dma_top_ahb3 #(
   parameter ADDR_WIDTH = 32,
   parameter DATA_WIDTH = 32,
 
@@ -192,10 +192,10 @@ module mpsoc_dma_ahb3_top #(
   assign ctrl_in_read_pos = 0;
   assign ctrl_write_pos = 0;
 
-  mpsoc_dma_ahb3_interface #(
+  peripheral_dma_interface_ahb3 #(
     .TILEID(TILEID)
   )
-  ahb3_interface (
+  dma_interface_ahb3 (
     .clk                     (clk),
     .rst                     (rst),
 
@@ -221,10 +221,10 @@ module mpsoc_dma_ahb3_top #(
     .done                    (done[TABLE_ENTRIES-1:0])
   );
 
-  mpsoc_dma_request_table #(
+  peripheral_dma_request_table #(
     .GENERATE_INTERRUPT(GENERATE_INTERRUPT)
   )
-  request_table (
+  dma_request_table (
     .clk                   (clk),
     .rst                   (rst),
 
@@ -250,10 +250,10 @@ module mpsoc_dma_ahb3_top #(
     .irq                   (irq[TABLE_ENTRIES-1:0])
   );
 
-  mpsoc_dma_ahb3_initiator #(
+  peripheral_dma_initiator_ahb3 #(
     .TILEID (TILEID)
   )
-  ahb3_initiator (
+  dma_initiator_ahb3 (
     .clk                  (clk),
     .rst                  (rst),
 
@@ -298,11 +298,11 @@ module mpsoc_dma_ahb3_top #(
     .ahb3_res_hready      (ahb3_res_hready)
   );
 
-  mpsoc_dma_ahb3_target #(
+  peripheral_dma_target_ahb3 #(
     .TILEID(TILEID),
     .NOC_PACKET_SIZE(NOC_PACKET_SIZE)
   )
-  ahb3_target (
+  dma_target_ahb3 (
     .clk                          (clk),
     .rst                          (rst),
 

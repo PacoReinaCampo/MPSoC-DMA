@@ -42,9 +42,9 @@
  *   Paco Reina Campo <pacoreinacampo@queenfield.tech>
  */
 
-`include "mpsoc_dma_pkg.sv"
+`include "peripheral_dma_pkg.sv"
 
-module mpsoc_dma_wb_top #(
+module peripheral_dma_wb_top #(
   parameter ADDR_WIDTH = 32,
   parameter DATA_WIDTH = 32,
 
@@ -184,10 +184,10 @@ module mpsoc_dma_wb_top #(
   assign ctrl_in_read_pos  = 0;
   assign ctrl_write_pos    = 0;
 
-  mpsoc_dma_wb_interface #(
+  peripheral_dma_interface_wb #(
     .TILEID(TILEID)
   )
-  wb_interface (
+  dma_interface_wb (
     .clk                     (clk),
     .rst                     (rst),
 
@@ -212,10 +212,10 @@ module mpsoc_dma_wb_top #(
     .done                    (done[TABLE_ENTRIES-1:0])
   );
 
-  mpsoc_dma_request_table #(
+  peripheral_dma_request_table #(
     .GENERATE_INTERRUPT(GENERATE_INTERRUPT)
   )
-  request_table (
+  dma_request_table (
     .clk                   (clk),
     .rst                   (rst),
 
@@ -241,10 +241,10 @@ module mpsoc_dma_wb_top #(
     .irq                   (irq[TABLE_ENTRIES-1:0])
   );
 
-  mpsoc_dma_wb_initiator #(
+  peripheral_dma_initiator_wb #(
     .TILEID (TILEID)
   )
-  wb_initiator (
+  dma_initiator_wb (
     .clk                  (clk),
     .rst                  (rst),
 
@@ -287,11 +287,11 @@ module mpsoc_dma_wb_top #(
     .wb_res_ack_i         (wb_res_ack_i)
   );
 
-  mpsoc_dma_wb_target #(
-    .TILEID(TILEID),
-    .NOC_PACKET_SIZE(NOC_PACKET_SIZE)
+  peripheral_dma_target_wb #(
+    .TILEID          (TILEID),
+    .NOC_PACKET_SIZE (NOC_PACKET_SIZE)
   )
-  wb_target (
+  dma_target_wb (
     // Outputs
     .clk                          (clk),
     .rst                          (rst),
