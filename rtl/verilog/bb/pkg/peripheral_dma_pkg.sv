@@ -42,108 +42,112 @@
  *   Paco Reina Campo <pacoreinacampo@queenfield.tech>
  */
 
-`define FLIT_TYPE_PAYLOAD 2'b00
-`define FLIT_TYPE_HEADER  2'b01
-`define FLIT_TYPE_LAST    2'b10
-`define FLIT_TYPE_SINGLE  2'b11
+package peripheral_dma_pkg;
 
-// Convenience definitions for mesh
-`define SELECT_NONE  5'b00000
-`define SELECT_NORTH 5'b00001
-`define SELECT_EAST  5'b00010
-`define SELECT_SOUTH 5'b00100
-`define SELECT_WEST  5'b01000
-`define SELECT_LOCAL 5'b10000
+  localparam FLIT_TYPE_PAYLOAD = 2'b00
+  localparam FLIT_TYPE_HEADER  = 2'b01
+  localparam FLIT_TYPE_LAST    = 2'b10
+  localparam FLIT_TYPE_SINGLE  = 2'b11
 
-`define NORTH 0
-`define EAST  1
-`define SOUTH 2
-`define WEST  3
-`define LOCAL 4
+  // Convenience definitions for mesh
+  localparam SELECT_NONE  = 5'b00000
+  localparam SELECT_NORTH = 5'b00001
+  localparam SELECT_EAST  = 5'b00010
+  localparam SELECT_SOUTH = 5'b00100
+  localparam SELECT_WEST  = 5'b01000
+  localparam SELECT_LOCAL = 5'b10000
 
-`define FLIT_WIDTH 34
+  localparam NORTH = 0
+  localparam EAST  = 1
+  localparam SOUTH = 2
+  localparam WEST  = 3
+  localparam LOCAL = 4
 
-// Type of flit
-// The coding is chosen, so that
-// type[0] signals that this is the first flit of a packet
-// type[1] signals that this is the last flit of a packet
+  localparam FLIT_WIDTH = 34
 
-`define FLIT_TYPE_MSB (`FLIT_WIDTH - 1)
-`define FLIT_TYPE_WIDTH 2
-`define FLIT_TYPE_LSB (`FLIT_TYPE_MSB - `FLIT_TYPE_WIDTH + 1)
+  // Type of flit
+  // The coding is chosen, so that
+  // type[0] signals that this is the first flit of a packet
+  // type[1] signals that this is the last flit of a packet
 
-// This is the flit content size
-`define FLIT_CONTENT_WIDTH 32
-`define FLIT_CONTENT_MSB   31
-`define FLIT_CONTENT_LSB    0
+  localparam FLIT_TYPE_MSB   = (FLIT_WIDTH - 1)
+  localparam FLIT_TYPE_WIDTH = 2
+  localparam FLIT_TYPE_LSB   = (FLIT_TYPE_MSB - FLIT_TYPE_WIDTH + 1)
 
-// The following fields are only valid for header flits
-`define FLIT_DEST_WIDTH 5
-// destination address field of header flit
-`define FLIT_DEST_MSB `FLIT_CONTENT_MSB
-`define FLIT_DEST_LSB `FLIT_DEST_MSB - `FLIT_DEST_WIDTH + 1
+  // This is the flit content size
+  localparam FLIT_CONTENT_WIDTH = 32
+  localparam FLIT_CONTENT_MSB   = 31
+  localparam FLIT_CONTENT_LSB   =  0
 
-// packet type field  of header flit
-`define PACKET_CLASS_MSB (`FLIT_DEST_LSB - 1)
-`define PACKET_CLASS_WIDTH 3
-`define PACKET_CLASS_LSB (`PACKET_CLASS_MSB - `PACKET_CLASS_WIDTH + 1)
+  // The following fields are only valid for header flits
+  localparam FLIT_DEST_WIDTH 5
+  // destination address field of header flit
+  localparam FLIT_DEST_MSB = FLIT_CONTENT_MSB
+  localparam FLIT_DEST_LSB = FLIT_DEST_MSB - FLIT_DEST_WIDTH + 1
 
-`define PACKET_CLASS_DMA 3'b010
+  // packet type field  of header flit
+  localparam PACKET_CLASS_MSB   = (FLIT_DEST_LSB - 1)
+  localparam PACKET_CLASS_WIDTH = 3
+  localparam PACKET_CLASS_LSB   = (PACKET_CLASS_MSB - PACKET_CLASS_WIDTH + 1)
 
-// source address field  of header flit
-`define SOURCE_MSB 23
-`define SOURCE_WIDTH 5
-`define SOURCE_LSB 19
+  localparam PACKET_CLASS_DMA = 3'b010
 
-// packet id field  of header flit
-`define PACKET_ID_MSB   18
-`define PACKET_ID_WIDTH 4
-`define PACKET_ID_LSB   15
+  // source address field  of header flit
+  localparam SOURCE_MSB   = 23
+  localparam SOURCE_WIDTH = 5
+  localparam SOURCE_LSB   = 19
 
-`define PACKET_TYPE_MSB   14
-`define PACKET_TYPE_WIDTH 2
-`define PACKET_TYPE_LSB   13
+  // packet id field  of header flit
+  localparam PACKET_ID_MSB   = 18
+  localparam PACKET_ID_WIDTH = 4
+  localparam PACKET_ID_LSB   = 15
 
-`define PACKET_TYPE_L2R_REQ  2'b00
-`define PACKET_TYPE_R2L_REQ  2'b01
-`define PACKET_TYPE_L2R_RESP 2'b10
-`define PACKET_TYPE_R2L_RESP 2'b11
+  localparam PACKET_TYPE_MSB   = 14
+  localparam PACKET_TYPE_WIDTH = 2
+  localparam PACKET_TYPE_LSB   = 13
 
-`define PACKET_REQ_LAST 12
-`define PACKET_RESP_LAST 12
+  localparam PACKET_TYPE_L2R_REQ  = 2'b00
+  localparam PACKET_TYPE_R2L_REQ  = 2'b01
+  localparam PACKET_TYPE_L2R_RESP = 2'b10
+  localparam PACKET_TYPE_R2L_RESP = 2'b11
 
-`define SIZE_MSB 31
-`define SIZE_WIDTH 32
-`define SIZE_LSB   0
+  localparam PACKET_REQ_LAST  = 12
+  localparam PACKET_RESP_LAST = 12
 
-`define DMA_REQUEST_WIDTH 103
+  localparam SIZE_MSB   = 31
+  localparam SIZE_WIDTH = 32
+  localparam SIZE_LSB   = 0
 
-`define DMA_REQFIELD_LADDR_WIDTH 32
-`define DMA_REQFIELD_SIZE_WIDTH  32
-`define DMA_REQFIELD_RTILE_WIDTH  5
-`define DMA_REQFIELD_RADDR_WIDTH 32
+  localparam DMA_REQUEST_WIDTH = 103
 
-`define DMA_REQFIELD_LADDR_MSB 102
-`define DMA_REQFIELD_LADDR_LSB 70
-`define DMA_REQFIELD_SIZE_MSB  69
-`define DMA_REQFIELD_SIZE_LSB  38
-`define DMA_REQFIELD_RTILE_MSB 37
-`define DMA_REQFIELD_RTILE_LSB 33
-`define DMA_REQFIELD_RADDR_MSB 32
-`define DMA_REQFIELD_RADDR_LSB 1
-`define DMA_REQFIELD_DIR       0
+  localparam DMA_REQFIELD_LADDR_WIDTH = 32
+  localparam DMA_REQFIELD_SIZE_WIDTH  = 32
+  localparam DMA_REQFIELD_RTILE_WIDTH =  5
+  localparam DMA_REQFIELD_RADDR_WIDTH = 32
 
-`define DMA_REQUEST_INVALID 1'b0
-`define DMA_REQUEST_VALID   1'b1
+  localparam DMA_REQFIELD_LADDR_MSB = 102
+  localparam DMA_REQFIELD_LADDR_LSB = 70
+  localparam DMA_REQFIELD_SIZE_MSB  = 69
+  localparam DMA_REQFIELD_SIZE_LSB  = 38
+  localparam DMA_REQFIELD_RTILE_MSB = 37
+  localparam DMA_REQFIELD_RTILE_LSB = 33
+  localparam DMA_REQFIELD_RADDR_MSB = 32
+  localparam DMA_REQFIELD_RADDR_LSB = 1
+  localparam DMA_REQFIELD_DIR       = 0
 
-`define DMA_REQUEST_L2R 1'b0
-`define DMA_REQUEST_R2L 1'b1
+  localparam DMA_REQUEST_INVALID = 1'b0
+  localparam DMA_REQUEST_VALID   = 1'b1
 
-`define DMA_REQMASK_WIDTH 5
-`define DMA_REQMASK_LADDR 0
-`define DMA_REQMASK_SIZE  1
-`define DMA_REQMASK_RTILE 2
-`define DMA_REQMASK_RADDR 3
-`define DMA_REQMASK_DIR   4
+  localparam DMA_REQUEST_L2R = 1'b0
+  localparam DMA_REQUEST_R2L = 1'b1
 
-`define DMA_RESPFIELD_SIZE_WIDTH 14
+  localparam DMA_REQMASK_WIDTH = 5
+  localparam DMA_REQMASK_LADDR = 0
+  localparam DMA_REQMASK_SIZE  = 1
+  localparam DMA_REQMASK_RTILE = 2
+  localparam DMA_REQMASK_RADDR = 3
+  localparam DMA_REQMASK_DIR   = 4
+
+  localparam DMA_RESPFIELD_SIZE_WIDTH = 14
+
+endpackage
