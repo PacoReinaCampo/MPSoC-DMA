@@ -42,7 +42,7 @@
  *   Paco Reina Campo <pacoreinacampo@queenfield.tech>
  */
 
-`include "peripheral_dma_pkg.sv"
+import peripheral_dma_pkg::*;
 
 module peripheral_dma_wb_top #(
   parameter ADDR_WIDTH = 32,

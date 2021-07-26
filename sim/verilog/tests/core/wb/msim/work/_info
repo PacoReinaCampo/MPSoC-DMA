@@ -7,4 +7,4 @@ z2
 !i10e 25
 !i10f 100
 cModel Technology
-d/home/us1/github/MPSoC-DMA/sim/verilog/tests/core/ahb3/msim
+d/home/usuario/github/MPSoC-DMA/sim/verilog/tests/core/wb/msim

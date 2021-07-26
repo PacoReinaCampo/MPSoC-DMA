@@ -41,7 +41,7 @@
  *   Paco Reina Campo <pacoreinacampo@queenfield.tech>
  */
 
-`include "peripheral_dma_pkg.sv"
+import peripheral_dma_pkg::*;
 
 module peripheral_dma_initiator_nocres_bb #(
   parameter ADDR_WIDTH = 32,

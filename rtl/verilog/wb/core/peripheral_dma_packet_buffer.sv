@@ -43,7 +43,7 @@
  *   Paco Reina Campo <pacoreinacampo@queenfield.tech>
  */
 
-`include "peripheral_dma_pkg.sv"
+import peripheral_dma_pkg::*;
 
 module peripheral_dma_packet_buffer #(
   parameter DATA_WIDTH = 32,
