@@ -59,7 +59,7 @@ module peripheral_dma_initiator_req_bb #(
 
     input                                 req_start,
     input                                 req_is_l2r,
-    input  [`DMA_REQFIELD_SIZE_WIDTH-3:0] req_size,
+    input  [DMA_REQFIELD_SIZE_WIDTH-3:0] req_size,
     input  [ADDR_WIDTH              -1:0] req_laddr,
     output                                req_data_valid,
     output [DATA_WIDTH              -1:0] req_data,
@@ -72,10 +72,10 @@ module peripheral_dma_initiator_req_bb #(
   //
 
   // Blackbone state machine
-  `define WB_REQ_WIDTH 2
-  `define WB_REQ_IDLE  2'b00
-  `define WB_REQ_DATA  2'b01
-  `define WB_REQ_WAIT  2'b10
+  localparam WB_REQ_WIDTH = 2;
+  localparam WB_REQ_IDLE  = 2'b00;
+  localparam WB_REQ_DATA  = 2'b01;
+  localparam WB_REQ_WAIT  = 2'b10;
 
   //////////////////////////////////////////////////////////////////
   //
@@ -83,12 +83,12 @@ module peripheral_dma_initiator_req_bb #(
   //
 
   // State logic
-  reg [`WB_REQ_WIDTH-1:0] bb_req_state;
-  reg [`WB_REQ_WIDTH-1:0] nxt_bb_req_state;
+  reg [WB_REQ_WIDTH-1:0] bb_req_state;
+  reg [WB_REQ_WIDTH-1:0] nxt_bb_req_state;
 
   // Counter for the state machine for loaded words
-  reg [`DMA_REQFIELD_SIZE_WIDTH-3:0] bb_req_count;
-  reg [`DMA_REQFIELD_SIZE_WIDTH-3:0] nxt_bb_req_count;
+  reg [DMA_REQFIELD_SIZE_WIDTH-3:0] bb_req_count;
+  reg [DMA_REQFIELD_SIZE_WIDTH-3:0] nxt_bb_req_count;
 
    /*
     * The wishbone data fetch and the NoC interface are seperated by a FIFO.
@@ -206,7 +206,7 @@ module peripheral_dma_initiator_req_bb #(
     bb_req_addr_o = 32'hx;
 
     case (bb_req_state)
-      `WB_REQ_IDLE: begin
+      WB_REQ_IDLE: begin
         // We are idle'ing
 
         // Always reset counter
@@ -216,12 +216,12 @@ module peripheral_dma_initiator_req_bb #(
           // start when new request is handled and it is a L2R
           // request. Direct transition to data fetching from bus,
           // as the FIFO is always empty at this point.
-          nxt_bb_req_state = `WB_REQ_DATA;
+          nxt_bb_req_state = WB_REQ_DATA;
         else
           // otherwise keep idle'ing
-          nxt_bb_req_state = `WB_REQ_IDLE;
+          nxt_bb_req_state = WB_REQ_IDLE;
       end
-      `WB_REQ_DATA: begin
+      WB_REQ_DATA: begin
         // We get data from the bus
 
         // Signal cycle and strobe. We do bursts, but don't insert
@@ -233,19 +233,19 @@ module peripheral_dma_initiator_req_bb #(
         bb_req_addr_o = req_laddr + (bb_req_count << 2);
 
         // ..otherwise we still wait for the acknowledgement
-        nxt_bb_req_state = `WB_REQ_DATA;
+        nxt_bb_req_state = WB_REQ_DATA;
       end
-      `WB_REQ_WAIT: begin
+      WB_REQ_WAIT: begin
         // Waiting for FIFO to accept new data
         if (data_fifo_ready)
           // FIFO ready, restart burst
-          nxt_bb_req_state = `WB_REQ_DATA;
+          nxt_bb_req_state = WB_REQ_DATA;
         else
           // wait
-          nxt_bb_req_state = `WB_REQ_WAIT;
+          nxt_bb_req_state = WB_REQ_WAIT;
       end
       default: begin
-        nxt_bb_req_state = `WB_REQ_IDLE;
+        nxt_bb_req_state = WB_REQ_IDLE;
       end
     endcase
   end
@@ -253,7 +253,7 @@ module peripheral_dma_initiator_req_bb #(
   // Sequential part of the state machine
   always @(posedge clk) begin
     if (rst) begin
-      bb_req_state <= `WB_REQ_IDLE;
+      bb_req_state <= WB_REQ_IDLE;
       bb_req_count <= 0;
     end
     else begin

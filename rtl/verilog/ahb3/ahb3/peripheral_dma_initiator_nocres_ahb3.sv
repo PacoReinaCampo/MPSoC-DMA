@@ -47,7 +47,7 @@ module peripheral_dma_initiator_nocres_ahb3 #(
   parameter ADDR_WIDTH = 32,
   parameter DATA_WIDTH = 32,
 
-  parameter FLIT_WIDTH = `FLIT_WIDTH,
+  parameter FLIT_WIDTH = 34,
 
   parameter TABLE_ENTRIES = 4,
   parameter TABLE_ENTRIES_PTRWIDTH = $clog2(4),
@@ -65,7 +65,7 @@ module peripheral_dma_initiator_nocres_ahb3 #(
     input clk,
     input rst,
 
-    input [`FLIT_WIDTH-1:0]                 noc_in_flit,
+    input [FLIT_WIDTH-1:0]                  noc_in_flit,
     input                                   noc_in_valid,
     output                                  noc_in_ready,
 
@@ -104,7 +104,7 @@ module peripheral_dma_initiator_nocres_ahb3 #(
   // There is a buffer between the NoC input and the wishbone
   // handling by the state machine. Those are the connection signals
   // from buffer to wishbone
-  wire [`FLIT_WIDTH-1:0]                  buf_flit;
+  wire [FLIT_WIDTH-1:0]                   buf_flit;
   wire                                    buf_valid;
   reg                                     buf_ready;
 
@@ -136,12 +136,12 @@ module peripheral_dma_initiator_nocres_ahb3 #(
   );
 
   // Is this the last flit of a packet?
-  assign buf_last_flit = (buf_flit[`FLIT_TYPE_MSB:`FLIT_TYPE_LSB]==`FLIT_TYPE_LAST) |
-                         (buf_flit[`FLIT_TYPE_MSB:`FLIT_TYPE_LSB]==`FLIT_TYPE_SINGLE);
+  assign buf_last_flit = (buf_flit[FLIT_TYPE_MSB:FLIT_TYPE_LSB]==FLIT_TYPE_LAST) |
+                         (buf_flit[FLIT_TYPE_MSB:FLIT_TYPE_LSB]==FLIT_TYPE_SINGLE);
 
   assign ahb3_haddr = resp_address; //alias
 
-  assign ahb3_hwdata = buf_flit[`FLIT_CONTENT_MSB:`FLIT_CONTENT_LSB];
+  assign ahb3_hwdata = buf_flit[FLIT_CONTENT_MSB:FLIT_CONTENT_LSB];
 
   // We only do word transfers
   assign ahb3_hprot = 4'hf;
@@ -169,13 +169,13 @@ module peripheral_dma_initiator_nocres_ahb3 #(
       STATE_IDLE: begin
         buf_ready = 1'b1;
         if (buf_valid) begin
-          nxt_resp_id = buf_flit[`PACKET_ID_MSB:`PACKET_ID_LSB];
-          nxt_last_packet_of_response = buf_flit[`PACKET_RESP_LAST];
-          if (buf_flit[`PACKET_TYPE_MSB:`PACKET_TYPE_LSB] == `PACKET_TYPE_L2R_RESP) begin
+          nxt_resp_id = buf_flit[PACKET_ID_MSB:PACKET_ID_LSB];
+          nxt_last_packet_of_response = buf_flit[PACKET_RESP_LAST];
+          if (buf_flit[PACKET_TYPE_MSB:PACKET_TYPE_LSB] == PACKET_TYPE_L2R_RESP) begin
             nxt_state = STATE_IDLE;
             ctrl_done_en = 1'b1;
             ctrl_done_pos = nxt_resp_id;
-          end  else if(buf_flit[`PACKET_TYPE_MSB:`PACKET_TYPE_LSB] == `PACKET_TYPE_R2L_RESP) begin
+          end  else if(buf_flit[PACKET_TYPE_MSB:PACKET_TYPE_LSB] == PACKET_TYPE_R2L_RESP) begin
             nxt_state = STATE_GET_SIZE;
           end
           else begin
@@ -194,7 +194,7 @@ module peripheral_dma_initiator_nocres_ahb3 #(
       end
       STATE_GET_ADDR: begin
         buf_ready = 1'b1;
-        nxt_resp_address = buf_flit[`FLIT_CONTENT_MSB:`FLIT_CONTENT_LSB];
+        nxt_resp_address = buf_flit[FLIT_CONTENT_MSB:FLIT_CONTENT_LSB];
         nxt_state = STATE_DATA;
       end
       STATE_DATA: begin

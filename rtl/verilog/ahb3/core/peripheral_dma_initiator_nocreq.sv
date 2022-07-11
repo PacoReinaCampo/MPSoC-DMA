@@ -59,13 +59,13 @@ module peripheral_dma_initiator_nocreq #(
     input rst,
 
     // NOC-Interface
-    output reg [`FLIT_WIDTH-1:0]            noc_out_flit,
+    output reg [FLIT_WIDTH-1:0]             noc_out_flit,
     output reg                              noc_out_valid,
     input                                   noc_out_ready,
 
     // Control read (request) interface
     output reg [TABLE_ENTRIES_PTRWIDTH-1:0] ctrl_read_pos,
-    input      [`DMA_REQUEST_WIDTH    -1:0] ctrl_read_req,
+    input      [DMA_REQUEST_WIDTH     -1:0] ctrl_read_req,
 
     input      [TABLE_ENTRIES         -1:0] valid,
 
@@ -81,7 +81,7 @@ module peripheral_dma_initiator_nocreq #(
     output reg                              req_data_ready,
     input  [DATA_WIDTH              -1:0]   req_data,
     output                                  req_is_l2r,
-    output [`DMA_REQFIELD_SIZE_WIDTH-3:0]   req_size
+    output [DMA_REQFIELD_SIZE_WIDTH-3:0]   req_size
   );
 
   //////////////////////////////////////////////////////////////////
@@ -112,8 +112,8 @@ module peripheral_dma_initiator_nocreq #(
   reg [NOC_REQ_WIDTH-1:0]                 nxt_noc_req_state;
 
   // Counter for payload flits/words in request
-  reg [`DMA_REQFIELD_SIZE_WIDTH-1:0] noc_req_counter;
-  reg [`DMA_REQFIELD_SIZE_WIDTH-1:0] nxt_noc_req_counter;
+  reg [DMA_REQFIELD_SIZE_WIDTH-1:0] noc_req_counter;
+  reg [DMA_REQFIELD_SIZE_WIDTH-1:0] nxt_noc_req_counter;
 
   // Current packet payload flit/word counter
   reg [4:0]             noc_req_packet_count;
@@ -150,7 +150,7 @@ module peripheral_dma_initiator_nocreq #(
 
   wire nxt_req_start;
 
-  wire [`DMA_REQFIELD_RTILE_WIDTH-1:0] req_rtile;
+  wire [DMA_REQFIELD_RTILE_WIDTH-1:0] req_rtile;
   wire [ADDR_WIDTH               -1:0] req_raddr;
 
   integer d;
@@ -202,11 +202,11 @@ module peripheral_dma_initiator_nocreq #(
      (noc_req_state == NOC_REQ_IDLE));
 
   // Convenience wires
-  assign req_is_l2r = (ctrl_read_req[`DMA_REQFIELD_DIR] == `DMA_REQUEST_L2R);
-  assign req_laddr  = ctrl_read_req[`DMA_REQFIELD_LADDR_MSB:`DMA_REQFIELD_LADDR_LSB];
-  assign req_size   = ctrl_read_req[`DMA_REQFIELD_SIZE_MSB:`DMA_REQFIELD_SIZE_LSB];
-  assign req_rtile  = ctrl_read_req[`DMA_REQFIELD_RTILE_MSB:`DMA_REQFIELD_RTILE_LSB];
-  assign req_raddr  = ctrl_read_req[`DMA_REQFIELD_RADDR_MSB:`DMA_REQFIELD_RADDR_LSB];
+  assign req_is_l2r = (ctrl_read_req[DMA_REQFIELD_DIR] == DMA_REQUEST_L2R);
+  assign req_laddr  = ctrl_read_req[DMA_REQFIELD_LADDR_MSB:DMA_REQFIELD_LADDR_LSB];
+  assign req_size   = ctrl_read_req[DMA_REQFIELD_SIZE_MSB:DMA_REQFIELD_SIZE_LSB];
+  assign req_rtile  = ctrl_read_req[DMA_REQFIELD_RTILE_MSB:DMA_REQFIELD_RTILE_LSB];
+  assign req_raddr  = ctrl_read_req[DMA_REQFIELD_RADDR_MSB:DMA_REQFIELD_RADDR_LSB];
 
   // NoC side request generation
 
@@ -247,24 +247,24 @@ module peripheral_dma_initiator_nocreq #(
       end
       NOC_REQ_L2R_GENHDR: begin
         noc_out_valid = 1'b1;
-        noc_out_flit[`FLIT_TYPE_MSB:`FLIT_TYPE_LSB]       = `FLIT_TYPE_HEADER;
-        noc_out_flit[`FLIT_DEST_MSB:`FLIT_DEST_LSB]       = req_rtile;
-        noc_out_flit[`PACKET_CLASS_MSB:`PACKET_CLASS_LSB] = `PACKET_CLASS_DMA;
-        noc_out_flit[`PACKET_ID_MSB:`PACKET_ID_LSB]       = ctrl_read_pos;
-        noc_out_flit[`SOURCE_MSB:`SOURCE_LSB]             = TILEID;
-        noc_out_flit[`PACKET_TYPE_MSB:`PACKET_TYPE_LSB]   = `PACKET_TYPE_L2R_REQ;
+        noc_out_flit[FLIT_TYPE_MSB:FLIT_TYPE_LSB]       = FLIT_TYPE_HEADER;
+        noc_out_flit[FLIT_DEST_MSB:FLIT_DEST_LSB]       = req_rtile;
+        noc_out_flit[PACKET_CLASS_MSB:PACKET_CLASS_LSB] = PACKET_CLASS_DMA;
+        noc_out_flit[PACKET_ID_MSB:PACKET_ID_LSB]       = ctrl_read_pos;
+        noc_out_flit[SOURCE_MSB:SOURCE_LSB]             = TILEID;
+        noc_out_flit[PACKET_TYPE_MSB:PACKET_TYPE_LSB]   = PACKET_TYPE_L2R_REQ;
         if ((noc_req_counter + (NOC_PACKET_SIZE-2)) < req_size) begin
           // This is not the last packet in the request (NOC_PACKET_SIZE-2)
-          noc_out_flit[`SIZE_MSB:`SIZE_LSB] = NOC_PACKET_SIZE-2;
-          noc_out_flit[`PACKET_REQ_LAST]    = 1'b0;
+          noc_out_flit[SIZE_MSB:SIZE_LSB] = NOC_PACKET_SIZE-2;
+          noc_out_flit[PACKET_REQ_LAST]    = 1'b0;
           nxt_noc_req_packet_size  = NOC_PACKET_SIZE-2;
           // count is the current transfer number
           nxt_noc_req_packet_count = 5'd1;
         end
         else begin
           // This is the last packet in the request
-          noc_out_flit[`SIZE_MSB:`SIZE_LSB] = req_size - noc_req_counter;
-          noc_out_flit[`PACKET_REQ_LAST] = 1'b1;
+          noc_out_flit[SIZE_MSB:SIZE_LSB] = req_size - noc_req_counter;
+          noc_out_flit[PACKET_REQ_LAST] = 1'b1;
           nxt_noc_req_packet_size = req_size - noc_req_counter;
           // count is the current transfer number
           nxt_noc_req_packet_count = 5'd1;
@@ -277,8 +277,8 @@ module peripheral_dma_initiator_nocreq #(
       end
       NOC_REQ_L2R_GENADDR: begin
         noc_out_valid = 1'b1;
-        noc_out_flit[`FLIT_TYPE_MSB:`FLIT_TYPE_LSB] = `FLIT_TYPE_PAYLOAD;
-        noc_out_flit[`FLIT_CONTENT_MSB:`FLIT_CONTENT_LSB] = req_raddr + (noc_req_counter << 2);
+        noc_out_flit[FLIT_TYPE_MSB:FLIT_TYPE_LSB] = FLIT_TYPE_PAYLOAD;
+        noc_out_flit[FLIT_CONTENT_MSB:FLIT_CONTENT_LSB] = req_raddr + (noc_req_counter << 2);
         if (noc_out_ready) begin
           nxt_noc_req_state = NOC_REQ_L2R_DATA;
         end
@@ -292,12 +292,12 @@ module peripheral_dma_initiator_nocreq #(
 
         // Signal last flit for this transfer
         if (noc_req_packet_count==noc_req_packet_size) begin
-          noc_out_flit[`FLIT_TYPE_MSB:`FLIT_TYPE_LSB] = `FLIT_TYPE_LAST;
+          noc_out_flit[FLIT_TYPE_MSB:FLIT_TYPE_LSB] = FLIT_TYPE_LAST;
         end
         else begin
-          noc_out_flit[`FLIT_TYPE_MSB:`FLIT_TYPE_LSB] = `FLIT_TYPE_PAYLOAD;
+          noc_out_flit[FLIT_TYPE_MSB:FLIT_TYPE_LSB] = FLIT_TYPE_PAYLOAD;
         end
-        noc_out_flit[`FLIT_CONTENT_MSB:`FLIT_CONTENT_LSB] = req_data;
+        noc_out_flit[FLIT_CONTENT_MSB:FLIT_CONTENT_LSB] = req_data;
         if (noc_out_ready & noc_out_valid) begin
           // transfer was successful
 
@@ -339,16 +339,16 @@ module peripheral_dma_initiator_nocreq #(
       end
       NOC_REQ_R2L_GENHDR: begin
         noc_out_valid = 1'b1;
-        noc_out_flit[`FLIT_TYPE_MSB:`FLIT_TYPE_LSB]       = `FLIT_TYPE_HEADER;
-        noc_out_flit[`FLIT_DEST_MSB:`FLIT_DEST_LSB]       = req_rtile;
-        noc_out_flit[`PACKET_CLASS_MSB:`PACKET_CLASS_LSB] = `PACKET_CLASS_DMA;
-        noc_out_flit[`PACKET_ID_MSB:`PACKET_ID_LSB]       = ctrl_read_pos;
-        noc_out_flit[`SOURCE_MSB:`SOURCE_LSB]             = TILEID;
-        noc_out_flit[`PACKET_TYPE_MSB:`PACKET_TYPE_LSB]   = `PACKET_TYPE_R2L_REQ;
+        noc_out_flit[FLIT_TYPE_MSB:FLIT_TYPE_LSB]       = FLIT_TYPE_HEADER;
+        noc_out_flit[FLIT_DEST_MSB:FLIT_DEST_LSB]       = req_rtile;
+        noc_out_flit[PACKET_CLASS_MSB:PACKET_CLASS_LSB] = PACKET_CLASS_DMA;
+        noc_out_flit[PACKET_ID_MSB:PACKET_ID_LSB]       = ctrl_read_pos;
+        noc_out_flit[SOURCE_MSB:SOURCE_LSB]             = TILEID;
+        noc_out_flit[PACKET_TYPE_MSB:PACKET_TYPE_LSB]   = PACKET_TYPE_R2L_REQ;
         noc_out_flit[11:0] = 0;
 
         // There's only one packet needed for the request
-        noc_out_flit[`PACKET_REQ_LAST] = 1'b1;
+        noc_out_flit[PACKET_REQ_LAST] = 1'b1;
 
         // change to next state if successful
         if (noc_out_ready)
@@ -358,7 +358,7 @@ module peripheral_dma_initiator_nocreq #(
       end
       NOC_REQ_R2L_GENSIZE: begin
         noc_out_valid = 1'b1;
-        noc_out_flit[`SIZE_MSB:`SIZE_LSB] = req_size;
+        noc_out_flit[SIZE_MSB:SIZE_LSB] = req_size;
 
         // change to next state if successful
         if (noc_out_ready)
@@ -369,8 +369,8 @@ module peripheral_dma_initiator_nocreq #(
 
       NOC_REQ_R2L_GENRADDR: begin
         noc_out_valid = 1'b1;
-        noc_out_flit[`FLIT_TYPE_MSB:`FLIT_TYPE_LSB] = `FLIT_TYPE_PAYLOAD;
-        noc_out_flit[`FLIT_CONTENT_MSB:`FLIT_CONTENT_LSB] = ctrl_read_req[`DMA_REQFIELD_RADDR_MSB:`DMA_REQFIELD_RADDR_LSB];
+        noc_out_flit[FLIT_TYPE_MSB:FLIT_TYPE_LSB] = FLIT_TYPE_PAYLOAD;
+        noc_out_flit[FLIT_CONTENT_MSB:FLIT_CONTENT_LSB] = ctrl_read_req[DMA_REQFIELD_RADDR_MSB:DMA_REQFIELD_RADDR_LSB];
         if (noc_out_ready) begin
           // keep open_responses and "add" currently selected request to it
           nxt_noc_req_state = NOC_REQ_R2L_GENLADDR;
@@ -381,8 +381,8 @@ module peripheral_dma_initiator_nocreq #(
       end
       NOC_REQ_R2L_GENLADDR: begin
         noc_out_valid = 1'b1;
-        noc_out_flit[`FLIT_TYPE_MSB:`FLIT_TYPE_LSB] = `FLIT_TYPE_LAST;
-        noc_out_flit[`FLIT_CONTENT_MSB:`FLIT_CONTENT_LSB] = ctrl_read_req[`DMA_REQFIELD_LADDR_MSB:`DMA_REQFIELD_LADDR_LSB];
+        noc_out_flit[FLIT_TYPE_MSB:FLIT_TYPE_LSB] = FLIT_TYPE_LAST;
+        noc_out_flit[FLIT_CONTENT_MSB:FLIT_CONTENT_LSB] = ctrl_read_req[DMA_REQFIELD_LADDR_MSB:DMA_REQFIELD_LADDR_LSB];
         if (noc_out_ready) begin
           // keep open_responses and "add" currently selected request to it
           nxt_open_responses = open_responses | select;

@@ -58,19 +58,19 @@ module peripheral_dma_top_ahb3 #(
     input clk,
     input rst,
 
-    input [`FLIT_WIDTH-1:0] noc_in_req_flit,
+    input [FLIT_WIDTH-1:0]  noc_in_req_flit,
     input                   noc_in_req_valid,
     output                  noc_in_req_ready,
 
-    input [`FLIT_WIDTH-1:0] noc_in_res_flit,
+    input [FLIT_WIDTH-1:0]  noc_in_res_flit,
     input                   noc_in_res_valid,
     output                  noc_in_res_ready,
 
-    output [`FLIT_WIDTH-1:0] noc_out_req_flit,
+    output [FLIT_WIDTH-1:0]  noc_out_req_flit,
     output                   noc_out_req_valid,
     input                    noc_out_req_ready,
 
-    output [`FLIT_WIDTH-1:0] noc_out_res_flit,
+    output [FLIT_WIDTH-1:0]  noc_out_res_flit,
     output                   noc_out_res_valid,
     input                    noc_out_res_ready,
 
@@ -158,7 +158,7 @@ module peripheral_dma_top_ahb3 #(
   wire                              ctrl_done_en;       // From ctrl_initiator
   wire [TABLE_ENTRIES_PTRWIDTH-1:0] ctrl_done_pos;      // From ctrl_initiator
   wire [TABLE_ENTRIES_PTRWIDTH-1:0] ctrl_read_pos;      // From ctrl_initiator
-  wire [`DMA_REQUEST_WIDTH    -1:0] ctrl_read_req;      // From request_table
+  wire [DMA_REQUEST_WIDTH     -1:0] ctrl_read_req;      // From request_table
   wire [TABLE_ENTRIES         -1:0] done;               // From request_table
   wire                              if_valid_en;        // From wb interface
   wire [TABLE_ENTRIES_PTRWIDTH-1:0] if_valid_pos;       // From wb interface
@@ -166,8 +166,8 @@ module peripheral_dma_top_ahb3 #(
   wire                              if_validrd_en;      // From wb interface
   wire                              if_write_en;        // From wb interface
   wire [TABLE_ENTRIES_PTRWIDTH-1:0] if_write_pos;       // From wb interface
-  wire [`DMA_REQUEST_WIDTH    -1:0] if_write_req;       // From wb interface
-  wire [`DMA_REQMASK_WIDTH    -1:0] if_write_select;    // From wb interface
+  wire [DMA_REQUEST_WIDTH     -1:0] if_write_req;       // From wb interface
+  wire [DMA_REQMASK_WIDTH     -1:0] if_write_select;    // From wb interface
   wire [TABLE_ENTRIES         -1:0] valid;              // From request_table
   wire [                       3:0] ahb3_target_hprot;  // From target
   // End of automatics
@@ -208,9 +208,9 @@ module peripheral_dma_top_ahb3 #(
     .ahb3_if_hwdata          (ahb3_if_hwdata[DATA_WIDTH-1:0]),
     .ahb3_if_hready          (ahb3_if_hready),
 
-    .if_write_req            (if_write_req[`DMA_REQUEST_WIDTH-1:0]),
+    .if_write_req            (if_write_req[DMA_REQUEST_WIDTH-1:0]),
     .if_write_pos            (if_write_pos[TABLE_ENTRIES_PTRWIDTH-1:0]),
-    .if_write_select         (if_write_select[`DMA_REQMASK_WIDTH-1:0]),
+    .if_write_select         (if_write_select[DMA_REQMASK_WIDTH-1:0]),
     .if_write_en             (if_write_en),
 
     .if_valid_pos            (if_valid_pos[TABLE_ENTRIES_PTRWIDTH-1:0]),
@@ -228,9 +228,9 @@ module peripheral_dma_top_ahb3 #(
     .clk                   (clk),
     .rst                   (rst),
 
-    .if_write_req          (if_write_req[`DMA_REQUEST_WIDTH-1:0]),
+    .if_write_req          (if_write_req[DMA_REQUEST_WIDTH-1:0]),
     .if_write_pos          (if_write_pos[TABLE_ENTRIES_PTRWIDTH-1:0]),
-    .if_write_select       (if_write_select[`DMA_REQMASK_WIDTH-1:0]),
+    .if_write_select       (if_write_select[DMA_REQMASK_WIDTH-1:0]),
     .if_write_en           (if_write_en),
 
     .if_valid_pos          (if_valid_pos[TABLE_ENTRIES_PTRWIDTH-1:0]),
@@ -238,7 +238,7 @@ module peripheral_dma_top_ahb3 #(
     .if_valid_en           (if_valid_en),
     .if_validrd_en         (if_validrd_en),
 
-    .ctrl_read_req         (ctrl_read_req[`DMA_REQUEST_WIDTH-1:0]),
+    .ctrl_read_req         (ctrl_read_req[DMA_REQUEST_WIDTH-1:0]),
     .ctrl_read_pos         (ctrl_read_pos[TABLE_ENTRIES_PTRWIDTH-1:0]),
 
     .ctrl_done_pos         (ctrl_done_pos[TABLE_ENTRIES_PTRWIDTH-1:0]),
@@ -258,18 +258,18 @@ module peripheral_dma_top_ahb3 #(
     .rst                  (rst),
 
     .ctrl_read_pos        (ctrl_read_pos[TABLE_ENTRIES_PTRWIDTH-1:0]),
-    .ctrl_read_req        (ctrl_read_req[`DMA_REQUEST_WIDTH-1:0]),
+    .ctrl_read_req        (ctrl_read_req[DMA_REQUEST_WIDTH-1:0]),
 
     .ctrl_done_pos        (ctrl_done_pos[TABLE_ENTRIES_PTRWIDTH-1:0]),
     .ctrl_done_en         (ctrl_done_en),
 
     .valid                (valid[TABLE_ENTRIES-1:0]),
 
-    .noc_out_flit         (noc_out_req_flit[`FLIT_WIDTH-1:0]),
+    .noc_out_flit         (noc_out_req_flit[FLIT_WIDTH-1:0]),
     .noc_out_valid        (noc_out_req_valid),
     .noc_out_ready        (noc_out_req_ready),
 
-    .noc_in_flit          (noc_in_res_flit[`FLIT_WIDTH-1:0]),
+    .noc_in_flit          (noc_in_res_flit[FLIT_WIDTH-1:0]),
     .noc_in_valid         (noc_in_res_valid),
     .noc_in_ready         (noc_in_res_ready),
 
@@ -306,11 +306,11 @@ module peripheral_dma_top_ahb3 #(
     .clk                          (clk),
     .rst                          (rst),
 
-    .noc_out_flit                 (noc_out_res_flit[`FLIT_WIDTH-1:0]),
+    .noc_out_flit                 (noc_out_res_flit[FLIT_WIDTH-1:0]),
     .noc_out_valid                (noc_out_res_valid),
     .noc_out_ready                (noc_out_res_ready),
 
-    .noc_in_flit                  (noc_in_req_flit[`FLIT_WIDTH-1:0]),
+    .noc_in_flit                  (noc_in_req_flit[FLIT_WIDTH-1:0]),
     .noc_in_valid                 (noc_in_req_valid),
     .noc_in_ready                 (noc_in_req_ready),
 

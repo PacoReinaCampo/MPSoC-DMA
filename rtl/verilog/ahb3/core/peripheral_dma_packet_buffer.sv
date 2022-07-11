@@ -104,7 +104,7 @@ module peripheral_dma_packet_buffer #(
 
   assign in_flit_type = in_flit[FLIT_WIDTH-1:FLIT_WIDTH-2];
 
-  assign in_is_last = (in_flit_type == `FLIT_TYPE_LAST) || (in_flit_type == `FLIT_TYPE_SINGLE);
+  assign in_is_last = (in_flit_type == FLIT_TYPE_LAST) || (in_flit_type == FLIT_TYPE_SINGLE);
 
   always @(*) begin : valid_flits_comb
     // Set first element

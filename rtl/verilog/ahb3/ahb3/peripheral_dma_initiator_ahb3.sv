@@ -58,7 +58,7 @@ module peripheral_dma_initiator_ahb3 #(
  
     // Control read (request) interface
     output [TABLE_ENTRIES_PTRWIDTH-1:0] ctrl_read_pos,
-    input  [`DMA_REQUEST_WIDTH-1:0]     ctrl_read_req,
+    input  [DMA_REQUEST_WIDTH-1:0]     ctrl_read_req,
 
     output [TABLE_ENTRIES_PTRWIDTH-1:0] ctrl_done_pos,
     output                              ctrl_done_en,
@@ -66,11 +66,11 @@ module peripheral_dma_initiator_ahb3 #(
     input  [TABLE_ENTRIES-1:0]          valid,
 
     // NOC-Interface
-    output [`FLIT_WIDTH-1:0]                noc_out_flit,
+    output [FLIT_WIDTH-1:0]                 noc_out_flit,
     output                                  noc_out_valid,
     input                                   noc_out_ready,
 
-    input  [`FLIT_WIDTH-1:0]                noc_in_flit,
+    input  [FLIT_WIDTH-1:0]                 noc_in_flit,
     input                                   noc_in_valid,
     output                                  noc_in_ready,
 
@@ -107,14 +107,13 @@ module peripheral_dma_initiator_ahb3 #(
   //
 
   // Beginning of automatic wires (for undeclared instantiated-module outputs)
-  wire [DATA_WIDTH              -1:0] req_data;
-  wire                                req_data_ready;
-  wire                                req_data_valid;
-  wire                                req_is_l2r;
-  wire [ADDR_WIDTH              -1:0] req_laddr;
-  wire [`DMA_REQFIELD_SIZE_WIDTH-3:0] req_size;
-  wire                                req_start;
-
+  wire [DATA_WIDTH             -1:0] req_data;
+  wire                               req_data_ready;
+  wire                               req_data_valid;
+  wire                               req_is_l2r;
+  wire [ADDR_WIDTH             -1:0] req_laddr;
+  wire [DMA_REQFIELD_SIZE_WIDTH-3:0] req_size;
+  wire                               req_start;
 
   //////////////////////////////////////////////////////////////////
   //
@@ -139,7 +138,7 @@ module peripheral_dma_initiator_ahb3 #(
 
     .req_start                 (req_start),
     .req_is_l2r                (req_is_l2r),
-    .req_size                  (req_size[`DMA_REQFIELD_SIZE_WIDTH-3:0]),
+    .req_size                  (req_size[DMA_REQFIELD_SIZE_WIDTH-3:0]),
     .req_laddr                 (req_laddr[ADDR_WIDTH-1:0]),
     .req_data_valid            (req_data_valid),
     .req_data                  (req_data[DATA_WIDTH-1:0]),
@@ -154,12 +153,12 @@ module peripheral_dma_initiator_ahb3 #(
     .clk                        (clk),
     .rst                        (rst),
 
-    .noc_out_flit               (noc_out_flit[`FLIT_WIDTH-1:0]),
+    .noc_out_flit               (noc_out_flit[FLIT_WIDTH-1:0]),
     .noc_out_valid              (noc_out_valid),
     .noc_out_ready              (noc_out_ready),
 
     .ctrl_read_pos              (ctrl_read_pos[TABLE_ENTRIES_PTRWIDTH-1:0]),
-    .ctrl_read_req              (ctrl_read_req[`DMA_REQUEST_WIDTH-1:0]),
+    .ctrl_read_req              (ctrl_read_req[DMA_REQUEST_WIDTH-1:0]),
 
     .valid                      (valid[TABLE_ENTRIES-1:0]),
 
@@ -172,7 +171,7 @@ module peripheral_dma_initiator_ahb3 #(
     .req_data_ready             (req_data_ready),
     .req_data                   (req_data[DATA_WIDTH-1:0]),
     .req_is_l2r                 (req_is_l2r),
-    .req_size                   (req_size[`DMA_REQFIELD_SIZE_WIDTH-3:0])
+    .req_size                   (req_size[DMA_REQFIELD_SIZE_WIDTH-3:0])
   );
 
   peripheral_dma_initiator_nocres_ahb3 #(
@@ -182,7 +181,7 @@ module peripheral_dma_initiator_ahb3 #(
     .clk                       (clk),
     .rst                       (rst),
 
-    .noc_in_flit               (noc_in_flit[`FLIT_WIDTH-1:0]),
+    .noc_in_flit               (noc_in_flit[FLIT_WIDTH-1:0]),
     .noc_in_valid              (noc_in_valid),
     .noc_in_ready              (noc_in_ready),
 

@@ -56,9 +56,9 @@ module peripheral_dma_request_table #(
     input rst,
 
     // Interface write (request) interface
-    input [`DMA_REQUEST_WIDTH    -1:0] if_write_req,
+    input [DMA_REQUEST_WIDTH     -1:0] if_write_req,
     input [TABLE_ENTRIES_PTRWIDTH-1:0] if_write_pos,
-    input [`DMA_REQMASK_WIDTH    -1:0] if_write_select,
+    input [DMA_REQMASK_WIDTH     -1:0] if_write_select,
     input                              if_write_en,
 
     input [TABLE_ENTRIES_PTRWIDTH-1:0] if_valid_pos,
@@ -67,7 +67,7 @@ module peripheral_dma_request_table #(
     input                              if_validrd_en,
 
     // Control read (request) interface
-    output [`DMA_REQUEST_WIDTH   -1:0] ctrl_read_req,
+    output [DMA_REQUEST_WIDTH    -1:0] ctrl_read_req,
     input [TABLE_ENTRIES_PTRWIDTH-1:0] ctrl_read_pos,
 
     // Control write (status) interface
@@ -87,12 +87,12 @@ module peripheral_dma_request_table #(
   //
 
   // The storage of the requests ..
-  reg [`DMA_REQUEST_WIDTH-1:0] transfer_request_table[0:TABLE_ENTRIES-1];
+  reg [DMA_REQUEST_WIDTH-1:0] transfer_request_table[0:TABLE_ENTRIES-1];
 
   reg [TABLE_ENTRIES-1:0]      transfer_valid;
   reg [TABLE_ENTRIES-1:0]      transfer_done;
 
-  wire [`DMA_REQUEST_WIDTH-1:0] if_write_mask;
+  wire [DMA_REQUEST_WIDTH-1:0] if_write_mask;
 
   integer i;
   genvar j;
@@ -102,11 +102,11 @@ module peripheral_dma_request_table #(
   // Module body
   //
 
-  assign if_write_mask[`DMA_REQFIELD_LADDR_MSB:`DMA_REQFIELD_LADDR_LSB] = {`DMA_REQFIELD_LADDR_WIDTH{if_write_select[`DMA_REQMASK_LADDR]}};
-  assign if_write_mask[`DMA_REQFIELD_SIZE_MSB:`DMA_REQFIELD_SIZE_LSB]   = {`DMA_REQFIELD_SIZE_WIDTH{if_write_select[`DMA_REQMASK_SIZE]}};
-  assign if_write_mask[`DMA_REQFIELD_RTILE_MSB:`DMA_REQFIELD_RTILE_LSB] = {`DMA_REQFIELD_RTILE_WIDTH{if_write_select[`DMA_REQMASK_RTILE]}};
-  assign if_write_mask[`DMA_REQFIELD_RADDR_MSB:`DMA_REQFIELD_RADDR_LSB] = {`DMA_REQFIELD_RADDR_WIDTH{if_write_select[`DMA_REQMASK_RADDR]}};
-  assign if_write_mask[`DMA_REQFIELD_DIR] = if_write_select[`DMA_REQMASK_DIR];
+  assign if_write_mask[DMA_REQFIELD_LADDR_MSB:DMA_REQFIELD_LADDR_LSB] = {DMA_REQFIELD_LADDR_WIDTH{if_write_select[DMA_REQMASK_LADDR]}};
+  assign if_write_mask[DMA_REQFIELD_SIZE_MSB:DMA_REQFIELD_SIZE_LSB]   = {DMA_REQFIELD_SIZE_WIDTH{if_write_select[DMA_REQMASK_SIZE]}};
+  assign if_write_mask[DMA_REQFIELD_RTILE_MSB:DMA_REQFIELD_RTILE_LSB] = {DMA_REQFIELD_RTILE_WIDTH{if_write_select[DMA_REQMASK_RTILE]}};
+  assign if_write_mask[DMA_REQFIELD_RADDR_MSB:DMA_REQFIELD_RADDR_LSB] = {DMA_REQFIELD_RADDR_WIDTH{if_write_select[DMA_REQMASK_RADDR]}};
+  assign if_write_mask[DMA_REQFIELD_DIR] = if_write_select[DMA_REQMASK_DIR];
 
   // Write to the request table
   always @(posedge clk) begin : proc_request_table
