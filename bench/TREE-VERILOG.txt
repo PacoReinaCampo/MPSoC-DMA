@@ -25,6 +25,18 @@
     └── core
         ├── ahb3
         │   └── peripheral_dma_testbench.sv
+        ├── bb
+        │   ├── bus
+        │   │   ├── peripheral_bfm_master_bb.sv
+        │   │   ├── peripheral_bfm_memory_bb.sv
+        │   │   ├── peripheral_bfm_slave_bb.sv
+        │   │   └── peripheral_bfm_transactor_bb.sv
+        │   ├── main
+        │   │   ├── peripheral_dma_testbench.sv
+        │   │   ├── peripheral_tap_generator.sv
+        │   │   ├── peripheral_testbench_utils.sv
+        │   │   └── peripheral_top_testbench.sv
+        │   └── peripheral_dma_testbench.sv
         └── wb
             ├── bus
             │   ├── peripheral_bfm_master_wb.sv
