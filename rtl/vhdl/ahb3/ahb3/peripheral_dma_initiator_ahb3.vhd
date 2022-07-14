@@ -1,4 +1,4 @@
--- Converted from rtl/verilog/ahb3/mpsoc_dma_ahb3_initiator.sv
+-- Converted from rtl/verilog/ahb3/peripheral_dma_initiator_ahb3.sv
 -- by verilog2vhdl - QueenField
 
 --//////////////////////////////////////////////////////////////////////////////
@@ -49,9 +49,9 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 use ieee.math_real.all;
 
-use work.mpsoc_dma_pkg.all;
+use work.peripheral_dma_pkg.all;
 
-entity mpsoc_dma_ahb3_initiator is
+entity peripheral_dma_initiator_ahb3 is
   generic (
     ADDR_WIDTH             : integer := 64;
     DATA_WIDTH             : integer := 64;
@@ -106,10 +106,10 @@ entity mpsoc_dma_ahb3_initiator is
     ahb3_res_htrans    : out std_logic_vector(1 downto 0);
     ahb3_res_hprot     : out std_logic_vector(3 downto 0)
     );
-end mpsoc_dma_ahb3_initiator;
+end peripheral_dma_initiator_ahb3;
 
-architecture RTL of mpsoc_dma_ahb3_initiator is
-  component mpsoc_dma_ahb3_initiator_req
+architecture RTL of peripheral_dma_initiator_ahb3 is
+  component peripheral_dma_initiator_req_ahb3
     generic (
       ADDR_WIDTH : integer := 32;
       DATA_WIDTH : integer := 32
@@ -139,7 +139,7 @@ architecture RTL of mpsoc_dma_ahb3_initiator is
       );
   end component;
 
-  component mpsoc_dma_initiator_nocreq
+  component peripheral_dma_initiator_nocreq
     generic (
       ADDR_WIDTH             : integer := 32;
       DATA_WIDTH             : integer := 32;
@@ -180,7 +180,7 @@ architecture RTL of mpsoc_dma_ahb3_initiator is
       );
   end component;
 
-  component mpsoc_dma_ahb3_initiator_nocres
+  component peripheral_dma_initiator_ahb3_nocres
     generic (
       ADDR_WIDTH             : integer := 32;
       DATA_WIDTH             : integer := 32;
@@ -243,7 +243,7 @@ begin
   -- Module body
   --
 
-  ahb3_initiator_req : mpsoc_dma_ahb3_initiator_req
+  ahb3_initiator_req : peripheral_dma_initiator_req_ahb3
     port map (
       -- Outputs
       ahb3_req_hmastlock => ahb3_req_hmastlock,
@@ -268,7 +268,7 @@ begin
       req_data_ready     => req_data_ready
       );
 
-  initiator_nocreq : mpsoc_dma_initiator_nocreq
+  initiator_nocreq : peripheral_dma_initiator_nocreq
     generic map (
       TILEID          => TILEID,
       NOC_PACKET_SIZE => NOC_PACKET_SIZE
@@ -295,7 +295,7 @@ begin
       req_data       => req_data(DATA_WIDTH-1 downto 0)
       );
 
-  ahb3_initiator_nocres : mpsoc_dma_ahb3_initiator_nocres
+  ahb3_initiator_nocres : peripheral_dma_initiator_ahb3_nocres
     generic map (
       NOC_PACKET_SIZE => NOC_PACKET_SIZE
       )

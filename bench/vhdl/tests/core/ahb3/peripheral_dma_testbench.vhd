@@ -1,4 +1,4 @@
--- Converted from bench/verilog/regression/mpsoc_dma_testbench.sv
+-- Converted from bench/verilog/regression/peripheral_dma_testbench.sv
 -- by verilog2vhdl - QueenField
 
 --//////////////////////////////////////////////////////////////////////////////
@@ -50,13 +50,13 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 use ieee.math_real.all;
 
-use work.mpsoc_dma_pkg.all;
+use work.peripheral_dma_pkg.all;
 
-entity mpsoc_dma_testbench is
-end mpsoc_dma_testbench;
+entity peripheral_dma_testbench is
+end peripheral_dma_testbench;
 
-architecture RTL of mpsoc_dma_testbench is
-  component mpsoc_dma_ahb3_top
+architecture RTL of peripheral_dma_testbench is
+  component peripheral_dma_top_ahb3
     generic (
       ADDR_WIDTH             : integer := 64;
       DATA_WIDTH             : integer := 64;
@@ -178,7 +178,7 @@ begin
   --
 
   --DUT AHB3
-  ahb3_top : mpsoc_dma_ahb3_top
+  ahb3_top : peripheral_dma_top_ahb3
     generic map (
       ADDR_WIDTH => ADDR_WIDTH,
       DATA_WIDTH => DATA_WIDTH,

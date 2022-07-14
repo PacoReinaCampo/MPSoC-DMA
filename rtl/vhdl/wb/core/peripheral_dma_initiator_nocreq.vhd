@@ -1,4 +1,4 @@
--- Converted from rtl/verilog/core/mpsoc_dma_initiator_nocreq.sv
+-- Converted from rtl/verilog/core/peripheral_dma_initiator_nocreq.sv
 -- by verilog2vhdl - QueenField
 
 --//////////////////////////////////////////////////////////////////////////////
@@ -49,9 +49,10 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 use ieee.math_real.all;
 
-use work.mpsoc_dma_pkg.all;
+use work.vhdl_pkg.all;
+use work.peripheral_dma_pkg.all;
 
-entity mpsoc_dma_initiator_nocreq is
+entity peripheral_dma_initiator_nocreq is
   generic (
     ADDR_WIDTH             : integer := 64;
     DATA_WIDTH             : integer := 64;
@@ -90,10 +91,10 @@ entity mpsoc_dma_initiator_nocreq is
     req_is_l2r     : out std_logic;
     req_size       : out std_logic_vector(DMA_REQFIELD_SIZE_WIDTH-3 downto 0)
     );
-end mpsoc_dma_initiator_nocreq;
+end peripheral_dma_initiator_nocreq;
 
-architecture RTL of mpsoc_dma_initiator_nocreq is
-  component arb_rr
+architecture RTL of peripheral_dma_initiator_nocreq is
+  component peripheral_arb_rr
     generic (
       N : integer := 2
       );
@@ -204,7 +205,7 @@ begin
   requests <= valid and not open_responses and (TABLE_ENTRIES-1 downto 0 => to_stdlogic(noc_req_state = NOC_REQ_IDLE));
 
   -- Round Robin (rr) arbiter
-  arbiter_rr : arb_rr
+  arbiter_rr : peripheral_arb_rr
     generic map (
       N => TABLE_ENTRIES
       )

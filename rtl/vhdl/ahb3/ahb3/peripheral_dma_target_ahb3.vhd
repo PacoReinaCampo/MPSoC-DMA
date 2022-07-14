@@ -1,4 +1,4 @@
--- Converted from rtl/verilog/ahb3/mpsoc_dma_ahb3_target.sv
+-- Converted from rtl/verilog/ahb3/peripheral_dma_target_ahb3.sv
 -- by verilog2vhdl - QueenField
 
 --//////////////////////////////////////////////////////////////////////////////
@@ -49,9 +49,10 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 use ieee.math_real.all;
 
-use work.mpsoc_dma_pkg.all;
+use work.vhdl_pkg.all;
+use work.peripheral_dma_pkg.all;
 
-entity mpsoc_dma_ahb3_target is
+entity peripheral_dma_target_ahb3 is
   generic (
     ADDR_WIDTH  : integer := 64;
     DATA_WIDTH  : integer := 64;
@@ -98,10 +99,10 @@ entity mpsoc_dma_ahb3_target is
     ahb3_hburst    : out std_logic_vector(2 downto 0);
     ahb3_htrans    : out std_logic_vector(1 downto 0)
     );
-end mpsoc_dma_ahb3_target;
+end peripheral_dma_target_ahb3;
 
-architecture RTL of mpsoc_dma_ahb3_target is
-  component mpsoc_dma_packet_buffer
+architecture RTL of peripheral_dma_target_ahb3 is
+  component peripheral_dma_packet_buffer
     generic (
       DATA_WIDTH : integer   := 32;
       FLIT_WIDTH : integer   := 34;
@@ -226,7 +227,7 @@ begin
   --
 
   -- Input buffer that stores flits until we have one complete packet
-  packet_buffer : mpsoc_dma_packet_buffer
+  packet_buffer : peripheral_dma_packet_buffer
     generic map (
       FIFO_DEPTH => NOC_PACKET_SIZE
       )

@@ -1,4 +1,4 @@
--- Converted from rtl/verilog/core/arb_rr.sv
+-- Converted from rtl/verilog/core/peripheral_arb_rr.sv
 -- by verilog2vhdl - QueenField
 
 --//////////////////////////////////////////////////////////////////////////////
@@ -49,7 +49,7 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-entity arb_rr is
+entity peripheral_arb_rr is
   generic (
     N : integer := 2
     );
@@ -59,9 +59,9 @@ entity arb_rr is
     gnt     : in  std_logic_vector(N-1 downto 0);
     nxt_gnt : out std_logic_vector(N-1 downto 0)
     );
-end arb_rr;
+end peripheral_arb_rr;
 
-architecture RTL of arb_rr is
+architecture RTL of peripheral_arb_rr is
   --////////////////////////////////////////////////////////////////
   --
   -- Variables

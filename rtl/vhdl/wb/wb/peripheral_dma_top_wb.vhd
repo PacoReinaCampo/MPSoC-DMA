@@ -1,4 +1,4 @@
--- Converted from rtl/verilog/wb/mpsoc_dma_wb_top.sv
+-- Converted from rtl/verilog/wb/peripheral_dma_top_wb.sv
 -- by verilog2vhdl - QueenField
 
 --//////////////////////////////////////////////////////////////////////////////
@@ -50,9 +50,10 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 use ieee.math_real.all;
 
-use work.mpsoc_dma_pkg.all;
+use work.vhdl_pkg.all;
+use work.peripheral_dma_pkg.all;
 
-entity mpsoc_dma_wb_top is
+entity peripheral_dma_top_wb is
   generic (
     ADDR_WIDTH             : integer := 64;
     DATA_WIDTH             : integer := 64;
@@ -106,10 +107,10 @@ entity mpsoc_dma_wb_top is
 
     irq : out std_logic_vector(TABLE_ENTRIES-1 downto 0)
     );
-end mpsoc_dma_wb_top;
+end peripheral_dma_top_wb;
 
-architecture RTL of mpsoc_dma_wb_top is
-  component mpsoc_dma_wb_interface
+architecture RTL of peripheral_dma_top_wb is
+  component peripheral_dma_interface_wb
     generic (
       ADDR_WIDTH             : integer := 32;
       DATA_WIDTH             : integer := 32;
@@ -144,7 +145,7 @@ architecture RTL of mpsoc_dma_wb_top is
       );
   end component;
 
-  component mpsoc_dma_request_table
+  component peripheral_dma_request_table
     generic (
       TABLE_ENTRIES          : integer := 4;
       TABLE_ENTRIES_PTRWIDTH : integer := integer(log2(real(4)));
@@ -181,7 +182,7 @@ architecture RTL of mpsoc_dma_wb_top is
       );
   end component;
 
-  component mpsoc_dma_wb_initiator
+  component peripheral_dma_initiator_wb
     generic (
       ADDR_WIDTH             : integer := 32;
       DATA_WIDTH             : integer := 32;
@@ -238,7 +239,7 @@ architecture RTL of mpsoc_dma_wb_top is
       );
   end component;
 
-  component mpsoc_dma_wb_target
+  component peripheral_dma_target_wb
     generic (
       ADDR_WIDTH  : integer := 32;
       DATA_WIDTH  : integer := 32;
@@ -370,7 +371,7 @@ begin
   ctrl_in_read_pos  <= (others => '0');
   ctrl_write_pos    <= (others => '0');
 
-  wb_interface : mpsoc_dma_wb_interface
+  wb_interface : peripheral_dma_interface_wb
     generic map (
       TILEID => TILEID
       )
@@ -397,7 +398,7 @@ begin
       done            => done(TABLE_ENTRIES-1 downto 0)
       );
 
-  request_table : mpsoc_dma_request_table
+  request_table : peripheral_dma_request_table
     generic map (
       GENERATE_INTERRUPT => GENERATE_INTERRUPT
       )
@@ -423,7 +424,7 @@ begin
       ctrl_done_en    => ctrl_done_en
       );
 
-  wb_initiator : mpsoc_dma_wb_initiator
+  wb_initiator : peripheral_dma_initiator_wb
     generic map (
       TILEID => TILEID
       )
@@ -465,7 +466,7 @@ begin
       wb_res_dat_i  => wb_res_dat_i(DATA_WIDTH-1 downto 0)
       );
 
-  wb_target : mpsoc_dma_wb_target
+  wb_target : peripheral_dma_target_wb
     generic map (
       TILEID          => TILEID,
       NOC_PACKET_SIZE => NOC_PACKET_SIZE

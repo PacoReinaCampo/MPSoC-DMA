@@ -1,4 +1,4 @@
--- Converted from rtl/verilog/wb/mpsoc_dma_wb_interface.sv
+-- Converted from rtl/verilog/wb/peripheral_dma_interface_wb.sv
 -- by verilog2vhdl - QueenField
 
 --//////////////////////////////////////////////////////////////////////////////
@@ -48,9 +48,10 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-use work.mpsoc_dma_pkg.all;
+use work.vhdl_pkg.all;
+use work.peripheral_dma_pkg.all;
 
-entity mpsoc_dma_wb_interface is
+entity peripheral_dma_interface_wb is
   generic (
     ADDR_WIDTH             : integer := 64;
     DATA_WIDTH             : integer := 64;
@@ -83,9 +84,9 @@ entity mpsoc_dma_wb_interface is
 
     done : in std_logic_vector(TABLE_ENTRIES-1 downto 0)
     );
-end mpsoc_dma_wb_interface;
+end peripheral_dma_interface_wb;
 
-architecture RTL of mpsoc_dma_wb_interface is
+architecture RTL of peripheral_dma_interface_wb is
 
 begin
   --////////////////////////////////////////////////////////////////

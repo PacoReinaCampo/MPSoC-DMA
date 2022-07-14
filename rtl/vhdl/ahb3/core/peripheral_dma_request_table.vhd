@@ -1,4 +1,4 @@
--- Converted from rtl/verilog/core/mpsoc_dma_request_table.sv
+-- Converted from rtl/verilog/core/peripheral_dma_request_table.sv
 -- by verilog2vhdl - QueenField
 
 --//////////////////////////////////////////////////////////////////////////////
@@ -50,9 +50,9 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 use ieee.math_real.all;
 
-use work.mpsoc_dma_pkg.all;
+use work.peripheral_dma_pkg.all;
 
-entity mpsoc_dma_request_table is
+entity peripheral_dma_request_table is
   generic (
     TABLE_ENTRIES          : integer := 4;
     TABLE_ENTRIES_PTRWIDTH : integer := integer(log2(real(4)));
@@ -87,9 +87,9 @@ entity mpsoc_dma_request_table is
 
     irq : out std_logic_vector(TABLE_ENTRIES-1 downto 0)
     );
-end mpsoc_dma_request_table;
+end peripheral_dma_request_table;
 
-architecture RTL of mpsoc_dma_request_table is
+architecture RTL of peripheral_dma_request_table is
   --////////////////////////////////////////////////////////////////
   --
   -- Types

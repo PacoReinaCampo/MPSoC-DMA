@@ -1,4 +1,4 @@
--- Converted from rtl/verilog/wb/mpsoc_dma_wb_initiator_req.sv
+-- Converted from rtl/verilog/wb/peripheral_dma_initiator_req_wb.sv
 -- by verilog2vhdl - QueenField
 
 --//////////////////////////////////////////////////////////////////////////////
@@ -48,9 +48,9 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-use work.mpsoc_dma_pkg.all;
+use work.peripheral_dma_pkg.all;
 
-entity mpsoc_dma_wb_initiator_req is
+entity peripheral_dma_initiator_req_wb is
   generic (
     ADDR_WIDTH : integer := 64;
     DATA_WIDTH : integer := 64
@@ -78,9 +78,9 @@ entity mpsoc_dma_wb_initiator_req is
     req_data       : out std_logic_vector(DATA_WIDTH-1 downto 0);
     req_data_ready : in  std_logic
     );
-end mpsoc_dma_wb_initiator_req;
+end peripheral_dma_initiator_req_wb;
 
-architecture RTL of mpsoc_dma_wb_initiator_req is
+architecture RTL of peripheral_dma_initiator_req_wb is
   --////////////////////////////////////////////////////////////////
   --
   -- Constants

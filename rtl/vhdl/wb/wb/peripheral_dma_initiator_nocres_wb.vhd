@@ -1,4 +1,4 @@
--- Converted from rtl/verilog/wb/mpsoc_dma_wb_initiator_nocres.sv
+-- Converted from rtl/verilog/wb/peripheral_dma_initiator_nocres_wb.sv
 -- by verilog2vhdl - QueenField
 
 --//////////////////////////////////////////////////////////////////////////////
@@ -50,9 +50,10 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 use ieee.math_real.all;
 
-use work.mpsoc_dma_pkg.all;
+use work.vhdl_pkg.all;
+use work.peripheral_dma_pkg.all;
 
-entity mpsoc_dma_wb_initiator_nocres is
+entity peripheral_dma_initiator_nocres_wb is
   generic (
     ADDR_WIDTH             : integer := 64;
     DATA_WIDTH             : integer := 64;
@@ -90,10 +91,10 @@ entity mpsoc_dma_wb_initiator_nocres is
     ctrl_done_pos : out std_logic_vector(TABLE_ENTRIES_PTRWIDTH-1 downto 0);
     ctrl_done_en  : out std_logic
     );
-end mpsoc_dma_wb_initiator_nocres;
+end peripheral_dma_initiator_nocres_wb;
 
-architecture RTL of mpsoc_dma_wb_initiator_nocres is
-  component mpsoc_dma_packet_buffer
+architecture RTL of peripheral_dma_initiator_nocres_wb is
+  component peripheral_dma_packet_buffer
     generic (
       DATA_WIDTH : integer := 32;
       FLIT_WIDTH : integer := 34;
@@ -150,7 +151,7 @@ begin
   -- Module body
   --
 
-  packet_buffer : mpsoc_dma_packet_buffer
+  packet_buffer : peripheral_dma_packet_buffer
     generic map (
       FIFO_DEPTH => NOC_PACKET_SIZE
       )

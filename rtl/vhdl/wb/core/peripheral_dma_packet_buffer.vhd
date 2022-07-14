@@ -1,4 +1,4 @@
--- Converted from rtl/verilog/core/mpsoc_dma_packet_buffer.sv
+-- Converted from rtl/verilog/core/peripheral_dma_packet_buffer.sv
 -- by verilog2vhdl - QueenField
 
 --//////////////////////////////////////////////////////////////////////////////
@@ -50,9 +50,10 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 use ieee.math_real.all;
 
-use work.mpsoc_dma_pkg.all;
+use work.vhdl_pkg.all;
+use work.peripheral_dma_pkg.all;
 
-entity mpsoc_dma_packet_buffer is
+entity peripheral_dma_packet_buffer is
   generic (
     DATA_WIDTH : integer   := 32;
     FLIT_WIDTH : integer   := 34;
@@ -76,9 +77,9 @@ entity mpsoc_dma_packet_buffer is
 
     out_size : out std_logic_vector(SIZE_WIDTH-1 downto 0)
     );
-end mpsoc_dma_packet_buffer;
+end peripheral_dma_packet_buffer;
 
-architecture RTL of mpsoc_dma_packet_buffer is
+architecture RTL of peripheral_dma_packet_buffer is
   --////////////////////////////////////////////////////////////////
   --
   -- Types
