@@ -41,9 +41,9 @@
  *   Paco Reina Campo <pacoreinacampo@queenfield.tech>
  */
 
-`include "mpsoc_dma_pkg.sv"
+import peripheral_dma_pkg::*;
 
-module mpsoc_dma_testbench;
+module peripheral_dma_testbench;
 
   //////////////////////////////////////////////////////////////////
   //
@@ -66,19 +66,19 @@ module mpsoc_dma_testbench;
   logic rst;
 
   // AHB3
-  logic [`FLIT_WIDTH-1:0] noc_ahb3_in_req_flit;
+  logic [FLIT_WIDTH-1:0]  noc_ahb3_in_req_flit;
   logic                   noc_ahb3_in_req_valid;
   logic                   noc_ahb3_in_req_ready;
 
-  logic [`FLIT_WIDTH-1:0] noc_ahb3_in_res_flit;
+  logic [FLIT_WIDTH-1:0]  noc_ahb3_in_res_flit;
   logic                   noc_ahb3_in_res_valid;
   logic                   noc_ahb3_in_res_ready;
 
-  logic [`FLIT_WIDTH-1:0] noc_ahb3_out_req_flit;
+  logic [FLIT_WIDTH-1:0]  noc_ahb3_out_req_flit;
   logic                   noc_ahb3_out_req_valid;
   logic                   noc_ahb3_out_req_ready;
 
-  logic [`FLIT_WIDTH-1:0] noc_ahb3_out_res_flit;
+  logic [FLIT_WIDTH-1:0]  noc_ahb3_out_res_flit;
   logic                   noc_ahb3_out_res_valid;
   logic                   noc_ahb3_out_res_ready;
 
@@ -111,7 +111,7 @@ module mpsoc_dma_testbench;
   //
 
   //DUT AHB3
-  mpsoc_dma_ahb3_top #(
+  peripheral_dma_top_ahb3 #(
     .ADDR_WIDTH ( ADDR_WIDTH ),
     .DATA_WIDTH ( DATA_WIDTH ),
 
@@ -121,7 +121,7 @@ module mpsoc_dma_testbench;
     .NOC_PACKET_SIZE ( NOC_PACKET_SIZE ),
     .GENERATE_INTERRUPT ( GENERATE_INTERRUPT )
   )
-  ahb3_top (
+  dma_ahb3_top (
     .clk (clk),
     .rst (rst),
 
