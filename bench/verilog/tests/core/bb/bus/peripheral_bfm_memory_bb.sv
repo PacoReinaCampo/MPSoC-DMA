@@ -41,7 +41,7 @@
  *   Paco Reina Campo <pacoreinacampo@queenfield.tech>
  */
 
-module mpsoc_wb_bfm_memory #(
+module mpsoc_bb_bfm_memory #(
   //Wishbone parameters
   parameter DW = 32,
   parameter AW = 32,
@@ -76,7 +76,7 @@ module mpsoc_wb_bfm_memory #(
   // Constants
   //
 
-  `include "mpsoc_bfm_wb_pkg.sv"
+  `include "mpsoc_bfm_bb_pkg.sv"
 
   localparam bytes_per_dw = (DW/8);
   localparam mem_words = (MEM_SIZE_BYTES/bytes_per_dw);
@@ -106,7 +106,7 @@ module mpsoc_wb_bfm_memory #(
   //
   // Module Body
   //
-  mpsoc_wb_bfm_slave #(
+  mpsoc_bb_bfm_slave #(
     .AW    (AW),
     .DW    (DW),
     .DEBUG (DEBUG)

@@ -56,7 +56,7 @@ entity peripheral_dma_testbench is
 end peripheral_dma_testbench;
 
 architecture RTL of peripheral_dma_testbench is
-  component peripheral_dma_top_wb
+  component peripheral_dma_top_bb
     generic (
       ADDR_WIDTH             : integer := 32;
       DATA_WIDTH             : integer := 32;
@@ -133,21 +133,21 @@ architecture RTL of peripheral_dma_testbench is
   signal rst : std_logic;
 
   -- WB
-  signal noc_wb_in_req_flit  : std_logic_vector(FLIT_WIDTH-1 downto 0);
-  signal noc_wb_in_req_valid : std_logic;
-  signal noc_wb_in_req_ready : std_logic;
+  signal noc_bb_in_req_flit  : std_logic_vector(FLIT_WIDTH-1 downto 0);
+  signal noc_bb_in_req_valid : std_logic;
+  signal noc_bb_in_req_ready : std_logic;
 
-  signal noc_wb_in_res_flit  : std_logic_vector(FLIT_WIDTH-1 downto 0);
-  signal noc_wb_in_res_valid : std_logic;
-  signal noc_wb_in_res_ready : std_logic;
+  signal noc_bb_in_res_flit  : std_logic_vector(FLIT_WIDTH-1 downto 0);
+  signal noc_bb_in_res_valid : std_logic;
+  signal noc_bb_in_res_ready : std_logic;
 
-  signal noc_wb_out_req_flit  : std_logic_vector(FLIT_WIDTH-1 downto 0);
-  signal noc_wb_out_req_valid : std_logic;
-  signal noc_wb_out_req_ready : std_logic;
+  signal noc_bb_out_req_flit  : std_logic_vector(FLIT_WIDTH-1 downto 0);
+  signal noc_bb_out_req_valid : std_logic;
+  signal noc_bb_out_req_ready : std_logic;
 
-  signal noc_wb_out_res_flit  : std_logic_vector(FLIT_WIDTH-1 downto 0);
-  signal noc_wb_out_res_valid : std_logic;
-  signal noc_wb_out_res_ready : std_logic;
+  signal noc_bb_out_res_flit  : std_logic_vector(FLIT_WIDTH-1 downto 0);
+  signal noc_bb_out_res_valid : std_logic;
+  signal noc_bb_out_res_ready : std_logic;
 
   signal wb_if_addr_i : std_logic_vector(ADDR_WIDTH-1 downto 0);
   signal wb_if_dat_i  : std_logic_vector(DATA_WIDTH-1 downto 0);
@@ -171,7 +171,7 @@ architecture RTL of peripheral_dma_testbench is
   signal wb_dat_i : std_logic_vector(DATA_WIDTH-1 downto 0);
   signal wb_ack_i : std_logic;
 
-  signal irq_wb : std_logic_vector(TABLE_ENTRIES-1 downto 0);
+  signal irq_bb : std_logic_vector(TABLE_ENTRIES-1 downto 0);
 
 begin
   --////////////////////////////////////////////////////////////////
@@ -180,7 +180,7 @@ begin
   --
 
   --DUT WB
-  wb_top : peripheral_dma_top_wb
+  wb_top : peripheral_dma_top_bb
     generic map (
       ADDR_WIDTH => ADDR_WIDTH,
       DATA_WIDTH => DATA_WIDTH,
@@ -195,21 +195,21 @@ begin
       clk => clk,
       rst => rst,
 
-      noc_in_req_flit  => noc_wb_in_req_flit,
-      noc_in_req_valid => noc_wb_in_req_valid,
-      noc_in_req_ready => noc_wb_in_req_ready,
+      noc_in_req_flit  => noc_bb_in_req_flit,
+      noc_in_req_valid => noc_bb_in_req_valid,
+      noc_in_req_ready => noc_bb_in_req_ready,
 
-      noc_in_res_flit  => noc_wb_in_res_flit,
-      noc_in_res_valid => noc_wb_in_res_valid,
-      noc_in_res_ready => noc_wb_in_res_ready,
+      noc_in_res_flit  => noc_bb_in_res_flit,
+      noc_in_res_valid => noc_bb_in_res_valid,
+      noc_in_res_ready => noc_bb_in_res_ready,
 
-      noc_out_req_flit  => noc_wb_out_req_flit,
-      noc_out_req_valid => noc_wb_out_req_valid,
-      noc_out_req_ready => noc_wb_out_req_ready,
+      noc_out_req_flit  => noc_bb_out_req_flit,
+      noc_out_req_valid => noc_bb_out_req_valid,
+      noc_out_req_ready => noc_bb_out_req_ready,
 
-      noc_out_res_flit  => noc_wb_out_res_flit,
-      noc_out_res_valid => noc_wb_out_res_valid,
-      noc_out_res_ready => noc_wb_out_res_ready,
+      noc_out_res_flit  => noc_bb_out_res_flit,
+      noc_out_res_valid => noc_bb_out_res_valid,
+      noc_out_res_ready => noc_bb_out_res_ready,
 
       wb_if_addr_i => wb_if_addr_i,
       wb_if_dat_i  => wb_if_dat_i,
@@ -233,6 +233,6 @@ begin
       wb_dat_i => wb_dat_i,
       wb_ack_i => wb_ack_i,
 
-      irq => irq_wb
+      irq => irq_bb
       );
 end RTL;

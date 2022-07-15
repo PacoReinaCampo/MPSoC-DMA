@@ -41,7 +41,7 @@
  *   Paco Reina Campo <pacoreinacampo@queenfield.tech>
  */
 
-module mpsoc_wb_bfm_slave #(
+module mpsoc_bb_bfm_slave #(
   parameter DW = 32,
   parameter AW = 32,
   parameter DEBUG = 0
@@ -68,7 +68,7 @@ module mpsoc_wb_bfm_slave #(
   // Constants
   //
 
-  `include "mpsoc_bfm_wb_pkg.sv"
+  `include "mpsoc_bfm_bb_pkg.sv"
 
   localparam TP = 1;
 

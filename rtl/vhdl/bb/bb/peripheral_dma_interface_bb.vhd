@@ -1,4 +1,4 @@
--- Converted from rtl/verilog/wb/peripheral_dma_interface_wb.sv
+-- Converted from rtl/verilog/wb/peripheral_dma_interface_bb.sv
 -- by verilog2vhdl - QueenField
 
 --//////////////////////////////////////////////////////////////////////////////
@@ -51,7 +51,7 @@ use ieee.numeric_std.all;
 use work.vhdl_pkg.all;
 use work.peripheral_dma_pkg.all;
 
-entity peripheral_dma_interface_wb is
+entity peripheral_dma_interface_bb is
   generic (
     ADDR_WIDTH             : integer := 64;
     DATA_WIDTH             : integer := 64;
@@ -84,9 +84,9 @@ entity peripheral_dma_interface_wb is
 
     done : in std_logic_vector(TABLE_ENTRIES-1 downto 0)
     );
-end peripheral_dma_interface_wb;
+end peripheral_dma_interface_bb;
 
-architecture RTL of peripheral_dma_interface_wb is
+architecture RTL of peripheral_dma_interface_bb is
 
 begin
   --////////////////////////////////////////////////////////////////

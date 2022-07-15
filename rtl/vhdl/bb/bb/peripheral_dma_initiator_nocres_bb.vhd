@@ -1,4 +1,4 @@
--- Converted from rtl/verilog/wb/peripheral_dma_initiator_nocres_wb.sv
+-- Converted from rtl/verilog/wb/peripheral_dma_initiator_nocres_bb.sv
 -- by verilog2vhdl - QueenField
 
 --//////////////////////////////////////////////////////////////////////////////
@@ -53,7 +53,7 @@ use ieee.math_real.all;
 use work.vhdl_pkg.all;
 use work.peripheral_dma_pkg.all;
 
-entity peripheral_dma_initiator_nocres_wb is
+entity peripheral_dma_initiator_nocres_bb is
   generic (
     ADDR_WIDTH             : integer := 64;
     DATA_WIDTH             : integer := 64;
@@ -91,9 +91,9 @@ entity peripheral_dma_initiator_nocres_wb is
     ctrl_done_pos : out std_logic_vector(TABLE_ENTRIES_PTRWIDTH-1 downto 0);
     ctrl_done_en  : out std_logic
     );
-end peripheral_dma_initiator_nocres_wb;
+end peripheral_dma_initiator_nocres_bb;
 
-architecture RTL of peripheral_dma_initiator_nocres_wb is
+architecture RTL of peripheral_dma_initiator_nocres_bb is
   component peripheral_dma_packet_buffer
     generic (
       DATA_WIDTH : integer := 32;

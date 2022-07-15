@@ -1,4 +1,4 @@
--- Converted from rtl/verilog/wb/peripheral_dma_top_wb.sv
+-- Converted from rtl/verilog/wb/peripheral_dma_top_bb.sv
 -- by verilog2vhdl - QueenField
 
 --//////////////////////////////////////////////////////////////////////////////
@@ -53,7 +53,7 @@ use ieee.math_real.all;
 use work.vhdl_pkg.all;
 use work.peripheral_dma_pkg.all;
 
-entity peripheral_dma_top_wb is
+entity peripheral_dma_top_bb is
   generic (
     ADDR_WIDTH             : integer := 64;
     DATA_WIDTH             : integer := 64;
@@ -107,10 +107,10 @@ entity peripheral_dma_top_wb is
 
     irq : out std_logic_vector(TABLE_ENTRIES-1 downto 0)
     );
-end peripheral_dma_top_wb;
+end peripheral_dma_top_bb;
 
-architecture RTL of peripheral_dma_top_wb is
-  component peripheral_dma_interface_wb
+architecture RTL of peripheral_dma_top_bb is
+  component peripheral_dma_interface_bb
     generic (
       ADDR_WIDTH             : integer := 32;
       DATA_WIDTH             : integer := 32;
@@ -182,7 +182,7 @@ architecture RTL of peripheral_dma_top_wb is
       );
   end component;
 
-  component peripheral_dma_initiator_wb
+  component peripheral_dma_initiator_bb
     generic (
       ADDR_WIDTH             : integer := 32;
       DATA_WIDTH             : integer := 32;
@@ -239,7 +239,7 @@ architecture RTL of peripheral_dma_top_wb is
       );
   end component;
 
-  component peripheral_dma_target_wb
+  component peripheral_dma_target_bb
     generic (
       ADDR_WIDTH  : integer := 32;
       DATA_WIDTH  : integer := 32;
@@ -355,7 +355,7 @@ architecture RTL of peripheral_dma_top_wb is
   signal ctrl_write_pos    : std_logic_vector(TABLE_ENTRIES_PTRWIDTH-1 downto 0);
 
   signal wb_arb     : std_logic_vector(1 downto 0);
-  signal nxt_wb_arb : std_logic_vector(1 downto 0);
+  signal nxt_bb_arb : std_logic_vector(1 downto 0);
 
   signal wb_arb_active : std_logic;
 
@@ -371,7 +371,7 @@ begin
   ctrl_in_read_pos  <= (others => '0');
   ctrl_write_pos    <= (others => '0');
 
-  wb_interface : peripheral_dma_interface_wb
+  wb_interface : peripheral_dma_interface_bb
     generic map (
       TILEID => TILEID
       )
@@ -424,7 +424,7 @@ begin
       ctrl_done_en    => ctrl_done_en
       );
 
-  wb_initiator : peripheral_dma_initiator_wb
+  wb_initiator : peripheral_dma_initiator_bb
     generic map (
       TILEID => TILEID
       )
@@ -466,7 +466,7 @@ begin
       wb_res_dat_i  => wb_res_dat_i(DATA_WIDTH-1 downto 0)
       );
 
-  wb_target : peripheral_dma_target_wb
+  wb_target : peripheral_dma_target_bb
     generic map (
       TILEID          => TILEID,
       NOC_PACKET_SIZE => NOC_PACKET_SIZE
@@ -500,7 +500,7 @@ begin
       if (rst = '1') then
         wb_arb <= wb_arb_target;
       else
-        wb_arb <= nxt_wb_arb;
+        wb_arb <= nxt_bb_arb;
       end if;
     end if;
   end process;
@@ -512,15 +512,15 @@ begin
   processing_1 : process (wb_arb_active)
   begin
     if (wb_arb_active = '1') then
-      nxt_wb_arb <= wb_arb;
+      nxt_bb_arb <= wb_arb;
     elsif (wb_target_cyc_o = '1') then
-      nxt_wb_arb <= wb_arb_target;
+      nxt_bb_arb <= wb_arb_target;
     elsif (wb_res_cyc_o = '1') then
-      nxt_wb_arb <= wb_arb_resp;
+      nxt_bb_arb <= wb_arb_resp;
     elsif (wb_req_cyc_o = '1') then
-      nxt_wb_arb <= wb_arb_req;
+      nxt_bb_arb <= wb_arb_req;
     else
-      nxt_wb_arb <= wb_arb_target;
+      nxt_bb_arb <= wb_arb_target;
     end if;
   end process;
 

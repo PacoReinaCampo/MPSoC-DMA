@@ -1,4 +1,4 @@
--- Converted from rtl/verilog/wb/peripheral_dma_initiator_wb.sv
+-- Converted from rtl/verilog/wb/peripheral_dma_initiator_bb.sv
 -- by verilog2vhdl - QueenField
 
 --//////////////////////////////////////////////////////////////////////////////
@@ -50,7 +50,7 @@ use ieee.math_real.all;
 
 use work.peripheral_dma_pkg.all;
 
-entity peripheral_dma_initiator_wb is
+entity peripheral_dma_initiator_bb is
   generic (
     ADDR_WIDTH             : integer := 64;
     DATA_WIDTH             : integer := 64;
@@ -105,10 +105,10 @@ entity peripheral_dma_initiator_wb is
     wb_res_bte_o : out std_logic_vector(1 downto 0);
     wb_res_sel_o : out std_logic_vector(3 downto 0)
     );
-end peripheral_dma_initiator_wb;
+end peripheral_dma_initiator_bb;
 
-architecture RTL of peripheral_dma_initiator_wb is
-  component peripheral_dma_initiator_req_wb
+architecture RTL of peripheral_dma_initiator_bb is
+  component peripheral_dma_initiator_req_bb
     generic (
       ADDR_WIDTH : integer := 32;
       DATA_WIDTH : integer := 32
@@ -179,7 +179,7 @@ architecture RTL of peripheral_dma_initiator_wb is
       );
   end component;
 
-  component peripheral_dma_initiator_nocres_wb
+  component peripheral_dma_initiator_nocres_bb
     generic (
       ADDR_WIDTH             : integer := 32;
       DATA_WIDTH             : integer := 32;
@@ -241,7 +241,7 @@ begin
   -- Module body
   --
 
-  wb_initiator_req : peripheral_dma_initiator_req_wb
+  wb_initiator_req : peripheral_dma_initiator_req_bb
     port map (
       -- Outputs
       wb_req_cyc_o   => wb_req_cyc_o,
@@ -293,7 +293,7 @@ begin
       req_data       => req_data(DATA_WIDTH-1 downto 0)
       );
 
-  wb_initiator_nocres : peripheral_dma_initiator_nocres_wb
+  wb_initiator_nocres : peripheral_dma_initiator_nocres_bb
     generic map (
       NOC_PACKET_SIZE => NOC_PACKET_SIZE
       )

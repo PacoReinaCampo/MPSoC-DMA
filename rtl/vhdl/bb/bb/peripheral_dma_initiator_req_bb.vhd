@@ -1,4 +1,4 @@
--- Converted from rtl/verilog/wb/peripheral_dma_initiator_req_wb.sv
+-- Converted from rtl/verilog/wb/peripheral_dma_initiator_req_bb.sv
 -- by verilog2vhdl - QueenField
 
 --//////////////////////////////////////////////////////////////////////////////
@@ -50,7 +50,7 @@ use ieee.numeric_std.all;
 
 use work.peripheral_dma_pkg.all;
 
-entity peripheral_dma_initiator_req_wb is
+entity peripheral_dma_initiator_req_bb is
   generic (
     ADDR_WIDTH : integer := 64;
     DATA_WIDTH : integer := 64
@@ -78,9 +78,9 @@ entity peripheral_dma_initiator_req_wb is
     req_data       : out std_logic_vector(DATA_WIDTH-1 downto 0);
     req_data_ready : in  std_logic
     );
-end peripheral_dma_initiator_req_wb;
+end peripheral_dma_initiator_req_bb;
 
-architecture RTL of peripheral_dma_initiator_req_wb is
+architecture RTL of peripheral_dma_initiator_req_bb is
   --////////////////////////////////////////////////////////////////
   --
   -- Constants
@@ -106,11 +106,11 @@ architecture RTL of peripheral_dma_initiator_req_wb is
 
   -- State logic
   signal wb_req_state     : std_logic_vector(WB_REQ_WIDTH-1 downto 0);
-  signal nxt_wb_req_state : std_logic_vector(WB_REQ_WIDTH-1 downto 0);
+  signal nxt_bb_req_state : std_logic_vector(WB_REQ_WIDTH-1 downto 0);
 
   -- Counter for the state machine for loaded words
   signal wb_req_count     : std_logic_vector(DMA_REQFIELD_SIZE_WIDTH-3 downto 0);
-  signal nxt_wb_req_count : std_logic_vector(DMA_REQFIELD_SIZE_WIDTH-3 downto 0);
+  signal nxt_bb_req_count : std_logic_vector(DMA_REQFIELD_SIZE_WIDTH-3 downto 0);
 
   -- The wishbone data fetch and the NoC interface are seperated by a FIFO.
   -- This FIFO relaxes problems with bursts and their termination and decouples
@@ -237,7 +237,7 @@ begin
   processing_2 : process (wb_req_state)
   begin
     -- Signal defaults
-    nxt_wb_req_count <= wb_req_count;
+    nxt_bb_req_count <= wb_req_count;
     wb_req_stb_o     <= '0';
     wb_req_cyc_o     <= '0';
     data_fifo_push   <= '0';
@@ -251,14 +251,14 @@ begin
 
         -- Always reset counter
 
-        nxt_wb_req_count <= (others => '0');
+        nxt_bb_req_count <= (others => '0');
         if (req_start = '1' and req_is_l2r = '1') then
           -- start when new request is handled and it is a L2R
           -- request. Direct transition to data fetching from bus,
           -- as the FIFO is always empty at this point.
-          nxt_wb_req_state <= WB_REQ_DATA;
+          nxt_bb_req_state <= WB_REQ_DATA;
         else                            -- otherwise keep idle'ing
-          nxt_wb_req_state <= WB_REQ_IDLE;
+          nxt_bb_req_state <= WB_REQ_IDLE;
         end if;
       when WB_REQ_DATA =>
         -- We get data from the bus
@@ -284,33 +284,33 @@ begin
           -- When this request was successfull..
 
           -- increment word counter
-          nxt_wb_req_count <= std_logic_vector(unsigned(wb_req_count)+to_unsigned(1, DMA_REQFIELD_SIZE_WIDTH-2));
+          nxt_bb_req_count <= std_logic_vector(unsigned(wb_req_count)+to_unsigned(1, DMA_REQFIELD_SIZE_WIDTH-2));
           -- signal push to data fifo
           data_fifo_push   <= '1';
 
           if (unsigned(wb_req_count) = unsigned(req_size)-to_unsigned(1, DMA_REQFIELD_SIZE_WIDTH-2)) then
             -- This was the last word
-            nxt_wb_req_state <= WB_REQ_IDLE;
+            nxt_bb_req_state <= WB_REQ_IDLE;
           elsif (data_fifo_ready = '1') then
             -- when FIFO can still get data, we stay here
-            nxt_wb_req_state <= WB_REQ_DATA;
+            nxt_bb_req_state <= WB_REQ_DATA;
           else  -- .. otherwise we wait for FIFO to become ready
-            nxt_wb_req_state <= WB_REQ_WAIT;
+            nxt_bb_req_state <= WB_REQ_WAIT;
           end if;
         else  -- if (wb_req_ack_i)
           -- ..otherwise we still wait for the acknowledgement
-          nxt_wb_req_state <= WB_REQ_DATA;
+          nxt_bb_req_state <= WB_REQ_DATA;
         end if;
       when WB_REQ_WAIT =>
         -- Waiting for FIFO to accept new data
         if (data_fifo_ready = '1') then
           -- FIFO ready, restart burst
-          nxt_wb_req_state <= WB_REQ_DATA;
+          nxt_bb_req_state <= WB_REQ_DATA;
         else                            -- wait
-          nxt_wb_req_state <= WB_REQ_WAIT;
+          nxt_bb_req_state <= WB_REQ_WAIT;
         end if;
       when others =>
-        nxt_wb_req_state <= WB_REQ_IDLE;
+        nxt_bb_req_state <= WB_REQ_IDLE;
     end case;
   end process;
 
@@ -322,8 +322,8 @@ begin
         wb_req_state <= WB_REQ_IDLE;
         wb_req_count <= (others => '0');
       else
-        wb_req_state <= nxt_wb_req_state;
-        wb_req_count <= nxt_wb_req_count;
+        wb_req_state <= nxt_bb_req_state;
+        wb_req_count <= nxt_bb_req_count;
       end if;
     end if;
   end process;

@@ -1,4 +1,4 @@
--- Converted from rtl/verilog/wb/peripheral_dma_target_wb.sv
+-- Converted from rtl/verilog/wb/peripheral_dma_target_bb.sv
 -- by verilog2vhdl - QueenField
 
 --//////////////////////////////////////////////////////////////////////////////
@@ -52,7 +52,7 @@ use ieee.math_real.all;
 use work.vhdl_pkg.all;
 use work.peripheral_dma_pkg.all;
 
-entity peripheral_dma_target_wb is
+entity peripheral_dma_target_bb is
   generic (
     ADDR_WIDTH  : integer := 64;
     DATA_WIDTH  : integer := 64;
@@ -99,9 +99,9 @@ entity peripheral_dma_target_wb is
     wb_cti_o : out std_logic_vector(2 downto 0);
     wb_bte_o : out std_logic_vector(1 downto 0)
     );
-end peripheral_dma_target_wb;
+end peripheral_dma_target_bb;
 
-architecture RTL of peripheral_dma_target_wb is
+architecture RTL of peripheral_dma_target_bb is
   component peripheral_dma_packet_buffer
     generic (
       DATA_WIDTH : integer   := 32;
@@ -155,7 +155,7 @@ architecture RTL of peripheral_dma_target_wb is
 
   --FSM hidden state
   signal wb_waiting     : std_logic;
-  signal nxt_wb_waiting : std_logic;
+  signal nxt_bb_waiting : std_logic;
 
   -- Store request parameters: address, last packet and source
   signal src_address        : std_logic_vector(ADDR_WIDTH-1 downto 0);
@@ -185,7 +185,7 @@ architecture RTL of peripheral_dma_target_wb is
   signal resp_wsize        : std_logic_vector(DMA_RESPFIELD_SIZE_WIDTH-3 downto 0);
   signal nxt_resp_wsize    : std_logic_vector(DMA_RESPFIELD_SIZE_WIDTH-3 downto 0);
   signal wb_resp_count     : std_logic_vector(DMA_RESPFIELD_SIZE_WIDTH-3 downto 0);
-  signal nxt_wb_resp_count : std_logic_vector(DMA_RESPFIELD_SIZE_WIDTH-3 downto 0);
+  signal nxt_bb_resp_count : std_logic_vector(DMA_RESPFIELD_SIZE_WIDTH-3 downto 0);
 
   --FIFO-Stuff
 
@@ -340,10 +340,10 @@ begin
     nxt_src_tile               <= src_tile;
     nxt_end_of_request         <= end_of_request;
     nxt_packet_id              <= packet_id;
-    nxt_wb_resp_count          <= wb_resp_count;
+    nxt_bb_resp_count          <= wb_resp_count;
     nxt_noc_resp_packet_wcount <= noc_resp_packet_wcount;
     nxt_noc_resp_packet_wsize  <= noc_resp_packet_wsize;
-    nxt_wb_waiting             <= wb_waiting;
+    nxt_bb_waiting             <= wb_waiting;
     nxt_noc_resp_wcounter      <= noc_resp_wcounter;
     -- Default control signals
     wb_cyc_o                   <= '0';
@@ -364,7 +364,7 @@ begin
         nxt_resp_wsize        <= buf_flit(SIZE_MSB-20 downto SIZE_LSB);
         nxt_packet_id         <= buf_flit(PACKET_ID_MSB downto PACKET_ID_LSB);
         nxt_noc_resp_wcounter <= (others => '0');
-        nxt_wb_resp_count     <= std_logic_vector(to_unsigned(1, DMA_RESPFIELD_SIZE_WIDTH-2));
+        nxt_bb_resp_count     <= std_logic_vector(to_unsigned(1, DMA_RESPFIELD_SIZE_WIDTH-2));
         if (buf_valid = '1') then
           if (buf_flit(PACKET_TYPE_MSB downto PACKET_TYPE_LSB) = PACKET_TYPE_L2R_REQ) then
             nxt_state <= STATE_L2R_GETADDR;
@@ -524,9 +524,9 @@ begin
           wb_cyc_o       <= '0';
           data_fifo_push <= '0';
           if (data_fifo_ready = '1') then
-            nxt_wb_waiting <= '0';
+            nxt_bb_waiting <= '0';
           else
-            nxt_wb_waiting <= '1';
+            nxt_bb_waiting <= '1';
           end if;
         --not wb_waiting
         -- Signal cycle and strobe. We do bursts, but don't insert
@@ -546,18 +546,18 @@ begin
           if (wb_ack_i = '1') then
             -- When this was successfull..
             if ((data_fifo_ready = '0') or (wb_resp_count = resp_wsize)) then
-              nxt_wb_waiting <= '1';
+              nxt_bb_waiting <= '1';
             else
-              nxt_wb_waiting <= '0';
+              nxt_bb_waiting <= '0';
             end if;
-            nxt_wb_resp_count <= std_logic_vector(unsigned(wb_resp_count)+to_unsigned(1, DMA_RESPFIELD_SIZE_WIDTH-2));
+            nxt_bb_resp_count <= std_logic_vector(unsigned(wb_resp_count)+to_unsigned(1, DMA_RESPFIELD_SIZE_WIDTH-2));
             nxt_address       <= std_logic_vector(unsigned(address)+to_unsigned(4, ADDR_WIDTH));
             data_fifo_push    <= '1';
           else  -- ..otherwise we still wait for the acknowledgement
-            nxt_wb_resp_count <= wb_resp_count;
+            nxt_bb_resp_count <= wb_resp_count;
             nxt_address       <= address;
             data_fifo_push    <= '0';
-            nxt_wb_waiting    <= '0';
+            nxt_bb_waiting    <= '0';
           end if;
         end if;
       -- else: !if(wb_waiting)
@@ -597,8 +597,8 @@ begin
         noc_resp_wcounter      <= nxt_noc_resp_wcounter;
         noc_resp_packet_wsize  <= nxt_noc_resp_packet_wsize;
         noc_resp_packet_wcount <= nxt_noc_resp_packet_wcount;
-        wb_resp_count          <= nxt_wb_resp_count;
-        wb_waiting             <= nxt_wb_waiting;
+        wb_resp_count          <= nxt_bb_resp_count;
+        wb_waiting             <= nxt_bb_waiting;
       end if;
     end if;
   end process;
