@@ -611,6 +611,8 @@ sudo apt upgrade
 
 ### 1.6.2. UVM-Verilog
 
+![UVM Diagram Overview](../bench/uvm-testbench.png)
+
 #### 1.6.2.1. UVM Agent
 #### 1.6.2.2. UVM Driver
 #### 1.6.2.3. UVM Enviroment
