@@ -1,3 +1,4 @@
+verilog
 ├── ahb3
 │   ├── ahb3
 │   │   ├── peripheral_dma_initiator_ahb3.sv
@@ -43,3 +44,5 @@
         ├── peripheral_dma_interface_wb.sv
         ├── peripheral_dma_target_wb.sv
         └── peripheral_dma_top_wb.sv
+
+12 directories, 33 files
