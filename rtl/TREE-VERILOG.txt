@@ -1,5 +1,10 @@
 verilog
-├── ahb3
+├── core
+│   ├── peripheral_arb_rr.sv
+│   ├── peripheral_dma_initiator_nocreq.sv
+│   ├── peripheral_dma_packet_buffer.sv
+│   └── peripheral_dma_request_table.sv
+├── peripheral
 │   ├── ahb3
 │   │   ├── peripheral_dma_initiator_ahb3.sv
 │   │   ├── peripheral_dma_initiator_nocres_ahb3.sv
@@ -7,14 +12,6 @@ verilog
 │   │   ├── peripheral_dma_interface_ahb3.sv
 │   │   ├── peripheral_dma_target_ahb3.sv
 │   │   └── peripheral_dma_top_ahb3.sv
-│   ├── core
-│   │   ├── peripheral_arb_rr.sv
-│   │   ├── peripheral_dma_initiator_nocreq.sv
-│   │   ├── peripheral_dma_packet_buffer.sv
-│   │   └── peripheral_dma_request_table.sv
-│   └── pkg
-│       └── peripheral_dma_pkg.sv
-├── bb
 │   ├── bb
 │   │   ├── peripheral_dma_initiator_bb.sv
 │   │   ├── peripheral_dma_initiator_nocres_bb.sv
@@ -22,27 +19,20 @@ verilog
 │   │   ├── peripheral_dma_interface_bb.sv
 │   │   ├── peripheral_dma_target_bb.sv
 │   │   └── peripheral_dma_top_bb.sv
-│   ├── core
-│   │   ├── peripheral_arb_rr.sv
-│   │   ├── peripheral_dma_initiator_nocreq.sv
-│   │   ├── peripheral_dma_packet_buffer.sv
-│   │   └── peripheral_dma_request_table.sv
-│   └── pkg
-│       └── peripheral_dma_pkg.sv
-└── wb
-    ├── core
-    │   ├── peripheral_arb_rr.sv
-    │   ├── peripheral_dma_initiator_nocreq.sv
-    │   ├── peripheral_dma_packet_buffer.sv
-    │   └── peripheral_dma_request_table.sv
-    ├── pkg
-    │   └── peripheral_dma_pkg.sv
-    └── wb
-        ├── peripheral_dma_initiator_nocres_wb.sv
-        ├── peripheral_dma_initiator_req_wb.sv
-        ├── peripheral_dma_initiator_wb.sv
-        ├── peripheral_dma_interface_wb.sv
-        ├── peripheral_dma_target_wb.sv
-        └── peripheral_dma_top_wb.sv
+│   └── wb
+│       ├── peripheral_dma_initiator_nocres_wb.sv
+│       ├── peripheral_dma_initiator_req_wb.sv
+│       ├── peripheral_dma_initiator_wb.sv
+│       ├── peripheral_dma_interface_wb.sv
+│       ├── peripheral_dma_target_wb.sv
+│       └── peripheral_dma_top_wb.sv
+└── pkg
+    └── peripheral
+        ├── ahb3
+        │   └── peripheral_dma_pkg.sv
+        ├── bb
+        │   └── peripheral_dma_pkg.sv
+        └── wb
+            └── peripheral_dma_pkg.sv
 
-12 directories, 33 files
+10 directories, 25 files
