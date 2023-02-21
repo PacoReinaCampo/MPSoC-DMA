@@ -37,7 +37,8 @@ verilog
         │   │   ├── peripheral_tap_generator.sv
         │   │   ├── peripheral_testbench_utils.sv
         │   │   └── peripheral_top_testbench.sv
-        │   └── peripheral_dma_testbench.sv
+        │   └── top
+        │       └── peripheral_dma_testbench.sv
         └── wb
             ├── bus
             │   ├── peripheral_bfm_master_wb.sv
@@ -49,6 +50,7 @@ verilog
             │   ├── peripheral_tap_generator.sv
             │   ├── peripheral_testbench_utils.sv
             │   └── peripheral_top_testbench.sv
-            └── peripheral_dma_testbench.sv
+            └── top
+                └── peripheral_dma_testbench.sv
 
-14 directories, 37 files
+16 directories, 37 files

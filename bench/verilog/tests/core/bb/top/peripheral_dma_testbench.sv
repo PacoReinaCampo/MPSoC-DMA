@@ -45,7 +45,7 @@
 
 module mpsoc_dma_testbench;
 
-  //////////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////////////////
   //
   // Constants
   //
@@ -58,7 +58,7 @@ module mpsoc_dma_testbench;
   parameter NOC_PACKET_SIZE        = 16;
   parameter GENERATE_INTERRUPT     = 1;
 
-  //////////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////////////////
   //
   // Variables
   //
@@ -66,21 +66,21 @@ module mpsoc_dma_testbench;
   logic rst;
 
   // WB
-  logic [`FLIT_WIDTH-1:0] noc_wb_in_req_flit;
-  logic                   noc_wb_in_req_valid;
-  logic                   noc_wb_in_req_ready;
+  logic [`FLIT_WIDTH-1:0] noc_bb_in_req_flit;
+  logic                   noc_bb_in_req_valid;
+  logic                   noc_bb_in_req_ready;
 
-  logic [`FLIT_WIDTH-1:0] noc_wb_in_res_flit;
-  logic                   noc_wb_in_res_valid;
-  logic                   noc_wb_in_res_ready;
+  logic [`FLIT_WIDTH-1:0] noc_bb_in_res_flit;
+  logic                   noc_bb_in_res_valid;
+  logic                   noc_bb_in_res_ready;
 
-  logic [`FLIT_WIDTH-1:0] noc_wb_out_req_flit;
-  logic                   noc_wb_out_req_valid;
-  logic                   noc_wb_out_req_ready;
+  logic [`FLIT_WIDTH-1:0] noc_bb_out_req_flit;
+  logic                   noc_bb_out_req_valid;
+  logic                   noc_bb_out_req_ready;
 
-  logic [`FLIT_WIDTH-1:0] noc_wb_out_res_flit;
-  logic                   noc_wb_out_res_valid;
-  logic                   noc_wb_out_res_ready;
+  logic [`FLIT_WIDTH-1:0] noc_bb_out_res_flit;
+  logic                   noc_bb_out_res_valid;
+  logic                   noc_bb_out_res_ready;
 
   logic [ADDR_WIDTH-1:0]  wb_if_addr_i;
   logic [DATA_WIDTH-1:0]  wb_if_dat_i;
@@ -104,15 +104,15 @@ module mpsoc_dma_testbench;
   logic [DATA_WIDTH-1:0] wb_dat_i;
   logic                  wb_ack_i;
 
-  logic [TABLE_ENTRIES-1:0] irq_wb;
+  logic [TABLE_ENTRIES-1:0] irq_bb;
 
-  //////////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////////////////
   //
   // Module Body
   //
 
   //DUT WB
-  mpsoc_dma_wb_top #(
+  mpsoc_dma_bb_top #(
     .ADDR_WIDTH ( ADDR_WIDTH ),
     .DATA_WIDTH ( DATA_WIDTH ),
 
@@ -126,21 +126,21 @@ module mpsoc_dma_testbench;
     .clk (clk),
     .rst (rst),
 
-    .noc_in_req_flit  (noc_wb_in_req_flit),
-    .noc_in_req_valid (noc_wb_in_req_valid),
-    .noc_in_req_ready (noc_wb_in_req_ready),
+    .noc_in_req_flit  (noc_bb_in_req_flit),
+    .noc_in_req_valid (noc_bb_in_req_valid),
+    .noc_in_req_ready (noc_bb_in_req_ready),
 
-    .noc_in_res_flit  (noc_wb_in_res_flit),
-    .noc_in_res_valid (noc_wb_in_res_valid),
-    .noc_in_res_ready (noc_wb_in_res_ready),
+    .noc_in_res_flit  (noc_bb_in_res_flit),
+    .noc_in_res_valid (noc_bb_in_res_valid),
+    .noc_in_res_ready (noc_bb_in_res_ready),
 
-    .noc_out_req_flit  (noc_wb_out_req_flit),
-    .noc_out_req_valid (noc_wb_out_req_valid),
-    .noc_out_req_ready (noc_wb_out_req_ready),
+    .noc_out_req_flit  (noc_bb_out_req_flit),
+    .noc_out_req_valid (noc_bb_out_req_valid),
+    .noc_out_req_ready (noc_bb_out_req_ready),
 
-    .noc_out_res_flit  (noc_wb_out_res_flit),
-    .noc_out_res_valid (noc_wb_out_res_valid),
-    .noc_out_res_ready (noc_wb_out_res_ready),
+    .noc_out_res_flit  (noc_bb_out_res_flit),
+    .noc_out_res_valid (noc_bb_out_res_valid),
+    .noc_out_res_ready (noc_bb_out_res_ready),
 
     .wb_if_addr_i (wb_if_addr_i),
     .wb_if_dat_i  (wb_if_dat_i),
@@ -164,6 +164,6 @@ module mpsoc_dma_testbench;
     .wb_dat_i (wb_dat_i),
     .wb_ack_i (wb_ack_i),
 
-    .irq (irq_wb)
+    .irq (irq_bb)
   );
 endmodule
