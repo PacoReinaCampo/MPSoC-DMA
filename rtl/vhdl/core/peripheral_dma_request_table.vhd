@@ -1,49 +1,48 @@
 -- Converted from rtl/verilog/core/peripheral_dma_request_table.sv
 -- by verilog2vhdl - QueenField
 
---//////////////////////////////////////////////////////////////////////////////
---                                            __ _      _     _               //
---                                           / _(_)    | |   | |              //
---                __ _ _   _  ___  ___ _ __ | |_ _  ___| | __| |              //
---               / _` | | | |/ _ \/ _ \ '_ \|  _| |/ _ \ |/ _` |              //
---              | (_| | |_| |  __/  __/ | | | | | |  __/ | (_| |              //
---               \__, |\__,_|\___|\___|_| |_|_| |_|\___|_|\__,_|              //
---                  | |                                                       //
---                  |_|                                                       //
---                                                                            //
---                                                                            //
---              MPSoC-RISCV CPU                                               //
---              Direct Access Memory Interface                                //
---              AMBA3 AHB-Lite Bus Interface                                  //
---              WishBone Bus Interface                                        //
---                                                                            //
---//////////////////////////////////////////////////////////////////////////////
+--------------------------------------------------------------------------------
+--                                            __ _      _     _               --
+--                                           / _(_)    | |   | |              --
+--                __ _ _   _  ___  ___ _ __ | |_ _  ___| | __| |              --
+--               / _` | | | |/ _ \/ _ \ '_ \|  _| |/ _ \ |/ _` |              --
+--              | (_| | |_| |  __/  __/ | | | | | |  __/ | (_| |              --
+--               \__, |\__,_|\___|\___|_| |_|_| |_|\___|_|\__,_|              --
+--                  | |                                                       --
+--                  |_|                                                       --
+--                                                                            --
+--                                                                            --
+--              MPSoC-RISCV CPU                                               --
+--              Direct Access Memory Interface                                --
+--              AMBA3 AHB-Lite Bus Interface                                  --
+--              WishBone Bus Interface                                        --
+--                                                                            --
+--------------------------------------------------------------------------------
 
 -- Copyright (c) 2018-2019 by the author(s)
--- *
--- * Permission is hereby granted, free of charge, to any person obtaining a copy
--- * of this software and associated documentation files (the "Software"), to deal
--- * in the Software without restriction, including without limitation the rights
--- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
--- * copies of the Software, and to permit persons to whom the Software is
--- * furnished to do so, subject to the following conditions:
--- *
--- * The above copyright notice and this permission notice shall be included in
--- * all copies or substantial portions of the Software.
--- *
--- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
--- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
--- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
--- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
--- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
--- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
--- * THE SOFTWARE.
--- *
--- * =============================================================================
--- * Author(s):
--- *   Stefan Wallentowitz <stefan@wallentowitz.de>
--- *   Paco Reina Campo <pacoreinacampo@queenfield.tech>
--- */
+--
+-- Permission is hereby granted, free of charge, to any person obtaining a copy
+-- of this software and associated documentation files (the "Software"), to deal
+-- in the Software without restriction, including without limitation the rights
+-- to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+-- copies of the Software, and to permit persons to whom the Software is
+-- furnished to do so, subject to the following conditions:
+--
+-- The above copyright notice and this permission notice shall be included in
+-- all copies or substantial portions of the Software.
+--
+-- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+-- IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+-- FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+-- AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+-- LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+-- OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+-- THE SOFTWARE.
+--
+--------------------------------------------------------------------------------
+-- Author(s):
+--   Stefan Wallentowitz <stefan@wallentowitz.de>
+--   Paco Reina Campo <pacoreinacampo@queenfield.tech>
 
 library ieee;
 use ieee.std_logic_1164.all;
@@ -89,17 +88,15 @@ entity peripheral_dma_request_table is
     );
 end peripheral_dma_request_table;
 
-architecture RTL of peripheral_dma_request_table is
-  --////////////////////////////////////////////////////////////////
-  --
+architecture rtl of peripheral_dma_request_table is
+  ------------------------------------------------------------------------------
   -- Types
-  --
+  ------------------------------------------------------------------------------
   type M_TABLE_ENTRIES_DMA_REQUEST_WIDTH is array (TABLE_ENTRIES-1 downto 0) of std_logic_vector(DMA_REQUEST_WIDTH-1 downto 0);
 
-  --////////////////////////////////////////////////////////////////
-  --
+  ------------------------------------------------------------------------------
   -- Variables
-  --
+  ------------------------------------------------------------------------------
 
   -- The storage of the requests ..
   signal transfer_request_table : M_TABLE_ENTRIES_DMA_REQUEST_WIDTH;
@@ -110,10 +107,9 @@ architecture RTL of peripheral_dma_request_table is
   signal if_write_mask : std_logic_vector(DMA_REQUEST_WIDTH-1 downto 0);
 
 begin
-  --////////////////////////////////////////////////////////////////
-  --
-  -- Module body
-  --
+  ------------------------------------------------------------------------------
+  -- Module Body
+  ------------------------------------------------------------------------------
   if_write_mask(DMA_REQFIELD_LADDR_MSB downto DMA_REQFIELD_LADDR_LSB) <= (others => if_write_select(DMA_REQMASK_LADDR));
   if_write_mask(DMA_REQFIELD_SIZE_MSB downto DMA_REQFIELD_SIZE_LSB)   <= (others => if_write_select(DMA_REQMASK_SIZE));
   if_write_mask(DMA_REQFIELD_RTILE_MSB downto DMA_REQFIELD_RTILE_LSB) <= (others => if_write_select(DMA_REQMASK_RTILE));
@@ -162,4 +158,4 @@ begin
 
   -- The interrupt is set when any request is valid and done
   irq <= (transfer_valid and transfer_done) and std_logic_vector(to_unsigned(1, TABLE_ENTRIES));
-end RTL;
+end rtl;
