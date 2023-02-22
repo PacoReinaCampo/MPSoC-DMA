@@ -27,12 +27,12 @@ verilog
 │       ├── peripheral_dma_target_wb.sv
 │       └── peripheral_dma_top_wb.sv
 └── pkg
+    ├── core
+    │   └── peripheral_dma_pkg.sv
     └── peripheral
         ├── ahb3
-        │   └── peripheral_dma_pkg.sv
-        ├── bb
-        │   └── peripheral_dma_pkg.sv
+        │   └── peripheral_ahb3_pkg.sv
         └── wb
-            └── peripheral_dma_pkg.sv
+            └── peripheral_wb_pkg.sv
 
 10 directories, 25 files

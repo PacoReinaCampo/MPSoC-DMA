@@ -41,7 +41,7 @@
  *   Paco Reina Campo <pacoreinacampo@queenfield.tech>
  */
 
-module mpsoc_bb_bfm_transactor # (
+module peripheral_bfm_transactor_bb # (
   parameter                AW                    = 32,
   parameter                DW                    = 32,
   parameter                AUTORUN               = 1,
@@ -510,7 +510,7 @@ module mpsoc_bb_bfm_transactor # (
     end
   end
 
-  mpsoc_bb_bfm_master #(
+  peripheral_bfm_master_bb #(
     .DW (DW),
     .MAX_BURST_LEN           (MAX_BURST_LEN),
     .MAX_WAIT_STATES         (MAX_WAIT_STATES),

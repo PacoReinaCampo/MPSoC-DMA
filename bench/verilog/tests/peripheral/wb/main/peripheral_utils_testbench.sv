@@ -9,9 +9,9 @@
 //                  |_|                                                       //
 //                                                                            //
 //                                                                            //
-//              Peripheral-BFM for MPSoC                                      //
-//              Bus Functional Model for MPSoC                                //
-//              AMBA3 AHB-Lite Bus Interface                                  //
+//              MPSoC-RISCV CPU                                               //
+//              Master Slave Interface                                        //
+//              Wishbone Bus Interface                                        //
 //                                                                            //
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -37,80 +37,54 @@
  *
  * =============================================================================
  * Author(s):
+ *   Olof Kindgren <olof.kindgren@gmail.com>
  *   Paco Reina Campo <pacoreinacampo@queenfield.tech>
  */
 
-module peripheral_bfm_testbench;
-  parameter TIMERS = 3;  //Number of timers
-
-  parameter HADDR_SIZE = 16;
-  parameter HDATA_SIZE = 32;
+module peripheral_utils_testbench;
+  //////////////////////////////////////////////////////////////////////////////
+  //
+  // Constants
+  //
+  parameter MAX_STRING_LEN = 128;
+  localparam CHAR_WIDTH = 8;
 
   //////////////////////////////////////////////////////////////////////////////
   //
   // Variables
   //
+  reg [63:0] timeout;
+  reg [63:0] heartbeat;
 
-  //AHB signals
-  logic                   HSEL;
-  logic [HADDR_SIZE -1:0] HADDR;
-  logic [HDATA_SIZE -1:0] HWDATA;
-  logic [HDATA_SIZE -1:0] HRDATA;
-  logic                   HWRITE;
-  logic [            2:0] HSIZE;
-  logic [            2:0] HBURST;
-  logic [            3:0] HPROT;
-  logic [            1:0] HTRANS;
-  logic                   HMASTLOCK;
-  logic                   HREADY;
-  logic                   HREADYOUT;
-  logic                   HRESP;
-
-  //Timer Interrupt
-  logic                   tint;
+  reg [MAX_STRING_LEN*CHAR_WIDTH-1:0] testcase;
 
   //////////////////////////////////////////////////////////////////////////////
   //
-  // Clock & Reset
+  // Module Body
   //
 
-  bit HCLK, HRESETn;
-  initial begin : gen_HCLK
-    HCLK <= 1'b0;
-    forever #10 HCLK = ~ HCLK;
-  end : gen_HCLK
+  //Force simulation stop after timeout cycles
+  initial
+    if($value$plusargs("timeout=%d", timeout)) begin
+      #timeout $display("Timeout: Forcing end of simulation");
+      $finish;
+    end
 
-  initial begin : gen_HRESETn;
-    HRESETn = 1'b1;
-    //ensure falling edge of HRESETn
-    #10;
-    HRESETn = 1'b0;
-    #32;
-    HRESETn = 1'b1;
-  end : gen_HRESETn;
+  //FIXME: Add more options for VCD logging
 
-  //////////////////////////////////////////////////////////////////////////////
-  //
-  // TB and DUT
-  //
+  initial begin
+    if($test$plusargs("vcd")) begin
+      if($value$plusargs("testcase=%s", testcase))
+        $dumpfile({testcase,".vcd"});
+      else
+        $dumpfile("testlog.vcd");
+      $dumpvars;
+    end
+  end
 
-  peripheral_bfm_ahb3 #(
-    .TIMERS     ( TIMERS     ),
-    .HADDR_SIZE ( HADDR_SIZE ),
-    .HDATA_SIZE ( HDATA_SIZE )
-  )
-  tb (
-    .*
-  );
-
-  peripheral_timer_ahb3 #(
-    .TIMERS     ( TIMERS     ),
-    .HADDR_SIZE ( HADDR_SIZE ),
-    .HDATA_SIZE ( HDATA_SIZE )
-  )
-  dut (
-    .*
-  );
-
-  assign HREADY = HREADYOUT;
-endmodule : peripheral_bfm_testbench
+  //Heartbeat timer for simulations
+  initial begin
+    if($value$plusargs("heartbeat=%d", heartbeat))
+      forever #heartbeat $display("Heartbeat : Time=%0t", $time);
+  end
+endmodule // peripheral_utils_testbench

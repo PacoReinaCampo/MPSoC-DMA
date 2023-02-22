@@ -41,7 +41,7 @@
  *   Paco Reina Campo <pacoreinacampo@queenfield.tech>
  */
 
-module vlog_tap_generator #(
+module peripheral_tap_generator #(
   parameter TAPFILE          = "",
   parameter NUM_TESTS        = 0,
   parameter MAX_STRING_LEN   = 80,

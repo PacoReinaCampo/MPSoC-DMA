@@ -41,9 +41,9 @@
  *   Paco Reina Campo <pacoreinacampo@queenfield.tech>
  */
 
-`include "mpsoc_dma_pkg.sv"
+`include "peripheral_dma_pkg.sv"
 
-module mpsoc_dma_testbench;
+module peripheral_dma_testbench;
 
   //////////////////////////////////////////////////////////////////////////////
   //
@@ -112,7 +112,7 @@ module mpsoc_dma_testbench;
   //
 
   //DUT WB
-  mpsoc_dma_bb_top #(
+  peripheral_dma_top_bb #(
     .ADDR_WIDTH ( ADDR_WIDTH ),
     .DATA_WIDTH ( DATA_WIDTH ),
 

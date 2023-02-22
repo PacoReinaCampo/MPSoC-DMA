@@ -42,7 +42,7 @@
  */
 
 `default_nettype none
-module wb_dma_tb #(
+module peripheral_dma_testbench #(
   parameter AUTORUN = 1
 );
 
@@ -114,8 +114,8 @@ module wb_dma_tb #(
   //
   generate
     if (AUTORUN) begin
-      vlog_tb_utils vtu();
-      vlog_tap_generator #("wb_dma.tap", 1) vtg();
+      peripheral_utils_testbench vtu();
+      peripheral_tap_generator #("wb_dma.tap", 1) vtg();
 
       initial begin
         run;
@@ -128,7 +128,7 @@ module wb_dma_tb #(
   always #5 wbm_clk <= ~wbm_clk;
   always #3 wbs_clk <= ~wbs_clk;
 
-  mpsoc_wb_bfm_transactor #(
+  peripheral_bfm_transactor_wb #(
     .MEM_HIGH (MEM_SIZE-1),
     .AUTORUN  (0),
     .VERBOSE  (0)
@@ -152,7 +152,7 @@ module wb_dma_tb #(
     .done()
   );
 
-  mpsoc_dma_wb_top #(
+  peripheral_dma_top_wb #(
     .ADDR_WIDTH (AW),
     .DATA_WIDTH (DW)
   )
@@ -203,7 +203,7 @@ module wb_dma_tb #(
     .irq ()
   );
 
-  mpsoc_wb_bfm_memory #(
+  peripheral_bfm_memory_wb #(
     .DEBUG (0),
     .MEM_SIZE_BYTES (MEM_SIZE)
   )

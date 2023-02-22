@@ -27,14 +27,8 @@ vhdl
 │       ├── peripheral_dma_target_wb.vhd
 │       └── peripheral_dma_top_wb.vhd
 └── pkg
-    ├── core
-    │   └── vhdl_pkg.vhd
-    └── peripheral
-        ├── ahb3
-        │   └── peripheral_dma_pkg.vhd
-        ├── bb
-        │   └── peripheral_dma_pkg.vhd
-        └── wb
-            └── peripheral_dma_pkg.vhd
+    └── core
+        ├── peripheral_dma_pkg.vhd
+        └── vhdl_pkg.vhd
 
-11 directories, 26 files
+7 directories, 24 files

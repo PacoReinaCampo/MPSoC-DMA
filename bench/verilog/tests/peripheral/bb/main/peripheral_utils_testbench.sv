@@ -41,7 +41,7 @@
  *   Paco Reina Campo <pacoreinacampo@queenfield.tech>
  */
 
-module vlog_tb_utils;
+module peripheral_utils_testbench;
   //////////////////////////////////////////////////////////////////////////////
   //
   // Constants
@@ -87,4 +87,4 @@ module vlog_tb_utils;
     if($value$plusargs("heartbeat=%d", heartbeat))
       forever #heartbeat $display("Heartbeat : Time=%0t", $time);
   end
-endmodule // vlog_tb_utils
+endmodule // peripheral_utils_testbench

@@ -79,7 +79,7 @@ module peripheral_bfm_testbench;
   //
   // Module Body
   //
-  peripheral_testbench_utils testbench_utils ();
+  peripheral_utils_testbench testbench_utils ();
   peripheral_tap_generator #("wb_bfm.tap", 1) tap_generator();
 
   always #5 wb_clk <= ~wb_clk;

@@ -35,8 +35,8 @@ verilog
         │   ├── main
         │   │   ├── peripheral_dma_testbench.sv
         │   │   ├── peripheral_tap_generator.sv
-        │   │   ├── peripheral_testbench_utils.sv
-        │   │   └── peripheral_top_testbench.sv
+        │   │   ├── peripheral_top_testbench.sv
+        │   │   └── peripheral_utils_testbench.sv
         │   └── top
         │       └── peripheral_dma_testbench.sv
         └── wb
@@ -48,8 +48,8 @@ verilog
             ├── main
             │   ├── peripheral_dma_testbench.sv
             │   ├── peripheral_tap_generator.sv
-            │   ├── peripheral_testbench_utils.sv
-            │   └── peripheral_top_testbench.sv
+            │   ├── peripheral_top_testbench.sv
+            │   └── peripheral_utils_testbench.sv
             └── top
                 └── peripheral_dma_testbench.sv
 

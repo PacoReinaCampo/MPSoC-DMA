@@ -41,7 +41,7 @@
  *   Paco Reina Campo <pacoreinacampo@queenfield.tech>
  */
 
-module mpsoc_bb_bfm_slave #(
+module peripheral_bfm_slave_bb #(
   parameter DW = 32,
   parameter AW = 32,
   parameter DEBUG = 0

@@ -41,18 +41,18 @@
  *   Paco Reina Campo <pacoreinacampo@queenfield.tech>
  */
 
-module wb_top_tb;
+module peripheral_top_testbench;
   //////////////////////////////////////////////////////////////////////////////
   //
   // Module Body
   //
-   vlog_tb_utils vlog_tb_util0();
-   vlog_tap_generator #("wb_dma_tb.tap", 3) vtg();
+   peripheral_utils_testbench vlog_tb_util0();
+   peripheral_tap_generator #("peripheral_dma_testbench.tap", 3) vtg();
 
-   wb_dma_tb #(.AUTORUN (0)) wb_dma_tb();
+   peripheral_dma_testbench #(.AUTORUN (0)) peripheral_dma_testbench();
 
    initial begin
-      wb_dma_tb.run;
+      peripheral_dma_testbench.run;
       vtg.ok("wb_dma: All tests passed!");
 
       #3 $finish;
