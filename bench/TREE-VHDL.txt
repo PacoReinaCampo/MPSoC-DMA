@@ -1,6 +1,6 @@
 vhdl
 └── tests
-    └── core
+    └── peripheral
         ├── ahb3
         │   └── peripheral_dma_testbench.vhd
         ├── bb
