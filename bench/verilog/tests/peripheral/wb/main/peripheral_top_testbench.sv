@@ -46,7 +46,7 @@ module peripheral_top_testbench;
   //
   // Module Body
   //
-   peripheral_utils_testbench vlog_tb_util0();
+   peripheral_utils_testbench utils_testbench();
    peripheral_tap_generator #("peripheral_dma_testbench.tap", 3) vtg();
 
    peripheral_dma_testbench #(.AUTORUN (0)) peripheral_dma_testbench();
