@@ -46,7 +46,6 @@
 call ../../../../../../settings64_msim.bat
 
 vlib work
-vlog -sv -f system.verilog.vc
-vcom -2008 -f system.vhdl.vc
-vsim -c -do run.do work.peripheral_dma_testbench
+vlog -sv -f system.vc
+vsim -c -do run.do work.peripheral_bfm_testbench
 pause

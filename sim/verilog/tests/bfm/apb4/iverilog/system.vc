@@ -42,15 +42,8 @@
 ##                                                                               ##
 ###################################################################################
 
-all: build simulate
+../../../../../../bench/verilog/tests/bfm/apb4/peripheral_gpio_apb4.sv
 
-build:
-	if [ ! -e work ]; then vlib work; fi
-	vlog -sv -f system.verilog.vc
-	vcom -2008 -f system.vhdl.vc
-
-simulate:
-	vsim -c -do run.do work.peripheral_dma_testbench
-
-clean:
-	rm -rf work transcript
+../../../../../../bench/verilog/tests/bfm/apb4/peripheral_bfm_apb4.sv
+../../../../../../bench/verilog/tests/bfm/apb4/peripheral_bfm_master_apb4.sv
+../../../../../../bench/verilog/tests/bfm/apb4/peripheral_bfm_testbench.sv

@@ -9,8 +9,8 @@
 //                  |_|                                                       //
 //                                                                            //
 //                                                                            //
-//              Peripheral-BFM for MPSoC                                      //
-//              Bus Functional Model for MPSoC                                //
+//              Peripheral-GPIO for MPSoC                                     //
+//              General Purpose Input Output for MPSoC                        //
 //              AMBA3 AHB-Lite Bus Interface                                  //
 //                                                                            //
 ////////////////////////////////////////////////////////////////////////////////
@@ -43,7 +43,7 @@
 import peripheral_ahb3_pkg::*;
 
 module peripheral_bfm_ahb3 #(
-  parameter TIMERS = 2,  //Number of timers
+  parameter TIMERS = 2,       //Number of timers
 
   parameter HADDR_SIZE = 16,
   parameter HDATA_SIZE = 32
@@ -101,7 +101,7 @@ module peripheral_bfm_ahb3 #(
     .HADDR_SIZE ( HADDR_SIZE ),
     .HDATA_SIZE ( HDATA_SIZE )
   )
-  ahb_mst_bfm (
+  bfm_master_ahb3 (
     .*
   );
 
@@ -208,13 +208,13 @@ module peripheral_bfm_ahb3 #(
 
     $write("Testing amount of timers ... ");
     wbuffer[0] = {HDATA_SIZE{1'b1}};
-    ahb_mst_bfm.write(IENABLE, wbuffer, HSIZE_WORD, HBURST_SINGLE); //write all '1's
-    ahb_mst_bfm.idle();                                             //wait for HWDATA
-    ahb_mst_bfm.read (IENABLE, rbuffer, HSIZE_WORD, HBURST_SINGLE); //read actual value
+    bfm_master_ahb3.write(IENABLE, wbuffer, HSIZE_WORD, HBURST_SINGLE);  // write all '1's
+    bfm_master_ahb3.idle();                                              // wait for HWDATA
+    bfm_master_ahb3.read (IENABLE, rbuffer, HSIZE_WORD, HBURST_SINGLE);  // read actual value
     wbuffer[0] = {HDATA_SIZE{1'b0}};                                
-    ahb_mst_bfm.write(IENABLE, wbuffer, HSIZE_WORD, HBURST_SINGLE); //restore all '0's
-    ahb_mst_bfm.idle();                                             //Idle bus
-    wait fork;                                                      //wait for all threads to complete
+    bfm_master_ahb3.write(IENABLE, wbuffer, HSIZE_WORD, HBURST_SINGLE);  // restore all '0's
+    bfm_master_ahb3.idle();                                              // Idle bus
+    wait fork;                                                           // wait for all threads to complete
 
     if (rbuffer[0] !== {TIMERS{1'b1}}) begin
       errors++;
@@ -279,16 +279,16 @@ module peripheral_bfm_ahb3 #(
       end
 
       for (n=0; n<reg_cnt; n++)
-        ahb_mst_bfm.write(registers[n], wbuffer[n], hsize, hburst); //write register
+        bfm_master_ahb3.write(registers[n], wbuffer[n], hsize, hburst); // write register
 
-      ahb_mst_bfm.idle();                                           //wait for HWDATA
+      bfm_master_ahb3.idle();                                           // wait for HWDATA
 
       for (n=0; n<reg_cnt; n++) begin
-        ahb_mst_bfm.read (registers[n], rbuffer[n], hsize, hburst); //read register
+        bfm_master_ahb3.read (registers[n], rbuffer[n], hsize, hburst); //read register
       end
 
-      ahb_mst_bfm.idle();                                           //Idle bus
-      wait fork;                                                    //wait for all threads to complete
+      bfm_master_ahb3.idle();                                           // Idle bus
+      wait fork;                                                        // wait for all threads to complete
 
       for (n=0; n<reg_cnt; n++)
         for (int beat=0; beat<rbuffer[n].size(); beat++) begin
@@ -314,7 +314,7 @@ module peripheral_bfm_ahb3 #(
     //reset registers to all '0'
     wbuffer[0][0] = 0;
     for (n=0; n<reg_cnt; n++)
-      ahb_mst_bfm.write(registers[n], wbuffer[0], HSIZE_WORD, HBURST_SINGLE); //write register
+      bfm_master_ahb3.write(registers[n], wbuffer[0], HSIZE_WORD, HBURST_SINGLE); //write register
 
     //discard buffers
     rbuffer.delete();
@@ -330,10 +330,10 @@ module peripheral_bfm_ahb3 #(
     buffer[0] = value;
 
     $write("Programming prescaler ... ");
-    ahb_mst_bfm.write(PRESCALE, buffer, HSIZE_WORD, HBURST_SINGLE); //write value
-    ahb_mst_bfm.idle();                                             //wait for HWDATA
-    ahb_mst_bfm.read (PRESCALE, buffer, HSIZE_WORD, HBURST_SINGLE); //read back value
-    ahb_mst_bfm.idle();                                             //IDLE bus
+    bfm_master_ahb3.write(PRESCALE, buffer, HSIZE_WORD, HBURST_SINGLE); //write value
+    bfm_master_ahb3.idle();                                             //wait for HWDATA
+    bfm_master_ahb3.read (PRESCALE, buffer, HSIZE_WORD, HBURST_SINGLE); //read back value
+    bfm_master_ahb3.idle();                                             //IDLE bus
     wait fork;
 
     if (buffer[0] !== value) begin
@@ -359,15 +359,15 @@ module peripheral_bfm_ahb3 #(
     $display("Testing timer0 ... ");
     $display("  Programming registers ... ");
     buffer[0] = timecmp_value;
-    ahb_mst_bfm.write(TIMECMP, buffer, HSIZE_WORD, HBURST_SINGLE);  //write TIMECMP
+    bfm_master_ahb3.write(TIMECMP, buffer, HSIZE_WORD, HBURST_SINGLE);  //write TIMECMP
     buffer[0] = 1;
-    ahb_mst_bfm.write(IENABLE, buffer, HSIZE_BYTE, HBURST_SINGLE);  //Enable Timer0-interrupt
+    bfm_master_ahb3.write(IENABLE, buffer, HSIZE_BYTE, HBURST_SINGLE);  //Enable Timer0-interrupt
     buffer[0] = PRESCALE_VALUE -1;
-    ahb_mst_bfm.write(PRESCALE, buffer, HSIZE_WORD, HBURST_SINGLE); //Enable core
+    bfm_master_ahb3.write(PRESCALE, buffer, HSIZE_WORD, HBURST_SINGLE); //Enable core
     buffer[0] = 0;
-    ahb_mst_bfm.write(TIME    , buffer, HSIZE_WORD, HBURST_SINGLE); //write TIME_LSB
-    ahb_mst_bfm.write(TIME_MSB, buffer, HSIZE_WORD, HBURST_SINGLE);
-    ahb_mst_bfm.idle();                                             //wait for HWDATA
+    bfm_master_ahb3.write(TIME    , buffer, HSIZE_WORD, HBURST_SINGLE); //write TIME_LSB
+    bfm_master_ahb3.write(TIME_MSB, buffer, HSIZE_WORD, HBURST_SINGLE);
+    bfm_master_ahb3.idle();                                             //wait for HWDATA
     wait fork;
 
     //now wait for interrupt to rise
@@ -403,8 +403,8 @@ module peripheral_bfm_ahb3 #(
     //A write to TIMECMP should clear the interrupt
     $write("  Clearing timer interrupt ... ");
     buffer[0] = 1000; //some high number to prevent new interrupts
-    ahb_mst_bfm.write(TIMECMP, buffer, HSIZE_WORD, HBURST_SINGLE); //write TIMECMP
-    ahb_mst_bfm.idle();
+    bfm_master_ahb3.write(TIMECMP, buffer, HSIZE_WORD, HBURST_SINGLE); //write TIMECMP
+    bfm_master_ahb3.idle();
 
     cnt = 0;
     while (tint) begin

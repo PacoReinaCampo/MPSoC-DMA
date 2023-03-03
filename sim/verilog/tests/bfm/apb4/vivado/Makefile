@@ -42,6 +42,14 @@
 ##                                                                               ##
 ###################################################################################
 
-+incdir+../../../../../../rtl/verilog/pkg/peripheral/wb
+all: build simulate
 
-../../../../../../bench/verilog/tests/peripheral/ahb3/peripheral_dma_testbench.sv
+build:
+	xvlog -prj system.prj
+
+simulate:
+	xelab peripheral_bfm_testbench
+	xsim -R peripheral_bfm_testbench
+
+clean:
+	rm -rf *.dir *.jou *.log *.pb .Xil

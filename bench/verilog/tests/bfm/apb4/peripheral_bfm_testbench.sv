@@ -9,8 +9,8 @@
 //                  |_|                                                       //
 //                                                                            //
 //                                                                            //
-//              Peripheral-BFM for MPSoC                                      //
-//              Bus Functional Model for MPSoC                                //
+//              Peripheral-GPIO for MPSoC                                     //
+//              General Purpose Input Output for MPSoC                        //
 //              AMBA4 APB-Lite Bus Interface                                  //
 //                                                                            //
 ////////////////////////////////////////////////////////////////////////////////
@@ -41,7 +41,6 @@
  */
 
 module peripheral_bfm_testbench;
-  parameter PADDR_SIZE = 4;
   parameter PDATA_SIZE = 8;
 
   //////////////////////////////////////////////////////////////////////////////
@@ -52,7 +51,7 @@ module peripheral_bfm_testbench;
   //APB signals
   logic                    PSEL;
   logic                    PENABLE;
-  logic [PADDR_SIZE  -1:0] PADDR;
+  logic [             3:0] PADDR;
   logic [PDATA_SIZE/8-1:0] PSTRB;
   logic [PDATA_SIZE  -1:0] PWDATA;
   logic [PDATA_SIZE  -1:0] PRDATA;
@@ -91,15 +90,9 @@ module peripheral_bfm_testbench;
   //
   // TB and DUT
   //
-  peripheral_bfm_apb4 #(
-    .PADDR_SIZE ( PADDR_SIZE ),
-    .PDATA_SIZE ( PDATA_SIZE )
-  )
-  tb ( .* );
+  peripheral_bfm_apb4 #( .PDATA_SIZE ( PDATA_SIZE ))
+  bfm_apb4 ( .* );
 
-  bfm_apb4 #(
-    .PADDR_SIZE ( PADDR_SIZE ),
-    .PDATA_SIZE ( PDATA_SIZE )
-  )
+  peripheral_gpio_apb4 #( .PDATA_SIZE ( PDATA_SIZE ))
   dut ( .* );
 endmodule : peripheral_bfm_testbench

@@ -42,16 +42,14 @@
 ##                                                                               ##
 ###################################################################################
 
-../../../../../../rtl/vhdl/pkg/core/peripheral_dma_pkg.vhd
+all: build simulate
 
-../../../../../../rtl/vhdl/peripheral/ahb3/peripheral_dma_initiator_ahb3.vhd
-../../../../../../rtl/vhdl/peripheral/ahb3/peripheral_dma_initiator_nocres_ahb3.vhd
-../../../../../../rtl/vhdl/peripheral/ahb3/peripheral_dma_initiator_req_ahb3.vhd
-../../../../../../rtl/vhdl/peripheral/ahb3/peripheral_dma_interface_ahb3.vhd
-../../../../../../rtl/vhdl/peripheral/ahb3/peripheral_dma_target_ahb3.vhd
-../../../../../../rtl/vhdl/peripheral/ahb3/peripheral_dma_top_ahb3.vhd
+build:
+	if [ ! -e work ]; then vlib work; fi
+	vlog -sv -f system.vc
 
-../../../../../../rtl/vhdl/core/peripheral_arb_rr.vhd
-../../../../../../rtl/vhdl/core/peripheral_dma_initiator_nocreq.vhd
-../../../../../../rtl/vhdl/core/peripheral_dma_packet_buffer.vhd
-../../../../../../rtl/vhdl/core/peripheral_dma_request_table.vhd
+simulate:
+	vsim -c -do run.do work.peripheral_bfm_testbench
+
+clean:
+	rm -rf work transcript

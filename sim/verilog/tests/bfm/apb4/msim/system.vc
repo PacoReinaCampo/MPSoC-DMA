@@ -42,6 +42,8 @@
 ##                                                                               ##
 ###################################################################################
 
-+incdir+../../../../../../rtl/verilog/pkg/peripheral/wb
+../../../../../../bench/verilog/tests/bfm/apb4/peripheral_gpio_apb4.sv
 
-../../../../../../bench/verilog/tests/peripheral/wb/main/peripheral_dma_testbench.sv
+../../../../../../bench/verilog/tests/bfm/apb4/peripheral_bfm_apb4.sv
+../../../../../../bench/verilog/tests/bfm/apb4/peripheral_bfm_master_apb4.sv
+../../../../../../bench/verilog/tests/bfm/apb4/peripheral_bfm_testbench.sv

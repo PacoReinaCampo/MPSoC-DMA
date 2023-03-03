@@ -42,7 +42,13 @@
 ##                                                                               ##
 ###################################################################################
 
-source ../../../../../../settings64_msim.sh
+all: build simulate
 
-make clean
-make
+build:
+	iverilog -g2012 -o system.vvp -c system.vc -s peripheral_bfm_testbench
+
+simulate:
+	vvp system.vvp
+
+clean:
+	rm -rf system.vvp

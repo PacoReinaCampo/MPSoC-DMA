@@ -9,8 +9,8 @@
 //                  |_|                                                       //
 //                                                                            //
 //                                                                            //
-//              Peripheral-BFM for MPSoC                                      //
-//              Bus Functional Model for MPSoC                                //
+//              Peripheral-GPIO for MPSoC                                     //
+//              General Purpose Input Output for MPSoC                        //
 //              AMBA4 APB-Lite Bus Interface                                  //
 //                                                                            //
 ////////////////////////////////////////////////////////////////////////////////
@@ -41,7 +41,6 @@
  */
 
 module peripheral_bfm_apb4 #(
-  parameter PADDR_SIZE = 4,
   parameter PDATA_SIZE = 32
 )
   (
@@ -50,7 +49,7 @@ module peripheral_bfm_apb4 #(
 
     output                        PSEL,
     output                        PENABLE,
-    output     [PADDR_SIZE  -1:0] PADDR,
+    output     [             3:0] PADDR,
     output     [PDATA_SIZE/8-1:0] PSTRB,
     output     [PDATA_SIZE  -1:0] PWDATA,
     input      [PDATA_SIZE  -1:0] PRDATA,
@@ -97,7 +96,7 @@ module peripheral_bfm_apb4 #(
   // Instantiate the APB-Master
   //
   peripheral_bfm_master_apb4 #(
-    .PADDR_SIZE ( PADDR_SIZE ),
+    .PADDR_SIZE (          4 ),
     .PDATA_SIZE ( PDATA_SIZE )
   )
   bfm_master_apb4 (

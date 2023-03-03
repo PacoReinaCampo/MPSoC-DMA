@@ -42,5 +42,5 @@
 ::                                                                               ::
 :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-del transcript
-rmdir /s /q work
+del *.jou *.log *.pb
+rmdir /s /q xsim.dir .Xil

@@ -42,16 +42,7 @@
 ##                                                                               ##
 ###################################################################################
 
-../../../../../../rtl/vhdl/pkg/core/peripheral_dma_pkg.vhd
+source ../../../../../../settings64_vivado.sh
 
-../../../../../../rtl/vhdl/peripheral/wb/peripheral_dma_initiator_wb.vhd
-../../../../../../rtl/vhdl/peripheral/wb/peripheral_dma_initiator_nocres_wb.vhd
-../../../../../../rtl/vhdl/peripheral/wb/peripheral_dma_initiator_req_wb.vhd
-../../../../../../rtl/vhdl/peripheral/wb/peripheral_dma_interface_wb.vhd
-../../../../../../rtl/vhdl/peripheral/wb/peripheral_dma_target_wb.vhd
-../../../../../../rtl/vhdl/peripheral/wb/peripheral_dma_top_wb.vhd
-
-../../../../../../rtl/vhdl/core/peripheral_arb_rr.vhd
-../../../../../../rtl/vhdl/core/peripheral_dma_initiator_nocreq.vhd
-../../../../../../rtl/vhdl/core/peripheral_dma_packet_buffer.vhd
-../../../../../../rtl/vhdl/core/peripheral_dma_request_table.vhd
+make clean
+make
