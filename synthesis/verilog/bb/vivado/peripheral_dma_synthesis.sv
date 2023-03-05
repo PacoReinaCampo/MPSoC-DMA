@@ -40,7 +40,7 @@
  *   Paco Reina Campo <pacoreinacampo@queenfield.tech>
  */
 
-module mpsoc_uart_synthesis (
+module peripheral_dma_synthesis (
   input              mclk,         // Main system clock
   input              puc_rst,      // Main system reset
 
@@ -52,10 +52,10 @@ module mpsoc_uart_synthesis (
   input              per_en,       // Peripheral enable (high active)
   input       [ 1:0] per_we,       // Peripheral write enable (high active)
 
-  output             irq_uart_rx,  // UART receive interrupt
-  output             irq_uart_tx,  // UART transmit interrupt
-  input              uart_rxd,     // UART Data Receive (RXD)
-  output             uart_txd      // UART Data Transmit (TXD)
+  output             irq_dma_rx,  // UART receive interrupt
+  output             irq_dma_tx,  // UART transmit interrupt
+  input              dma_rxd,     // UART Data Receive (RXD)
+  output             dma_txd      // UART Data Transmit (TXD)
 );
 
   //////////////////////////////////////////////////////////////////
@@ -64,7 +64,7 @@ module mpsoc_uart_synthesis (
   //
 
   //DUT BB
-  msp430_uart uart (
+  bb_dma dma (
     .mclk         (mclk),         // Main system clock
     .puc_rst      (puc_rst),      // Main system reset
 	
@@ -76,9 +76,9 @@ module mpsoc_uart_synthesis (
     .per_en       (per_en),       // Peripheral enable (high active)
     .per_we       (per_we),       // Peripheral write enable (high active)
 
-    .irq_uart_rx  (irq_uart_rx),  // UART receive interrupt
-    .irq_uart_tx  (irq_uart_tx),  // UART transmit interrupt
-    .uart_rxd     (uart_rxd),     // UART Data Receive (RXD)
-    .uart_txd     (uart_txd)      // UART Data Transmit (TXD)
+    .irq_dma_rx  (irq_dma_rx),  // UART receive interrupt
+    .irq_dma_tx  (irq_dma_tx),  // UART transmit interrupt
+    .dma_rxd     (dma_rxd),     // UART Data Receive (RXD)
+    .dma_txd     (dma_txd)      // UART Data Transmit (TXD)
   );
 endmodule
