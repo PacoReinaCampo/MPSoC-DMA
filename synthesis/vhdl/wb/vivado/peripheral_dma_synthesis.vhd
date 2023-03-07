@@ -85,9 +85,8 @@ end peripheral_dma_synthesis;
 architecture rtl of peripheral_dma_synthesis is
 
   ------------------------------------------------------------------------------
-  --
   -- Components
-  --
+  ------------------------------------------------------------------------------
   component peripheral_wb_dma
     generic (
       SIM   : integer := 0;
@@ -125,9 +124,8 @@ architecture rtl of peripheral_dma_synthesis is
 
 begin
   ------------------------------------------------------------------------------
-  --
   -- Module Body
-  --
+  ------------------------------------------------------------------------------
 
   --DUT WB
   wb_dma : peripheral_wb_dma
