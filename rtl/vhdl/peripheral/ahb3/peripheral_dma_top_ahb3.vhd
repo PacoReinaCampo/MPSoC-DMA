@@ -108,6 +108,11 @@ entity peripheral_dma_top_ahb3 is
 end peripheral_dma_top_ahb3;
 
 architecture rtl of peripheral_dma_top_ahb3 is
+
+  ------------------------------------------------------------------------------
+  -- Components
+  ------------------------------------------------------------------------------
+
   component peripheral_dma_interface_ahb3
     generic (
       ADDR_WIDTH             : integer := 32;

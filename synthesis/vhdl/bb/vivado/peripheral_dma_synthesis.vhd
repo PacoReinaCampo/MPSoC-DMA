@@ -75,6 +75,11 @@ entity peripheral_dma_synthesis is
 end peripheral_dma_synthesis;
 
 architecture rtl of peripheral_dma_synthesis is
+
+  ------------------------------------------------------------------------------
+  -- Components
+  ------------------------------------------------------------------------------
+
   component bb_dma
     port (
       mclk     : in  std_logic;

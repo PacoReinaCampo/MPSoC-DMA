@@ -101,6 +101,11 @@ entity peripheral_dma_target_ahb3 is
 end peripheral_dma_target_ahb3;
 
 architecture rtl of peripheral_dma_target_ahb3 is
+
+  ------------------------------------------------------------------------------
+  -- Components
+  ------------------------------------------------------------------------------
+
   component peripheral_dma_packet_buffer
     generic (
       DATA_WIDTH : integer   := 32;

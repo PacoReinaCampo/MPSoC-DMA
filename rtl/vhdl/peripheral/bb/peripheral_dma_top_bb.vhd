@@ -109,6 +109,11 @@ entity peripheral_dma_top_bb is
 end peripheral_dma_top_bb;
 
 architecture rtl of peripheral_dma_top_bb is
+
+  ------------------------------------------------------------------------------
+  -- Components
+  ------------------------------------------------------------------------------
+
   component peripheral_dma_interface_bb
     generic (
       ADDR_WIDTH             : integer := 32;

@@ -78,6 +78,11 @@ entity peripheral_dma_synthesis is
 end peripheral_dma_synthesis;
 
 architecture rtl of peripheral_dma_synthesis is
+
+  ------------------------------------------------------------------------------
+  -- Components
+  ------------------------------------------------------------------------------
+
   component peripheral_bridge_apb2ahb
     generic (
       HADDR_SIZE : integer := 32;

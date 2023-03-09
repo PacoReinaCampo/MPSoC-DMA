@@ -93,6 +93,11 @@ entity peripheral_dma_initiator_nocreq is
 end peripheral_dma_initiator_nocreq;
 
 architecture rtl of peripheral_dma_initiator_nocreq is
+
+  ------------------------------------------------------------------------------
+  -- Components
+  ------------------------------------------------------------------------------
+
   component peripheral_arb_rr
     generic (
       N : integer := 2

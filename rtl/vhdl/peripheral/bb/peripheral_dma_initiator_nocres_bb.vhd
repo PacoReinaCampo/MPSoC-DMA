@@ -93,6 +93,11 @@ entity peripheral_dma_initiator_nocres_bb is
 end peripheral_dma_initiator_nocres_bb;
 
 architecture rtl of peripheral_dma_initiator_nocres_bb is
+
+  ------------------------------------------------------------------------------
+  -- Components
+  ------------------------------------------------------------------------------
+
   component peripheral_dma_packet_buffer
     generic (
       DATA_WIDTH : integer := 32;

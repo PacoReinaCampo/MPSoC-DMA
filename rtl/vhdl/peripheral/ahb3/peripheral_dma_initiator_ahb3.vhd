@@ -108,6 +108,11 @@ entity peripheral_dma_initiator_ahb3 is
 end peripheral_dma_initiator_ahb3;
 
 architecture rtl of peripheral_dma_initiator_ahb3 is
+
+  ------------------------------------------------------------------------------
+  -- Components
+  ------------------------------------------------------------------------------
+
   component peripheral_dma_initiator_req_ahb3
     generic (
       ADDR_WIDTH : integer := 32;

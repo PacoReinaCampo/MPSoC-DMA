@@ -92,6 +92,11 @@ entity peripheral_dma_initiator_ahb3_nocres is
 end peripheral_dma_initiator_ahb3_nocres;
 
 architecture rtl of peripheral_dma_initiator_ahb3_nocres is
+
+  ------------------------------------------------------------------------------
+  -- Components
+  ------------------------------------------------------------------------------
+
   component peripheral_dma_packet_buffer
     generic (
       DATA_WIDTH : integer := 32;

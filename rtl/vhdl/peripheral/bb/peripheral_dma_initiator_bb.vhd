@@ -107,6 +107,11 @@ entity peripheral_dma_initiator_bb is
 end peripheral_dma_initiator_bb;
 
 architecture rtl of peripheral_dma_initiator_bb is
+
+  ------------------------------------------------------------------------------
+  -- Components
+  ------------------------------------------------------------------------------
+
   component peripheral_dma_initiator_req_bb
     generic (
       ADDR_WIDTH : integer := 32;
