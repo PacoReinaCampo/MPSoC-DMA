@@ -163,7 +163,7 @@ module peripheral_dma_initiator_nocreq #(
   assign requests = valid & ~open_responses & {TABLE_ENTRIES{(noc_req_state == NOC_REQ_IDLE)}};
 
   // Round Robin (rr) arbiter
-  peripheral_arb_rr #(
+  peripheral_arbiter_rr #(
     .N(TABLE_ENTRIES)
   )
   arbiter_rr (

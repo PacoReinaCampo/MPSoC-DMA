@@ -1,6 +1,6 @@
 vhdl
 ├── core
-│   ├── peripheral_arb_rr.vhd
+│   ├── peripheral_arbiter_rr.vhd
 │   ├── peripheral_dma_initiator_nocreq.vhd
 │   ├── peripheral_dma_packet_buffer.vhd
 │   └── peripheral_dma_request_table.vhd
@@ -27,8 +27,13 @@ vhdl
 │       ├── peripheral_dma_target_wb.vhd
 │       └── peripheral_dma_top_wb.vhd
 └── pkg
-    └── core
-        ├── peripheral_dma_pkg.vhd
-        └── vhdl_pkg.vhd
+    ├── core
+    │   ├── peripheral_dma_pkg.vhd
+    │   └── vhdl_pkg.vhd
+    └── peripheral
+        ├── ahb3
+        │   └── peripheral_ahb3_pkg.vhd
+        └── wb
+            └── peripheral_wb_pkg.vhd
 
-7 directories, 24 files
+10 directories, 26 files

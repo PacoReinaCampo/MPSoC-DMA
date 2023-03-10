@@ -1,6 +1,6 @@
 verilog
 ├── core
-│   ├── peripheral_arb_rr.sv
+│   ├── peripheral_arbiter_rr.sv
 │   ├── peripheral_dma_initiator_nocreq.sv
 │   ├── peripheral_dma_packet_buffer.sv
 │   └── peripheral_dma_request_table.sv

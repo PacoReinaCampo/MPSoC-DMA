@@ -53,7 +53,7 @@
 ../../../../../../rtl/verilog/peripheral/wb/peripheral_dma_target_wb.sv
 ../../../../../../rtl/verilog/peripheral/wb/peripheral_dma_top_wb.sv
 
-../../../../../../rtl/verilog/core/peripheral_arb_rr.sv
+../../../../../../rtl/verilog/core/peripheral_arbiter_rr.sv
 ../../../../../../rtl/verilog/core/peripheral_dma_initiator_nocreq.sv
 ../../../../../../rtl/verilog/core/peripheral_dma_packet_buffer.sv
 ../../../../../../rtl/verilog/core/peripheral_dma_request_table.sv

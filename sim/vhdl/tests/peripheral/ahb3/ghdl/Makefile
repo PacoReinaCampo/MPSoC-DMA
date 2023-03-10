@@ -52,7 +52,7 @@ build:
 	ghdl -a --std=08 ../../../../../../rtl/vhdl/peripheral/ahb3/peripheral_dma_ahb3_interface.vhd
 	ghdl -a --std=08 ../../../../../../rtl/vhdl/peripheral/ahb3/peripheral_dma_ahb3_target.vhd
 	ghdl -a --std=08 ../../../../../../rtl/vhdl/peripheral/ahb3/peripheral_peripheral_dma_top_ahb3.vhd
-	ghdl -a --std=08 ../../../../../../rtl/vhdl/core/arb_rr.vhd
+	ghdl -a --std=08 ../../../../../../rtl/vhdl/core/arbiter_rr.vhd
 	ghdl -a --std=08 ../../../../../../rtl/vhdl/core/peripheral_dma_initiator_nocreq.vhd
 	ghdl -a --std=08 ../../../../../../rtl/vhdl/core/peripheral_dma_packet_buffer.vhd
 	ghdl -a --std=08 ../../../../../../rtl/vhdl/core/peripheral_dma_request_table.vhd

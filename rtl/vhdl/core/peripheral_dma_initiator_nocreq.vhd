@@ -98,7 +98,7 @@ architecture rtl of peripheral_dma_initiator_nocreq is
   -- Components
   ------------------------------------------------------------------------------
 
-  component peripheral_arb_rr
+  component peripheral_arbiter_rr
     generic (
       N : integer := 2
       );
@@ -205,7 +205,7 @@ begin
   requests <= valid and not open_responses and (TABLE_ENTRIES-1 downto 0 => to_stdlogic(noc_req_state = NOC_REQ_IDLE));
 
   -- Round Robin (rr) arbiter
-  arbiter_rr : peripheral_arb_rr
+  arbiter_rr : peripheral_arbiter_rr
     generic map (
       N => TABLE_ENTRIES
       )
