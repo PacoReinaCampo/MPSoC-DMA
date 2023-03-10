@@ -32,7 +32,9 @@ verilog
     └── peripheral
         ├── ahb3
         │   └── peripheral_ahb3_pkg.sv
+        ├── axi4
+        │   └── peripheral_axi4_pkg.sv
         └── wb
             └── peripheral_wb_pkg.sv
 
-10 directories, 25 files
+11 directories, 26 files

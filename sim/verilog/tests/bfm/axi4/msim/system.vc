@@ -42,7 +42,7 @@
 ##                                                                               ##
 ###################################################################################
 
-../../../../../../rtl/verilog/axi4/pkg/peripheral_axi4_pkg.sv
+../../../../../../rtl/verilog/pkg/peripheral/axi4/peripheral_axi4_pkg.sv
 
 ../../../../../../bench/verilog/tests/bfm/axi4/peripheral_bfm_basic.sv
 ../../../../../../bench/verilog/tests/bfm/axi4/peripheral_bfm_master_axi4.sv
