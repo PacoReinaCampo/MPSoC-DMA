@@ -44,11 +44,10 @@
 import peripheral_wb_pkg::*;
 
 module peripheral_bfm_slave_wb #(
-  parameter DW = 32,
-  parameter AW = 32,
+  parameter DW    = 32,
+  parameter AW    = 32,
   parameter DEBUG = 0
-)
-  (
+) (
   input                 wb_clk,
   input                 wb_rst,
   input      [AW  -1:0] wb_adr_i,
@@ -95,34 +94,32 @@ module peripheral_bfm_slave_wb #(
   task init;
     begin
       wb_ack_o <= #TP 1'b0;
-      wb_dat_o <= #TP {DW{1'b0}};
+      wb_dat_o <= #TP{DW{1'b0}};
       wb_err_o <= #TP 1'b0;
       wb_rty_o <= #TP 1'b0;
 
-      if(wb_rst !== 1'b0) begin
-        if(DEBUG) $display("%0d : waiting for reset release", $time);
+      if (wb_rst !== 1'b0) begin
+        if (DEBUG) $display("%0d : waiting for reset release", $time);
         @(negedge wb_rst);
         @(posedge wb_clk);
-        if(DEBUG) $display("%0d : Reset was released", $time);
+        if (DEBUG) $display("%0d : Reset was released", $time);
       end
 
       //Catch start of next cycle
-      if (!wb_cyc_i)
-        @(posedge wb_cyc_i);
+      if (!wb_cyc_i) @(posedge wb_cyc_i);
       @(posedge wb_clk);
 
       //Make sure that wb_cyc_i is still asserted at next clock edge to avoid glitches
-      while(wb_cyc_i !== 1'b1)
-        @(posedge wb_clk);
-      if(DEBUG) $display("%0d : Got wb_cyc_i", $time);
+      while (wb_cyc_i !== 1'b1) @(posedge wb_clk);
+      if (DEBUG) $display("%0d : Got wb_cyc_i", $time);
 
       cycle_type = get_cycle_type(wb_cti_i);
 
-      op      = wb_we_i;
-      address = wb_adr_i;
-      mask    = wb_sel_i;
+      op         = wb_we_i;
+      address    = wb_adr_i;
+      mask       = wb_sel_i;
 
-      has_next = 1'b1;
+      has_next   = 1'b1;
     end
   endtask
 
@@ -146,7 +143,7 @@ module peripheral_bfm_slave_wb #(
   task write_ack;
     output [DW-1:0] data_o;
     begin
-      if(DEBUG) $display("%0d : Write ack", $time);
+      if (DEBUG) $display("%0d : Write ack", $time);
       next();
       data_o = data;
     end
@@ -154,21 +151,19 @@ module peripheral_bfm_slave_wb #(
 
   task next;
     begin
-      if(DEBUG) $display("%0d : next address=0x%h, data=0x%h, op=%b", $time, address, data, op);
+      if (DEBUG) $display("%0d : next address=0x%h, data=0x%h, op=%b", $time, address, data, op);
 
-      wb_dat_o <= #TP {DW{1'b0}};
+      wb_dat_o <= #TP{DW{1'b0}};
       wb_ack_o <= #TP 1'b0;
       wb_err_o <= #TP 1'b0;
-      wb_rty_o <= #TP 1'b0; //TODO : rty not supported
+      wb_rty_o <= #TP 1'b0;  //TODO : rty not supported
 
-      if(err) begin
-        if(DEBUG) $display("%0d, Error", $time);
+      if (err) begin
+        if (DEBUG) $display("%0d, Error", $time);
         wb_err_o <= #TP 1'b1;
         has_next = 1'b0;
-      end
-      else begin
-        if(op === READ)
-          wb_dat_o <= #TP data;
+      end else begin
+        if (op === READ) wb_dat_o <= #TP data;
         wb_ack_o <= #TP 1'b1;
       end
 
@@ -179,7 +174,7 @@ module peripheral_bfm_slave_wb #(
 
       has_next = !wb_is_last(wb_cti_i) & !err;
 
-      if(op === WRITE) begin
+      if (op === WRITE) begin
         data = wb_dat_i;
         mask = wb_sel_i;
       end

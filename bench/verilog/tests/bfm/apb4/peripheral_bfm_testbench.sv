@@ -77,22 +77,22 @@ module peripheral_bfm_testbench;
     forever #10 PCLK = ~PCLK;
   end : gen_PCLK
 
-  initial begin : gen_PRESETn;
+  initial begin : gen_PRESETn
+    ;
     PRESETn = 1'b1;
     //ensure falling edge of PRESETn
     #10;
     PRESETn = 1'b0;
     #32;
     PRESETn = 1'b1;
-  end : gen_PRESETn;
+  end : gen_PRESETn
+  ;
 
   //////////////////////////////////////////////////////////////////////////////
   //
   // TB and DUT
   //
-  peripheral_bfm_apb4 #( .PDATA_SIZE ( PDATA_SIZE ))
-  bfm_apb4 ( .* );
+  peripheral_bfm_apb4 #(.PDATA_SIZE(PDATA_SIZE)) bfm_apb4 (.*);
 
-  peripheral_gpio_apb4 #( .PDATA_SIZE ( PDATA_SIZE ))
-  dut ( .* );
+  peripheral_gpio_apb4 #(.PDATA_SIZE(PDATA_SIZE)) dut (.*);
 endmodule : peripheral_bfm_testbench

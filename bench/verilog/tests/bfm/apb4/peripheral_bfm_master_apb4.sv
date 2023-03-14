@@ -43,10 +43,9 @@
 module peripheral_bfm_master_apb4 #(
   parameter PADDR_SIZE = 16,
   parameter PDATA_SIZE = 32
-)
-  (
-  input                         PRESETn,
-  input                         PCLK,
+) (
+  input PRESETn,
+  input PCLK,
 
   //APB Master Interface
   output reg                    PSEL,
@@ -69,26 +68,22 @@ module peripheral_bfm_master_apb4 #(
 
   task automatic reset();
     //Reset AHB Bus
-    PSEL      = 1'b0;
-    PENABLE   = 1'b0;
-    PADDR     = 'hx;
-    PSTRB     = 'hx;
-    PWDATA    = 'hx;
-    PWRITE    = 'hx;
+    PSEL    = 1'b0;
+    PENABLE = 1'b0;
+    PADDR   = 'hx;
+    PSTRB   = 'hx;
+    PWDATA  = 'hx;
+    PWRITE  = 'hx;
 
     @(posedge PRESETn);
   endtask
 
-  task automatic write (
-    input [PADDR_SIZE  -1:0] address,
-    input [PDATA_SIZE/8-1:0] strb,
-    input [PDATA_SIZE  -1:0] data
-  );
-    PSEL    = 1'b1;
-    PADDR   = address;
-    PSTRB   = strb;
-    PWDATA  = data;
-    PWRITE  = 1'b1;
+  task automatic write(input [PADDR_SIZE  -1:0] address, input [PDATA_SIZE/8-1:0] strb, input [PDATA_SIZE  -1:0] data);
+    PSEL   = 1'b1;
+    PADDR  = address;
+    PSTRB  = strb;
+    PWDATA = data;
+    PWRITE = 1'b1;
     @(posedge PCLK);
 
     PENABLE = 1'b1;
@@ -98,21 +93,18 @@ module peripheral_bfm_master_apb4 #(
 
     PSEL    = 1'b0;
     PADDR   = {PADDR_SIZE{1'bx}};
-    PSTRB   = {PDATA_SIZE/8{1'bx}};
+    PSTRB   = {PDATA_SIZE / 8{1'bx}};
     PWDATA  = {PDATA_SIZE{1'bx}};
     PWRITE  = 1'bx;
     PENABLE = 1'b0;
   endtask
 
-  task automatic read (
-    input  [PADDR_SIZE -1:0] address,
-    output [PDATA_SIZE -1:0] data
-  );
-    PSEL    = 1'b1;
-    PADDR   = address;
-    PSTRB   = {PDATA_SIZE/8{1'bx}};
-    PWDATA  = {PDATA_SIZE{1'bx}};
-    PWRITE  = 1'b0;
+  task automatic read(input [PADDR_SIZE -1:0] address, output [PDATA_SIZE -1:0] data);
+    PSEL   = 1'b1;
+    PADDR  = address;
+    PSTRB  = {PDATA_SIZE / 8{1'bx}};
+    PWDATA = {PDATA_SIZE{1'bx}};
+    PWRITE = 1'b0;
     @(posedge PCLK);
 
     PENABLE = 1'b1;
@@ -120,7 +112,7 @@ module peripheral_bfm_master_apb4 #(
 
     while (!PREADY) @(posedge PCLK);
 
-    data = PRDATA;
+    data    = PRDATA;
 
     PSEL    = 1'b0;
     PADDR   = {PADDR_SIZE{1'bx}};

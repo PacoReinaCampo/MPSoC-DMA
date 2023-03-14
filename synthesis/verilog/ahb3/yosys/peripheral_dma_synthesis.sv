@@ -41,16 +41,15 @@
  */
 
 module peripheral_dma_synthesis #(
-  parameter HADDR_SIZE =  8,
-  parameter HDATA_SIZE = 32,
-  parameter APB_ADDR_WIDTH =  8,
+  parameter HADDR_SIZE     = 8,
+  parameter HDATA_SIZE     = 32,
+  parameter APB_ADDR_WIDTH = 8,
   parameter APB_DATA_WIDTH = 32,
-  parameter SYNC_DEPTH =  3
-)
-  (
+  parameter SYNC_DEPTH     = 3
+) (
   //Common signals
-  input                         HRESETn,
-  input                         HCLK,
+  input HRESETn,
+  input HCLK,
 
   //UART AHB3
   input                         dma_HSEL,
@@ -83,8 +82,8 @@ module peripheral_dma_synthesis #(
   logic                       dma_PREADY;
   logic                       dma_PSLVERR;
 
-  logic                       dma_rx_i; // Receiver input
-  logic                       dma_tx_o; // Transmitter output
+  logic                       dma_rx_i;  // Receiver input
+  logic                       dma_tx_o;  // Transmitter output
 
   logic                       dma_event_o;
 
@@ -95,67 +94,65 @@ module peripheral_dma_synthesis #(
 
   //DUT AHB3
   peripheral_bridge_apb2ahb #(
-  .HADDR_SIZE ( HADDR_SIZE     ),
-  .HDATA_SIZE ( HDATA_SIZE     ),
-  .PADDR_SIZE ( APB_ADDR_WIDTH ),
-  .PDATA_SIZE ( APB_DATA_WIDTH ),
-  .SYNC_DEPTH ( SYNC_DEPTH     )
-  )
-  bridge_apb2ahb (
+    .HADDR_SIZE(HADDR_SIZE),
+    .HDATA_SIZE(HDATA_SIZE),
+    .PADDR_SIZE(APB_ADDR_WIDTH),
+    .PDATA_SIZE(APB_DATA_WIDTH),
+    .SYNC_DEPTH(SYNC_DEPTH)
+  ) bridge_apb2ahb (
     //AHB Slave Interface
-    .HRESETn   ( HRESETn ),
-    .HCLK      ( HCLK    ),
+    .HRESETn(HRESETn),
+    .HCLK   (HCLK),
 
-    .HSEL      ( dma_HSEL      ),
-    .HADDR     ( dma_HADDR     ),
-    .HWDATA    ( dma_HWDATA    ),
-    .HRDATA    ( dma_HRDATA    ),
-    .HWRITE    ( dma_HWRITE    ),
-    .HSIZE     ( dma_HSIZE     ),
-    .HBURST    ( dma_HBURST    ),
-    .HPROT     ( dma_HPROT     ),
-    .HTRANS    ( dma_HTRANS    ),
-    .HMASTLOCK ( dma_HMASTLOCK ),
-    .HREADYOUT ( dma_HREADYOUT ),
-    .HREADY    ( dma_HREADY    ),
-    .HRESP     ( dma_HRESP     ),
+    .HSEL     (dma_HSEL),
+    .HADDR    (dma_HADDR),
+    .HWDATA   (dma_HWDATA),
+    .HRDATA   (dma_HRDATA),
+    .HWRITE   (dma_HWRITE),
+    .HSIZE    (dma_HSIZE),
+    .HBURST   (dma_HBURST),
+    .HPROT    (dma_HPROT),
+    .HTRANS   (dma_HTRANS),
+    .HMASTLOCK(dma_HMASTLOCK),
+    .HREADYOUT(dma_HREADYOUT),
+    .HREADY   (dma_HREADY),
+    .HRESP    (dma_HRESP),
 
     //APB Master Interface
-    .PRESETn ( HRESETn ),
-    .PCLK    ( HCLK    ),
+    .PRESETn(HRESETn),
+    .PCLK   (HCLK),
 
-    .PSEL    ( dma_PSEL    ),
-    .PENABLE ( dma_PENABLE ),
-    .PPROT   (              ),
-    .PWRITE  ( dma_PWRITE  ),
-    .PSTRB   (              ),
-    .PADDR   ( dma_PADDR   ),
-    .PWDATA  ( dma_PWDATA  ),
-    .PRDATA  ( dma_PRDATA  ),
-    .PREADY  ( dma_PREADY  ),
-    .PSLVERR ( dma_PSLVERR )
+    .PSEL   (dma_PSEL),
+    .PENABLE(dma_PENABLE),
+    .PPROT  (),
+    .PWRITE (dma_PWRITE),
+    .PSTRB  (),
+    .PADDR  (dma_PADDR),
+    .PWDATA (dma_PWDATA),
+    .PRDATA (dma_PRDATA),
+    .PREADY (dma_PREADY),
+    .PSLVERR(dma_PSLVERR)
   );
 
   peripheral_apb4_dma #(
-  .APB_ADDR_WIDTH ( APB_ADDR_WIDTH ),
-  .APB_DATA_WIDTH ( APB_DATA_WIDTH )
-  )
-  apb4_dma (
-    .RSTN ( HRESETn ),
-    .CLK  ( HCLK    ),
+    .APB_ADDR_WIDTH(APB_ADDR_WIDTH),
+    .APB_DATA_WIDTH(APB_DATA_WIDTH)
+  ) apb4_dma (
+    .RSTN(HRESETn),
+    .CLK (HCLK),
 
-    .PADDR   ( dma_PADDR   ),
-    .PWDATA  ( dma_PWDATA  ),
-    .PWRITE  ( dma_PWRITE  ),
-    .PSEL    ( dma_PSEL    ),
-    .PENABLE ( dma_PENABLE ),
-    .PRDATA  ( dma_PRDATA  ),
-    .PREADY  ( dma_PREADY  ),
-    .PSLVERR ( dma_PSLVERR ),
+    .PADDR  (dma_PADDR),
+    .PWDATA (dma_PWDATA),
+    .PWRITE (dma_PWRITE),
+    .PSEL   (dma_PSEL),
+    .PENABLE(dma_PENABLE),
+    .PRDATA (dma_PRDATA),
+    .PREADY (dma_PREADY),
+    .PSLVERR(dma_PSLVERR),
 
-    .rx_i ( dma_rx_i ),
-    .tx_o ( dma_tx_o ),
+    .rx_i(dma_rx_i),
+    .tx_o(dma_tx_o),
 
-    .event_o ( dma_event_o )
+    .event_o(dma_event_o)
   );
 endmodule

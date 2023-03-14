@@ -51,8 +51,7 @@ module peripheral_dma_interface_bb #(
   parameter TABLE_ENTRIES_PTRWIDTH = 2,
 
   parameter TILEID = 0
-)
-  (
+) (
   input clk,
   input rst,
 
@@ -68,12 +67,12 @@ module peripheral_dma_interface_bb #(
   output                              if_write_en,
 
   // Interface read (status) interface
-  output [TABLE_ENTRIES_PTRWIDTH-1:0]    if_valid_pos,
-  output                                 if_valid_set,
-  output                                 if_valid_en,
-  output                                 if_validrd_en,
+  output [TABLE_ENTRIES_PTRWIDTH-1:0] if_valid_pos,
+  output                              if_valid_set,
+  output                              if_valid_en,
+  output                              if_validrd_en,
 
-  input [TABLE_ENTRIES-1:0]              done
+  input [TABLE_ENTRIES-1:0] done
 );
 
   //////////////////////////////////////////////////////////////////////////////
@@ -88,29 +87,25 @@ module peripheral_dma_interface_bb #(
   // Module body
   //
 
-  assign if_write_req = { bb_if_din_i[DMA_REQFIELD_LADDR_WIDTH -1:0],
-  bb_if_din_i[DMA_REQFIELD_SIZE_WIDTH  -1:0],
-  bb_if_din_i[DMA_REQFIELD_RTILE_WIDTH -1:0],
-  bb_if_din_i[DMA_REQFIELD_RADDR_WIDTH -1:0],
-  bb_if_din_i[0] };
+  assign if_write_req  = {bb_if_din_i[DMA_REQFIELD_LADDR_WIDTH-1:0], bb_if_din_i[DMA_REQFIELD_SIZE_WIDTH-1:0], bb_if_din_i[DMA_REQFIELD_RTILE_WIDTH-1:0], bb_if_din_i[DMA_REQFIELD_RADDR_WIDTH-1:0], bb_if_din_i[0]};
 
-  assign if_write_pos = bb_if_addr_i[TABLE_ENTRIES_PTRWIDTH+4:5]; // ptrwidth MUST be <= 7 (=128 entries)
-  assign if_write_en  = bb_if_en_i & bb_if_we_i;
+  assign if_write_pos  = bb_if_addr_i[TABLE_ENTRIES_PTRWIDTH+4:5];  // ptrwidth MUST be <= 7 (=128 entries)
+  assign if_write_en   = bb_if_en_i & bb_if_we_i;
 
-  assign if_valid_pos  = bb_if_addr_i[TABLE_ENTRIES_PTRWIDTH+4:5]; // ptrwidth MUST be <= 7 (=128 entries)
+  assign if_valid_pos  = bb_if_addr_i[TABLE_ENTRIES_PTRWIDTH+4:5];  // ptrwidth MUST be <= 7 (=128 entries)
   assign if_valid_en   = bb_if_en_i & (bb_if_addr_i[4:0] == 5'h14) & bb_if_we_i;
   assign if_validrd_en = bb_if_en_i & (bb_if_addr_i[4:0] == 5'h14) & ~bb_if_we_i;
   assign if_valid_set  = bb_if_we_i | (~bb_if_we_i & ~done[if_valid_pos]);
 
   always @(*) begin
     if (bb_if_addr_i[4:0] == 5'h14) begin
-      bb_if_dout_o = {31'h0,done[if_valid_pos]};
+      bb_if_dout_o = {31'h0, done[if_valid_pos]};
     end
   end
 
   // This assumes, that mask and address match
   generate
-    for (i=0;i<DMA_REQMASK_WIDTH;i=i+1) begin
+    for (i = 0; i < DMA_REQMASK_WIDTH; i = i + 1) begin
       assign if_write_select[i] = (bb_if_addr_i[4:2] == i);
     end
   endgenerate

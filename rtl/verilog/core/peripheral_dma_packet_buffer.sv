@@ -47,17 +47,17 @@ import peripheral_dma_pkg::*;
 
 module peripheral_dma_packet_buffer #(
   parameter DATA_WIDTH = 32,
-  parameter FLIT_WIDTH = DATA_WIDTH+2,
+  parameter FLIT_WIDTH = DATA_WIDTH + 2,
 
   parameter FIFO_DEPTH = 16,
   parameter SIZE_WIDTH = $clog2(17),
 
-  parameter READY = 1'b0, BUSY = 1'b1
-)
-  (
+  parameter READY = 1'b0,
+            BUSY  = 1'b1
+) (
   //inputs
-  input                   clk,
-  input                   rst,
+  input clk,
+  input rst,
 
   input  [FLIT_WIDTH-1:0] in_flit,
   input                   in_valid,
@@ -76,26 +76,26 @@ module peripheral_dma_packet_buffer #(
   //
 
   // Signals for fifo
-  reg [FLIT_WIDTH-1:0] fifo_data [0:FIFO_DEPTH]; //actual fifo
-  reg [FIFO_DEPTH  :0] fifo_write_ptr;
+  reg     [FLIT_WIDTH-1:0] fifo_data      [0:FIFO_DEPTH];  //actual fifo
+  reg     [FIFO_DEPTH : 0] fifo_write_ptr;
 
-  reg [FIFO_DEPTH  :0] last_flits;
+  reg     [FIFO_DEPTH : 0] last_flits;
 
-  wire                 full_packet;
-  wire                 pop;
-  wire                 push;
+  wire                     full_packet;
+  wire                     pop;
+  wire                     push;
 
-  wire [1:0] in_flit_type;
+  wire    [           1:0] in_flit_type;
 
-  wire                        in_is_last;
+  wire                     in_is_last;
 
-  reg [FIFO_DEPTH-1:0]        valid_flits;
+  reg     [FIFO_DEPTH-1:0] valid_flits;
 
-  reg [SIZE_WIDTH-1:0] k;
-  reg [SIZE_WIDTH-1:0] s;
-  reg                  found;
+  reg     [SIZE_WIDTH-1:0] k;
+  reg     [SIZE_WIDTH-1:0] s;
+  reg                      found;
 
-  integer i;
+  integer                  i;
 
   //////////////////////////////////////////////////////////////////////////////
   //
@@ -104,32 +104,32 @@ module peripheral_dma_packet_buffer #(
 
   assign in_flit_type = in_flit[FLIT_WIDTH-1:FLIT_WIDTH-2];
 
-  assign in_is_last = (in_flit_type == FLIT_TYPE_LAST) || (in_flit_type == FLIT_TYPE_SINGLE);
+  assign in_is_last   = (in_flit_type == FLIT_TYPE_LAST) || (in_flit_type == FLIT_TYPE_SINGLE);
 
   always @(*) begin : valid_flits_comb
     // Set first element
     valid_flits[FIFO_DEPTH-1] = fifo_write_ptr[FIFO_DEPTH];
-    for (i=FIFO_DEPTH-2;i>=0;i=i-1) begin
+    for (i = FIFO_DEPTH - 2; i >= 0; i = i - 1) begin
       valid_flits[i] = fifo_write_ptr[i+1] | valid_flits[i+1];
     end
   end
 
   assign full_packet = |(last_flits[FIFO_DEPTH-1:0] & valid_flits);
 
-  assign pop = out_valid & out_ready;
-  assign push = in_valid & in_ready;
+  assign pop         = out_valid & out_ready;
+  assign push        = in_valid & in_ready;
 
-  assign out_flit = fifo_data[0];
-  assign out_valid = full_packet;
+  assign out_flit    = fifo_data[0];
+  assign out_valid   = full_packet;
 
-  assign in_ready = !fifo_write_ptr[FIFO_DEPTH];
+  assign in_ready    = !fifo_write_ptr[FIFO_DEPTH];
 
   always @(*) begin : findfirstlast
-    s = 0;
+    s     = 0;
     found = 0;
-    for (k=0;k<FIFO_DEPTH;k=k+1) begin
+    for (k = 0; k < FIFO_DEPTH; k = k + 1) begin
       if (last_flits[k] && !found) begin
-        s = k+1;
+        s     = k + 1;
         found = 1;
       end
     end
@@ -138,46 +138,40 @@ module peripheral_dma_packet_buffer #(
 
   always @(posedge clk) begin
     if (rst) begin
-      fifo_write_ptr <= {{FIFO_DEPTH{1'b0}},1'b1};
-    end
-    else if (push & !pop) begin
+      fifo_write_ptr <= {{FIFO_DEPTH{1'b0}}, 1'b1};
+    end else if (push & !pop) begin
       fifo_write_ptr <= fifo_write_ptr << 1;
-    end
-    else if (!push & pop) begin
+    end else if (!push & pop) begin
       fifo_write_ptr <= fifo_write_ptr >> 1;
     end
   end
 
   always @(posedge clk) begin : shift_register
     if (rst) begin
-      last_flits <= {FIFO_DEPTH+1{1'b0}};
-    end
-    else begin : shift
-      for (i=0;i<FIFO_DEPTH-1;i=i+1) begin
+      last_flits <= {FIFO_DEPTH + 1{1'b0}};
+    end else begin : shift
+      for (i = 0; i < FIFO_DEPTH - 1; i = i + 1) begin
         if (pop) begin
           if (push & fifo_write_ptr[i+1]) begin
-            fifo_data[i] <= in_flit;
+            fifo_data[i]  <= in_flit;
             last_flits[i] <= in_is_last;
-          end
-          else begin
-            fifo_data[i] <= fifo_data[i+1];
+          end else begin
+            fifo_data[i]  <= fifo_data[i+1];
             last_flits[i] <= last_flits[i+1];
           end
-        end
-        else if (push & fifo_write_ptr[i]) begin
-          fifo_data[i] <= in_flit;
+        end else if (push & fifo_write_ptr[i]) begin
+          fifo_data[i]  <= in_flit;
           last_flits[i] <= in_is_last;
         end
-      end // for (i=0;i<FIFO_DEPTH-1;i=i+1)
+      end  // for (i=0;i<FIFO_DEPTH-1;i=i+1)
       // Handle last element
-      if (pop &  push & fifo_write_ptr[i+1]) begin
-        fifo_data[i] <= in_flit;
+      if (pop & push & fifo_write_ptr[i+1]) begin
+        fifo_data[i]  <= in_flit;
         last_flits[i] <= in_is_last;
-      end
-      else if (push & fifo_write_ptr[i]) begin
-        fifo_data[i] <= in_flit;
+      end else if (push & fifo_write_ptr[i]) begin
+        fifo_data[i]  <= in_flit;
         last_flits[i] <= in_is_last;
       end
     end
-  end // block: shift_register
+  end  // block: shift_register
 endmodule

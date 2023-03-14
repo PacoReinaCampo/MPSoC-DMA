@@ -52,57 +52,57 @@ module peripheral_dma_testbench;
   parameter ADDR_WIDTH = 32;
   parameter DATA_WIDTH = 32;
 
-  parameter TABLE_ENTRIES          = 4;
+  parameter TABLE_ENTRIES = 4;
   parameter TABLE_ENTRIES_PTRWIDTH = $clog2(4);
-  parameter TILEID                 = 0;
-  parameter NOC_PACKET_SIZE        = 16;
-  parameter GENERATE_INTERRUPT     = 1;
+  parameter TILEID = 0;
+  parameter NOC_PACKET_SIZE = 16;
+  parameter GENERATE_INTERRUPT = 1;
 
   //////////////////////////////////////////////////////////////////////////////
   //
   // Variables
   //
-  logic clk;
-  logic rst;
+  logic                     clk;
+  logic                     rst;
 
   // WB
-  logic [`FLIT_WIDTH-1:0] noc_wb_in_req_flit;
-  logic                   noc_wb_in_req_valid;
-  logic                   noc_wb_in_req_ready;
+  logic [  `FLIT_WIDTH-1:0] noc_wb_in_req_flit;
+  logic                     noc_wb_in_req_valid;
+  logic                     noc_wb_in_req_ready;
 
-  logic [`FLIT_WIDTH-1:0] noc_wb_in_res_flit;
-  logic                   noc_wb_in_res_valid;
-  logic                   noc_wb_in_res_ready;
+  logic [  `FLIT_WIDTH-1:0] noc_wb_in_res_flit;
+  logic                     noc_wb_in_res_valid;
+  logic                     noc_wb_in_res_ready;
 
-  logic [`FLIT_WIDTH-1:0] noc_wb_out_req_flit;
-  logic                   noc_wb_out_req_valid;
-  logic                   noc_wb_out_req_ready;
+  logic [  `FLIT_WIDTH-1:0] noc_wb_out_req_flit;
+  logic                     noc_wb_out_req_valid;
+  logic                     noc_wb_out_req_ready;
 
-  logic [`FLIT_WIDTH-1:0] noc_wb_out_res_flit;
-  logic                   noc_wb_out_res_valid;
-  logic                   noc_wb_out_res_ready;
+  logic [  `FLIT_WIDTH-1:0] noc_wb_out_res_flit;
+  logic                     noc_wb_out_res_valid;
+  logic                     noc_wb_out_res_ready;
 
-  logic [ADDR_WIDTH-1:0]  wb_if_addr_i;
-  logic [DATA_WIDTH-1:0]  wb_if_dat_i;
-  logic                   wb_if_cyc_i;
-  logic                   wb_if_stb_i;
-  logic                   wb_if_we_i;
-  logic [DATA_WIDTH-1:0]  wb_if_dat_o;
-  logic                   wb_if_ack_o;
-  logic                   wb_if_err_o;
-  logic                   wb_if_rty_o;
+  logic [   ADDR_WIDTH-1:0] wb_if_addr_i;
+  logic [   DATA_WIDTH-1:0] wb_if_dat_i;
+  logic                     wb_if_cyc_i;
+  logic                     wb_if_stb_i;
+  logic                     wb_if_we_i;
+  logic [   DATA_WIDTH-1:0] wb_if_dat_o;
+  logic                     wb_if_ack_o;
+  logic                     wb_if_err_o;
+  logic                     wb_if_rty_o;
 
-  logic [ADDR_WIDTH-1:0] wb_adr_o;
-  logic [DATA_WIDTH-1:0] wb_dat_o;
-  logic                  wb_cyc_o;
-  logic                  wb_stb_o;
-  logic [3:0]            wb_sel_o;
-  logic                  wb_we_o;
-  logic                  wb_cab_o;
-  logic [2:0]            wb_cti_o;
-  logic [1:0]            wb_bte_o;
-  logic [DATA_WIDTH-1:0] wb_dat_i;
-  logic                  wb_ack_i;
+  logic [   ADDR_WIDTH-1:0] wb_adr_o;
+  logic [   DATA_WIDTH-1:0] wb_dat_o;
+  logic                     wb_cyc_o;
+  logic                     wb_stb_o;
+  logic [              3:0] wb_sel_o;
+  logic                     wb_we_o;
+  logic                     wb_cab_o;
+  logic [              2:0] wb_cti_o;
+  logic [              1:0] wb_bte_o;
+  logic [   DATA_WIDTH-1:0] wb_dat_i;
+  logic                     wb_ack_i;
 
   logic [TABLE_ENTRIES-1:0] irq_wb;
 
@@ -113,57 +113,56 @@ module peripheral_dma_testbench;
 
   //DUT WB
   peripheral_dma_top_wb #(
-    .ADDR_WIDTH ( ADDR_WIDTH ),
-    .DATA_WIDTH ( DATA_WIDTH ),
+    .ADDR_WIDTH(ADDR_WIDTH),
+    .DATA_WIDTH(DATA_WIDTH),
 
-    .TABLE_ENTRIES          ( TABLE_ENTRIES ),
-    .TABLE_ENTRIES_PTRWIDTH ( TABLE_ENTRIES_PTRWIDTH ),
-    .TILEID                 ( TILEID ),
-    .NOC_PACKET_SIZE        ( NOC_PACKET_SIZE ),
-    .GENERATE_INTERRUPT     ( GENERATE_INTERRUPT )
-  )
-  wb_top (
-    .clk (clk),
-    .rst (rst),
+    .TABLE_ENTRIES         (TABLE_ENTRIES),
+    .TABLE_ENTRIES_PTRWIDTH(TABLE_ENTRIES_PTRWIDTH),
+    .TILEID                (TILEID),
+    .NOC_PACKET_SIZE       (NOC_PACKET_SIZE),
+    .GENERATE_INTERRUPT    (GENERATE_INTERRUPT)
+  ) wb_top (
+    .clk(clk),
+    .rst(rst),
 
-    .noc_in_req_flit  (noc_wb_in_req_flit),
-    .noc_in_req_valid (noc_wb_in_req_valid),
-    .noc_in_req_ready (noc_wb_in_req_ready),
+    .noc_in_req_flit (noc_wb_in_req_flit),
+    .noc_in_req_valid(noc_wb_in_req_valid),
+    .noc_in_req_ready(noc_wb_in_req_ready),
 
-    .noc_in_res_flit  (noc_wb_in_res_flit),
-    .noc_in_res_valid (noc_wb_in_res_valid),
-    .noc_in_res_ready (noc_wb_in_res_ready),
+    .noc_in_res_flit (noc_wb_in_res_flit),
+    .noc_in_res_valid(noc_wb_in_res_valid),
+    .noc_in_res_ready(noc_wb_in_res_ready),
 
-    .noc_out_req_flit  (noc_wb_out_req_flit),
-    .noc_out_req_valid (noc_wb_out_req_valid),
-    .noc_out_req_ready (noc_wb_out_req_ready),
+    .noc_out_req_flit (noc_wb_out_req_flit),
+    .noc_out_req_valid(noc_wb_out_req_valid),
+    .noc_out_req_ready(noc_wb_out_req_ready),
 
-    .noc_out_res_flit  (noc_wb_out_res_flit),
-    .noc_out_res_valid (noc_wb_out_res_valid),
-    .noc_out_res_ready (noc_wb_out_res_ready),
+    .noc_out_res_flit (noc_wb_out_res_flit),
+    .noc_out_res_valid(noc_wb_out_res_valid),
+    .noc_out_res_ready(noc_wb_out_res_ready),
 
-    .wb_if_addr_i (wb_if_addr_i),
-    .wb_if_dat_i  (wb_if_dat_i),
-    .wb_if_cyc_i  (wb_if_cyc_i),
-    .wb_if_stb_i  (wb_if_stb_i),
-    .wb_if_we_i   (wb_if_we_i ),
-    .wb_if_dat_o  (wb_if_dat_o),
-    .wb_if_ack_o  (wb_if_ack_o),
-    .wb_if_err_o  (wb_if_err_o),
-    .wb_if_rty_o  (wb_if_rty_o),
+    .wb_if_addr_i(wb_if_addr_i),
+    .wb_if_dat_i (wb_if_dat_i),
+    .wb_if_cyc_i (wb_if_cyc_i),
+    .wb_if_stb_i (wb_if_stb_i),
+    .wb_if_we_i  (wb_if_we_i),
+    .wb_if_dat_o (wb_if_dat_o),
+    .wb_if_ack_o (wb_if_ack_o),
+    .wb_if_err_o (wb_if_err_o),
+    .wb_if_rty_o (wb_if_rty_o),
 
-    .wb_adr_o (wb_adr_o),
-    .wb_dat_o (wb_dat_o),
-    .wb_cyc_o (wb_cyc_o),
-    .wb_stb_o (wb_stb_o),
-    .wb_sel_o (wb_sel_o),
-    .wb_we_o  (wb_we_o ),
-    .wb_cab_o (wb_cab_o),
-    .wb_cti_o (wb_cti_o),
-    .wb_bte_o (wb_bte_o),
-    .wb_dat_i (wb_dat_i),
-    .wb_ack_i (wb_ack_i),
+    .wb_adr_o(wb_adr_o),
+    .wb_dat_o(wb_dat_o),
+    .wb_cyc_o(wb_cyc_o),
+    .wb_stb_o(wb_stb_o),
+    .wb_sel_o(wb_sel_o),
+    .wb_we_o (wb_we_o),
+    .wb_cab_o(wb_cab_o),
+    .wb_cti_o(wb_cti_o),
+    .wb_bte_o(wb_bte_o),
+    .wb_dat_i(wb_dat_i),
+    .wb_ack_i(wb_ack_i),
 
-    .irq (irq_wb)
+    .irq(irq_wb)
   );
 endmodule

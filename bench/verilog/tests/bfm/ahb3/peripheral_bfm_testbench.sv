@@ -41,7 +41,7 @@
  */
 
 module peripheral_bfm_testbench;
-  parameter TIMERS = 3; //Number of timers
+  parameter TIMERS = 3;  //Number of timers
 
   parameter HADDR_SIZE = 16;
   parameter HDATA_SIZE = 32;
@@ -77,17 +77,19 @@ module peripheral_bfm_testbench;
   bit HCLK, HRESETn;
   initial begin : gen_HCLK
     HCLK <= 1'b0;
-    forever #10 HCLK = ~ HCLK;
+    forever #10 HCLK = ~HCLK;
   end : gen_HCLK
 
-  initial begin : gen_HRESETn;
+  initial begin : gen_HRESETn
+    ;
     HRESETn = 1'b1;
     //ensure falling edge of HRESETn
     #10;
     HRESETn = 1'b0;
     #32;
     HRESETn = 1'b1;
-  end : gen_HRESETn;
+  end : gen_HRESETn
+  ;
 
   //////////////////////////////////////////////////////////////////////////////
   //
@@ -95,21 +97,19 @@ module peripheral_bfm_testbench;
   //
 
   peripheral_bfm_ahb3 #(
-  .TIMERS     ( TIMERS     ),
-  .HADDR_SIZE ( HADDR_SIZE ),
-  .HDATA_SIZE ( HDATA_SIZE )
-  )
-  tb (
-  .*
+    .TIMERS    (TIMERS),
+    .HADDR_SIZE(HADDR_SIZE),
+    .HDATA_SIZE(HDATA_SIZE)
+  ) tb (
+    .*
   );
 
   peripheral_timer_ahb3 #(
-  .TIMERS     ( TIMERS     ),
-  .HADDR_SIZE ( HADDR_SIZE ),
-  .HDATA_SIZE ( HDATA_SIZE )
-  )
-  dut (
-  .*
+    .TIMERS    (TIMERS),
+    .HADDR_SIZE(HADDR_SIZE),
+    .HDATA_SIZE(HDATA_SIZE)
+  ) dut (
+    .*
   );
 
   assign HREADY = HREADYOUT;

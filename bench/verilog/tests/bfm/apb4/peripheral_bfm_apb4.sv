@@ -42,26 +42,25 @@
 
 module peripheral_bfm_apb4 #(
   parameter PDATA_SIZE = 32
-)
-  (
-  input                         PRESETn,
-  input                         PCLK,
+) (
+  input PRESETn,
+  input PCLK,
 
-  output                        PSEL,
-  output                        PENABLE,
-  output     [             3:0] PADDR,
-  output     [PDATA_SIZE/8-1:0] PSTRB,
-  output     [PDATA_SIZE  -1:0] PWDATA,
-  input      [PDATA_SIZE  -1:0] PRDATA,
-  output                        PWRITE,
-  input                         PREADY,
-  input                         PSLVERR,
+  output                    PSEL,
+  output                    PENABLE,
+  output [             3:0] PADDR,
+  output [PDATA_SIZE/8-1:0] PSTRB,
+  output [PDATA_SIZE  -1:0] PWDATA,
+  input  [PDATA_SIZE  -1:0] PRDATA,
+  output                    PWRITE,
+  input                     PREADY,
+  input                     PSLVERR,
 
   input      [PDATA_SIZE  -1:0] gpio_o,
   input      [PDATA_SIZE  -1:0] gpio_oe,
   output reg [PDATA_SIZE  -1:0] gpio_i,
 
-  input                         irq_o
+  input irq_o
 );
 
   //////////////////////////////////////////////////////////////////////////////
@@ -69,19 +68,19 @@ module peripheral_bfm_apb4 #(
   // Constants
   //
 
-  localparam MODE      = 0;
+  localparam MODE = 0;
   localparam DIRECTION = 1;
-  localparam OUTPUT    = 2;
-  localparam INPUT     = 3;
-  localparam TYPE      = 4;
-  localparam LVL0      = 5;
-  localparam LVL1      = 6;
-  localparam STATUS    = 7;
-  localparam IRQ_ENA   = 8;
+  localparam OUTPUT = 2;
+  localparam INPUT = 3;
+  localparam TYPE = 4;
+  localparam LVL0 = 5;
+  localparam LVL1 = 6;
+  localparam STATUS = 7;
+  localparam IRQ_ENA = 8;
 
-  localparam PSTRB_SIZE=PDATA_SIZE/8;
+  localparam PSTRB_SIZE = PDATA_SIZE / 8;
 
-  localparam VERBOSE=0;
+  localparam VERBOSE = 0;
 
   //////////////////////////////////////////////////////////////////////////////
   //
@@ -96,11 +95,10 @@ module peripheral_bfm_apb4 #(
   // Instantiate the APB-Master
   //
   peripheral_bfm_master_apb4 #(
-  .PADDR_SIZE (          4 ),
-  .PDATA_SIZE ( PDATA_SIZE )
-  )
-  bfm_master_apb4 (
-  .*
+    .PADDR_SIZE(4),
+    .PDATA_SIZE(PDATA_SIZE)
+  ) bfm_master_apb4 (
+    .*
   );
 
   initial begin
@@ -112,7 +110,7 @@ module peripheral_bfm_apb4 #(
       reset_watchdog++;
       @(posedge PCLK);
       if (!got_reset && reset_watchdog == 1000) begin
-        $fatal(-1,"PRESETn not asserted\nTestbench requires an APB reset");
+        $fatal(-1, "PRESETn not asserted\nTestbench requires an APB reset");
       end
     end
   end
@@ -122,7 +120,7 @@ module peripheral_bfm_apb4 #(
     @(posedge PRESETn);
     got_reset = 1;
 
-    repeat(5) @(posedge PCLK);
+    repeat (5) @(posedge PCLK);
 
     welcome_text();
 
@@ -170,58 +168,49 @@ module peripheral_bfm_apb4 #(
   // Tasks
   //
   task welcome_text();
-    $display ("---------------------------------------------------------------------------------------------------------");
-    $display ("                                                                                                         ");
-    $display ("                                                                                                         ");
-    $display ("                                                              ***                     ***          **    ");
-    $display ("                                                            ** ***    *                ***          **   ");
-    $display ("                                                           **   ***  ***                **          **   ");
-    $display ("                                                           **         *                 **          **   ");
-    $display ("    ****    **   ****                                      **                           **          **   ");
-    $display ("   * ***  *  **    ***  *    ***       ***    ***  ****    ******   ***        ***      **      *** **   ");
-    $display ("  *   ****   **     ****    * ***     * ***    **** **** * *****     ***      * ***     **     ********* ");
-    $display (" **    **    **      **    *   ***   *   ***    **   ****  **         **     *   ***    **    **   ****  ");
-    $display (" **    **    **      **   **    *** **    ***   **    **   **         **    **    ***   **    **    **   ");
-    $display (" **    **    **      **   ********  ********    **    **   **         **    ********    **    **    **   ");
-    $display (" **    **    **      **   *******   *******     **    **   **         **    *******     **    **    **   ");
-    $display (" **    **    **      **   **        **          **    **   **         **    **          **    **    **   ");
-    $display ("  *******     ******* **  ****    * ****    *   **    **   **         **    ****    *   **    **    **   ");
-    $display ("   ******      *****   **  *******   *******    ***   ***  **         *** *  *******    *** *  *****     ");
-    $display ("       **                   *****     *****      ***   ***  **         ***    *****      ***    ***      ");
-    $display ("       **                                                                                                ");
-    $display ("       **                                                                                                ");
-    $display ("        **                                                                                               ");
-    $display (" APB GPIO Testbench Initialized                                                                          ");
-    $display ("---------------------------------------------------------------------------------------------------------");
+    $display("---------------------------------------------------------------------------------------------------------");
+    $display("                                                                                                         ");
+    $display("                                                                                                         ");
+    $display("                                                              ***                     ***          **    ");
+    $display("                                                            ** ***    *                ***          **   ");
+    $display("                                                           **   ***  ***                **          **   ");
+    $display("                                                           **         *                 **          **   ");
+    $display("    ****    **   ****                                      **                           **          **   ");
+    $display("   * ***  *  **    ***  *    ***       ***    ***  ****    ******   ***        ***      **      *** **   ");
+    $display("  *   ****   **     ****    * ***     * ***    **** **** * *****     ***      * ***     **     ********* ");
+    $display(" **    **    **      **    *   ***   *   ***    **   ****  **         **     *   ***    **    **   ****  ");
+    $display(" **    **    **      **   **    *** **    ***   **    **   **         **    **    ***   **    **    **   ");
+    $display(" **    **    **      **   ********  ********    **    **   **         **    ********    **    **    **   ");
+    $display(" **    **    **      **   *******   *******     **    **   **         **    *******     **    **    **   ");
+    $display(" **    **    **      **   **        **          **    **   **         **    **          **    **    **   ");
+    $display("  *******     ******* **  ****    * ****    *   **    **   **         **    ****    *   **    **    **   ");
+    $display("   ******      *****   **  *******   *******    ***   ***  **         *** *  *******    *** *  *****     ");
+    $display("       **                   *****     *****      ***   ***  **         ***    *****      ***    ***      ");
+    $display("       **                                                                                                ");
+    $display("       **                                                                                                ");
+    $display("        **                                                                                               ");
+    $display(" APB GPIO Testbench Initialized                                                                          ");
+    $display("---------------------------------------------------------------------------------------------------------");
   endtask : welcome_text
 
   task finish_text();
-    if (errors>0) begin
-      $display ("------------------------------------------------------------");
-      $display (" APB GPIO Testbench failed with (%0d) errors @%0t", errors, $time);
-      $display ("------------------------------------------------------------");
-    end
-    else begin
-      $display ("------------------------------------------------------------");
-      $display (" APB GPIO Testbench finished successfully @%0t", $time);
-      $display ("------------------------------------------------------------");
+    if (errors > 0) begin
+      $display("------------------------------------------------------------");
+      $display(" APB GPIO Testbench failed with (%0d) errors @%0t", errors, $time);
+      $display("------------------------------------------------------------");
+    end else begin
+      $display("------------------------------------------------------------");
+      $display(" APB GPIO Testbench finished successfully @%0t", $time);
+      $display("------------------------------------------------------------");
     end
   endtask : finish_text
 
-  task check (
-    input string           name,
-    input [PDATA_SIZE-1:0] actual,
-    expected
-  );
+  task check(input string name, input [PDATA_SIZE-1:0] actual, expected);
     if (VERBOSE > 2) $display("Checking %s for %b==%b", name, actual, expected);
     if (actual !== expected) error_msg(name, actual, expected);
   endtask : check
 
-  task error_msg(
-    input string           name,
-    input [PDATA_SIZE-1:0] actual,
-    expected
-  );
+  task error_msg(input string name, input [PDATA_SIZE-1:0] actual, expected);
     errors++;
     $display("ERROR  : Incorrect %s value. Expected: %b, received: %b @%0t", name, expected, actual, $time);
   endtask : error_msg
@@ -230,7 +219,7 @@ module peripheral_bfm_apb4 #(
   task test_reset_register_values;
     logic [PDATA_SIZE-1:0] readdata;
 
-    $display ("Checking reset values ...");
+    $display("Checking reset values ...");
 
     //read register(s) contents
     bfm_master_apb4.read(MODE, readdata);
@@ -262,18 +251,18 @@ module peripheral_bfm_apb4 #(
   task test_io_basic;
     logic [PDATA_SIZE-1:0] readdata;
 
-    $display ("Basic IO test ...");
+    $display("Basic IO test ...");
 
     //basic output
-    for (int mode=0; mode <= 1; mode++) begin
-      for (int dir =0; dir <= 1; dir++) begin
-        for (int d   =0; d <= 1<<PDATA_SIZE; d++) begin
+    for (int mode = 0; mode <= 1; mode++) begin
+      for (int dir = 0; dir <= 1; dir++) begin
+        for (int d = 0; d <= 1 << PDATA_SIZE; d++) begin
           gpio_i = d;
 
-          bfm_master_apb4.write(MODE     , {PSTRB_SIZE{1'b1}}, {PDATA_SIZE{mode[0]}});
-          bfm_master_apb4.write(DIRECTION, {PSTRB_SIZE{1'b1}}, {PDATA_SIZE{dir [0]}});
-          bfm_master_apb4.write(OUTPUT   , {PSTRB_SIZE{1'b1}}, d);
-          bfm_master_apb4.read (INPUT    , readdata);
+          bfm_master_apb4.write(MODE, {PSTRB_SIZE{1'b1}}, {PDATA_SIZE{mode[0]}});
+          bfm_master_apb4.write(DIRECTION, {PSTRB_SIZE{1'b1}}, {PDATA_SIZE{dir[0]}});
+          bfm_master_apb4.write(OUTPUT, {PSTRB_SIZE{1'b1}}, d);
+          bfm_master_apb4.read(INPUT, readdata);
 
           //check read data
           check("INPUT", readdata, d[PDATA_SIZE-1:0]);
@@ -282,12 +271,11 @@ module peripheral_bfm_apb4 #(
           if (mode) begin
             //open-drain
             check("GPIO_OE", gpio_oe, {PDATA_SIZE{dir[0]}} & ~d[PDATA_SIZE-1:0]);
-            check("GPIO_O ", gpio_o , {PDATA_SIZE{1'b0}});
-          end
-          else begin
+            check("GPIO_O ", gpio_o, {PDATA_SIZE{1'b0}});
+          end else begin
             //push-pull
             check("GPIO_OE", gpio_oe, {PDATA_SIZE{dir[0]}});
-            check("GPIO_O ", gpio_o , d[PDATA_SIZE-1:0]);
+            check("GPIO_O ", gpio_o, d[PDATA_SIZE-1:0]);
           end
         end
       end
@@ -295,47 +283,47 @@ module peripheral_bfm_apb4 #(
   endtask : test_io_basic
 
   //Random IO tests
-  task test_io_random(input int runs=10000);
+  task test_io_random(input int runs = 10000);
     logic [PDATA_SIZE-1:0] mode;
     logic [PDATA_SIZE-1:0] dir;
     logic [PDATA_SIZE-1:0] d;
     logic [PDATA_SIZE-1:0] readdata;
     logic [PDATA_SIZE-1:0] expected;
 
-    $display ("Random IO test ...");
+    $display("Random IO test ...");
 
     //basic output
-    for (int run=0; run < runs; run++) begin
+    for (int run = 0; run < runs; run++) begin
       if (VERBOSE > 0) $display("Random IO test Run=%0d", run);
-      mode=$random;
-      dir =$random;
-      d   =$random;
+      mode   = $random;
+      dir    = $random;
+      d      = $random;
 
       gpio_i = $random;
 
-      bfm_master_apb4.write(MODE     , {PSTRB_SIZE{1'b1}}, mode);
-      bfm_master_apb4.write(DIRECTION, {PSTRB_SIZE{1'b1}}, dir );
-      bfm_master_apb4.write(OUTPUT   , {PSTRB_SIZE{1'b1}}, d   );
-      bfm_master_apb4.read (INPUT    , readdata);
+      bfm_master_apb4.write(MODE, {PSTRB_SIZE{1'b1}}, mode);
+      bfm_master_apb4.write(DIRECTION, {PSTRB_SIZE{1'b1}}, dir);
+      bfm_master_apb4.write(OUTPUT, {PSTRB_SIZE{1'b1}}, d);
+      bfm_master_apb4.read(INPUT, readdata);
 
       //check read data
       check($sformatf("INPUT   (%0d %0d %0d %0d)", run, mode, dir, d), readdata, gpio_i);
 
       //check gpio_o
-      for (int b=0; b < PDATA_SIZE; b++) expected[b] = mode[b] ? 1'b0 : d[b];
+      for (int b = 0; b < PDATA_SIZE; b++) expected[b] = mode[b] ? 1'b0 : d[b];
       check($sformatf("GPIO_O  (%0d %0d %0d %0d)", run, mode, dir, d), gpio_o, expected);
 
       //check gpio_oe
-      for (int b=0; b < PDATA_SIZE; b++) expected[b] = mode[b] ? dir[b] & ~d[b] : dir[b];
+      for (int b = 0; b < PDATA_SIZE; b++) expected[b] = mode[b] ? dir[b] & ~d[b] : dir[b];
       check($sformatf("GPIO_OE (%0d %0d %0d %0d)", run, mode, dir, d), gpio_oe, expected);
-    end //next run
+    end  //next run
   endtask : test_io_random
 
   //Clear STATUS test
   task test_clear_status;
     logic [PDATA_SIZE-1:0] readdata;
 
-    $display ("Clear Status Register test ...");
+    $display("Clear Status Register test ...");
 
     //drive gpio_i low
     gpio_i = {PDATA_SIZE{1'b0}};
@@ -369,11 +357,10 @@ module peripheral_bfm_apb4 #(
   endtask : test_clear_status
 
   //Trigger Level Low test
-  task test_trigger_level_low(input int runs=1<<PDATA_SIZE);
-    logic [PDATA_SIZE-1:0] gpio_data,
-    readdata;
+  task test_trigger_level_low(input int runs = 1 << PDATA_SIZE);
+    logic [PDATA_SIZE-1:0] gpio_data, readdata;
 
-    $display ("Trigger Level-Low test ...");
+    $display("Trigger Level-Low test ...");
 
     //drive gpio_i high
     gpio_i = {PDATA_SIZE{1'b1}};
@@ -387,7 +374,7 @@ module peripheral_bfm_apb4 #(
     //enable LVL0
     bfm_master_apb4.write(LVL0, {PSTRB_SIZE{1'b1}}, {PDATA_SIZE{1'b1}});
 
-    for (int run=0; run < runs; run++) begin
+    for (int run = 0; run < runs; run++) begin
       if (VERBOSE > 0) $display("  Trigger Level-Low test run=%0d", run);
 
       //clear STATUS register
@@ -402,7 +389,7 @@ module peripheral_bfm_apb4 #(
       gpio_i = {PDATA_SIZE{1'b1}};
 
       //wait for data to propagate
-      repeat(3) @(posedge PCLK);
+      repeat (3) @(posedge PCLK);
 
       //read STATUS register
       bfm_master_apb4.read(STATUS, readdata);
@@ -411,11 +398,11 @@ module peripheral_bfm_apb4 #(
   endtask : test_trigger_level_low
 
   //Trigger Level High test
-  task test_trigger_level_high(input int runs=1<<PDATA_SIZE);
+  task test_trigger_level_high(input int runs = 1 << PDATA_SIZE);
     logic [PDATA_SIZE-1:0] gpio_data;
     logic [PDATA_SIZE-1:0] readdata;
 
-    $display ("Trigger Level-High test ...");
+    $display("Trigger Level-High test ...");
 
     //drive gpio_i low
     gpio_i = {PDATA_SIZE{1'b0}};
@@ -429,7 +416,7 @@ module peripheral_bfm_apb4 #(
     //enable LVL1
     bfm_master_apb4.write(LVL1, {PSTRB_SIZE{1'b1}}, {PDATA_SIZE{1'b1}});
 
-    for (int run=0; run < runs; run++) begin
+    for (int run = 0; run < runs; run++) begin
       if (VERBOSE > 0) $display("  Trigger Level-High test run=%0d", run);
 
       //clear STATUS register
@@ -444,7 +431,7 @@ module peripheral_bfm_apb4 #(
       gpio_i = {PDATA_SIZE{1'b0}};
 
       //wait for data to propagate
-      repeat(3) @(posedge PCLK);
+      repeat (3) @(posedge PCLK);
 
       //read STATUS register
       bfm_master_apb4.read(STATUS, readdata);
@@ -453,14 +440,14 @@ module peripheral_bfm_apb4 #(
   endtask : test_trigger_level_high
 
   //Trigger Level Random test
-  task test_trigger_level_random(input int runs=10000);
+  task test_trigger_level_random(input int runs = 10000);
     logic [PDATA_SIZE-1:0] lvl0;
     logic [PDATA_SIZE-1:0] lvl1;
     logic [PDATA_SIZE-1:0] gpio_data;
     logic [PDATA_SIZE-1:0] readdata;
     logic [PDATA_SIZE-1:0] expected;
 
-    $display ("Trigger Level-Random test ...");
+    $display("Trigger Level-Random test ...");
 
     //drive gpio_i high
     gpio_i = {PDATA_SIZE{1'b1}};
@@ -468,7 +455,7 @@ module peripheral_bfm_apb4 #(
     //set trigger type to level
     bfm_master_apb4.write(TYPE, {PSTRB_SIZE{1'b1}}, {PDATA_SIZE{1'b0}});
 
-    for (int run=0; run < runs; run++) begin
+    for (int run = 0; run < runs; run++) begin
       if (VERBOSE > 0) $display("  Trigger Level-Random test run=%0d", run);
 
       //disable LVL0
@@ -485,7 +472,7 @@ module peripheral_bfm_apb4 #(
       gpio_i    = gpio_data;
 
       //wait for data to propagate
-      repeat(4) @(posedge PCLK);
+      repeat (4) @(posedge PCLK);
 
       //randomize level triggers
       lvl0 = $random;
@@ -499,7 +486,7 @@ module peripheral_bfm_apb4 #(
       //read STATUS register
       bfm_master_apb4.read(STATUS, readdata);
 
-      for (int b=0; b<PDATA_SIZE; b++) begin
+      for (int b = 0; b < PDATA_SIZE; b++) begin
         expected[b] = (lvl0[b] & ~gpio_data[b]) | (lvl1[b] & gpio_data[b]);
       end
 
@@ -508,13 +495,10 @@ module peripheral_bfm_apb4 #(
   endtask : test_trigger_level_random
 
   //Trigger Falling Edge test
-  task test_trigger_edge_fall(input int runs=4* 1<<PDATA_SIZE);
-    logic [PDATA_SIZE-1:0] gpio_data0,
-    gpio_data1,
-    readdata,
-    expected;
+  task test_trigger_edge_fall(input int runs = 4 * 1 << PDATA_SIZE);
+    logic [PDATA_SIZE-1:0] gpio_data0, gpio_data1, readdata, expected;
 
-    $display ("Trigger Falling-Edge test ...");
+    $display("Trigger Falling-Edge test ...");
 
     //set trigger type to edge
     bfm_master_apb4.write(TYPE, {PSTRB_SIZE{1'b1}}, {PDATA_SIZE{1'b1}});
@@ -525,7 +509,7 @@ module peripheral_bfm_apb4 #(
     //enable LVL0 (falling edge)
     bfm_master_apb4.write(LVL0, {PSTRB_SIZE{1'b1}}, {PDATA_SIZE{1'b1}});
 
-    for (int run=0; run < runs; run++) begin
+    for (int run = 0; run < runs; run++) begin
       if (VERBOSE > 0) $display("  Trigger Falling-Edge test run=%0d", run);
 
       //drive 1st data onto gpio_i
@@ -534,7 +518,7 @@ module peripheral_bfm_apb4 #(
       @(posedge PCLK);
 
       //wait for data to propagate
-      repeat(3) @(posedge PCLK);
+      repeat (3) @(posedge PCLK);
 
       //clear STATUS register
       bfm_master_apb4.write(STATUS, {PSTRB_SIZE{1'b1}}, {PDATA_SIZE{1'b1}});
@@ -545,12 +529,12 @@ module peripheral_bfm_apb4 #(
       @(posedge PCLK);
 
       //wait for data to propagate (one extra stage for edge detector)
-      repeat(4) @(posedge PCLK);
+      repeat (4) @(posedge PCLK);
 
       //read STATUS register
       bfm_master_apb4.read(STATUS, readdata);
 
-      for (int b=0; b<PDATA_SIZE; b++) begin
+      for (int b = 0; b < PDATA_SIZE; b++) begin
         expected[b] = gpio_data0[b] & ~gpio_data1[b];
       end
 
@@ -559,13 +543,10 @@ module peripheral_bfm_apb4 #(
   endtask : test_trigger_edge_fall
 
   //Trigger Rising Edge test
-  task test_trigger_edge_rise(input int runs=4* 1<<PDATA_SIZE);
-    logic [PDATA_SIZE-1:0] gpio_data0,
-    gpio_data1,
-    readdata,
-    expected;
+  task test_trigger_edge_rise(input int runs = 4 * 1 << PDATA_SIZE);
+    logic [PDATA_SIZE-1:0] gpio_data0, gpio_data1, readdata, expected;
 
-    $display ("Trigger Rising-Edge test ...");
+    $display("Trigger Rising-Edge test ...");
 
     //set trigger type to edge
     bfm_master_apb4.write(TYPE, {PSTRB_SIZE{1'b1}}, {PDATA_SIZE{1'b1}});
@@ -576,7 +557,7 @@ module peripheral_bfm_apb4 #(
     //enable LVL1 (rising edge)
     bfm_master_apb4.write(LVL1, {PSTRB_SIZE{1'b1}}, {PDATA_SIZE{1'b1}});
 
-    for (int run=0; run < runs; run++) begin
+    for (int run = 0; run < runs; run++) begin
       if (VERBOSE > 0) $display("  Trigger Rising-Edge test run=%0d", run);
 
       //drive 1st data onto gpio_i
@@ -585,7 +566,7 @@ module peripheral_bfm_apb4 #(
       @(posedge PCLK);
 
       //wait for data to propagate
-      repeat(3) @(posedge PCLK);
+      repeat (3) @(posedge PCLK);
 
       //clear STATUS register
       bfm_master_apb4.write(STATUS, {PSTRB_SIZE{1'b1}}, {PDATA_SIZE{1'b1}});
@@ -596,12 +577,12 @@ module peripheral_bfm_apb4 #(
       @(posedge PCLK);
 
       //wait for data to propagate (one extra stage for edge detector)
-      repeat(4) @(posedge PCLK);
+      repeat (4) @(posedge PCLK);
 
       //read STATUS register
       bfm_master_apb4.read(STATUS, readdata);
 
-      for (int b=0; b<PDATA_SIZE; b++) begin
+      for (int b = 0; b < PDATA_SIZE; b++) begin
         expected[b] = ~gpio_data0[b] & gpio_data1[b];
       end
 
@@ -610,7 +591,7 @@ module peripheral_bfm_apb4 #(
   endtask : test_trigger_edge_rise
 
   //Trigger Rising Random test
-  task test_trigger_edge_random(input int runs=40000);
+  task test_trigger_edge_random(input int runs = 40000);
     logic [PDATA_SIZE-1:0] gpio_data0;
     logic [PDATA_SIZE-1:0] gpio_data1;
     logic [PDATA_SIZE-1:0] lvl0;
@@ -618,12 +599,12 @@ module peripheral_bfm_apb4 #(
     logic [PDATA_SIZE-1:0] readdata;
     logic [PDATA_SIZE-1:0] expected;
 
-    $display ("Trigger Random-Edge test ...");
+    $display("Trigger Random-Edge test ...");
 
     //set trigger type to edge
     bfm_master_apb4.write(TYPE, {PSTRB_SIZE{1'b1}}, {PDATA_SIZE{1'b1}});
 
-    for (int run=0; run < runs; run++) begin
+    for (int run = 0; run < runs; run++) begin
       if (VERBOSE > 0) $display("  Trigger Random-Edge test run=%0d", run);
 
       //randomize trigger edge(s)
@@ -638,7 +619,7 @@ module peripheral_bfm_apb4 #(
       @(posedge PCLK);
 
       //wait for data to propagate
-      repeat(3) @(posedge PCLK);
+      repeat (3) @(posedge PCLK);
 
       //clear STATUS register
       bfm_master_apb4.write(STATUS, {PSTRB_SIZE{1'b1}}, {PDATA_SIZE{1'b1}});
@@ -649,13 +630,13 @@ module peripheral_bfm_apb4 #(
       @(posedge PCLK);
 
       //wait for data to propagate (one extra stage for edge detector)
-      repeat(4) @(posedge PCLK);
+      repeat (4) @(posedge PCLK);
 
       //read STATUS register
       bfm_master_apb4.read(STATUS, readdata);
 
-      for (int b=0; b<PDATA_SIZE; b++) begin
-        expected[b] = (lvl0[b] &  gpio_data0[b] & ~gpio_data1[b]) | (lvl1[b] & ~gpio_data0[b] &  gpio_data1[b]);
+      for (int b = 0; b < PDATA_SIZE; b++) begin
+        expected[b] = (lvl0[b] & gpio_data0[b] & ~gpio_data1[b]) | (lvl1[b] & ~gpio_data0[b] & gpio_data1[b]);
       end
 
       check("STATUS", readdata, expected);
@@ -664,14 +645,9 @@ module peripheral_bfm_apb4 #(
 
   //IRQ test
   task test_irq;
-    logic [PDATA_SIZE-1:0] gpio_data0,
-    gpio_data1,
-    lvl0,
-    lvl1,
-    readdata,
-    expected;
+    logic [PDATA_SIZE-1:0] gpio_data0, gpio_data1, lvl0, lvl1, readdata, expected;
 
-    $display ("IRQ test ...");
+    $display("IRQ test ...");
 
     //disable all triggers
     bfm_master_apb4.write(LVL0, {PSTRB_SIZE{1'b1}}, {PDATA_SIZE{1'b0}});
@@ -700,10 +676,10 @@ module peripheral_bfm_apb4 #(
     gpio_i = {PDATA_SIZE{1'b0}};
 
     //wait for data to propagate (one more for irq_o flipflop)
-    repeat(3) @(posedge PCLK);
+    repeat (3) @(posedge PCLK);
 
     //check irq_o
-    repeat(2) @(posedge PCLK); //it takes 2 cycles for irq_o to propagate and check
+    repeat (2) @(posedge PCLK);  //it takes 2 cycles for irq_o to propagate and check
     check("irq_o-1", irq_o, 1'b1);
 
     //Test 2, test IRQ_ENA
@@ -712,7 +688,7 @@ module peripheral_bfm_apb4 #(
     bfm_master_apb4.write(IRQ_ENA, {PSTRB_SIZE{1'b1}}, {PDATA_SIZE{1'b0}});
 
     //check irq_o
-    repeat(2) @(posedge PCLK);
+    repeat (2) @(posedge PCLK);
     check("irq_o-2", irq_o, 1'b0);
 
     // Test 3, check STAT/ENA combination
@@ -721,20 +697,20 @@ module peripheral_bfm_apb4 #(
     bfm_master_apb4.read(STATUS, readdata);
     check("STATUS", readdata, {PDATA_SIZE{1'b1}});
 
-    for (int b=0; b < PDATA_SIZE; b++) begin
+    for (int b = 0; b < PDATA_SIZE; b++) begin
       //Enable bitwise IRQs
-      bfm_master_apb4.write(IRQ_ENA, {PSTRB_SIZE{1'b1}}, 1<<b);
+      bfm_master_apb4.write(IRQ_ENA, {PSTRB_SIZE{1'b1}}, 1 << b);
 
       //check irq_o
-      repeat(2) @(posedge PCLK);
-      check($sformatf("irq_o-3-%0d",b), irq_o, 1'b1);
+      repeat (2) @(posedge PCLK);
+      check($sformatf("irq_o-3-%0d", b), irq_o, 1'b1);
 
       //clear status bit
-      bfm_master_apb4.write(STATUS, {PSTRB_SIZE{1'b1}}, 1<<b);
+      bfm_master_apb4.write(STATUS, {PSTRB_SIZE{1'b1}}, 1 << b);
 
       //check irq_o
-      repeat(2) @(posedge PCLK);
-      check($sformatf("irq_o-3-%0d",b), irq_o, 1'b0);
+      repeat (2) @(posedge PCLK);
+      check($sformatf("irq_o-3-%0d", b), irq_o, 1'b0);
     end
   endtask : test_irq
 endmodule : peripheral_bfm_apb4

@@ -47,20 +47,19 @@ module peripheral_dma_interface_ahb3 #(
   parameter ADDR_WIDTH = 32,
   parameter DATA_WIDTH = 32,
 
-  parameter TABLE_ENTRIES = 4,
+  parameter TABLE_ENTRIES          = 4,
   parameter TABLE_ENTRIES_PTRWIDTH = 2,
 
   parameter TILEID = 0
-)
-  (
+) (
   input clk,
   input rst,
 
-  input                       ahb3_if_hsel,
-  input      [ADDR_WIDTH-1:0] ahb3_if_haddr,
-  input      [DATA_WIDTH-1:0] ahb3_if_hwdata,
-  input                       ahb3_if_hwrite,
-  input                       ahb3_if_hmastlock,
+  input                  ahb3_if_hsel,
+  input [ADDR_WIDTH-1:0] ahb3_if_haddr,
+  input [DATA_WIDTH-1:0] ahb3_if_hwdata,
+  input                  ahb3_if_hwrite,
+  input                  ahb3_if_hmastlock,
 
   output reg [DATA_WIDTH-1:0] ahb3_if_hrdata,
   output                      ahb3_if_hready,
@@ -71,12 +70,12 @@ module peripheral_dma_interface_ahb3 #(
   output                              if_write_en,
 
   // Interface read (status) interface
-  output [TABLE_ENTRIES_PTRWIDTH-1:0]    if_valid_pos,
-  output                                 if_valid_set,
-  output                                 if_valid_en,
-  output                                 if_validrd_en,
+  output [TABLE_ENTRIES_PTRWIDTH-1:0] if_valid_pos,
+  output                              if_valid_set,
+  output                              if_valid_en,
+  output                              if_validrd_en,
 
-  input [TABLE_ENTRIES-1:0]              done
+  input [TABLE_ENTRIES-1:0] done
 );
 
   //////////////////////////////////////////////////////////////////////////////
@@ -91,31 +90,27 @@ module peripheral_dma_interface_ahb3 #(
   // Module body
   //
 
-  assign if_write_req = { ahb3_if_hwdata[DMA_REQFIELD_LADDR_WIDTH -1:0],
-  ahb3_if_hwdata[DMA_REQFIELD_SIZE_WIDTH  -1:0],
-  ahb3_if_hwdata[DMA_REQFIELD_RTILE_WIDTH -1:0],
-  ahb3_if_hwdata[DMA_REQFIELD_RADDR_WIDTH -1:0],
-  ahb3_if_hwdata[0] };
+  assign if_write_req   = {ahb3_if_hwdata[DMA_REQFIELD_LADDR_WIDTH-1:0], ahb3_if_hwdata[DMA_REQFIELD_SIZE_WIDTH-1:0], ahb3_if_hwdata[DMA_REQFIELD_RTILE_WIDTH-1:0], ahb3_if_hwdata[DMA_REQFIELD_RADDR_WIDTH-1:0], ahb3_if_hwdata[0]};
 
-  assign if_write_pos = ahb3_if_haddr[TABLE_ENTRIES_PTRWIDTH+4:5]; // ptrwidth MUST be <= 7 (=128 entries)
-  assign if_write_en  = ahb3_if_hmastlock & ahb3_if_hsel & ahb3_if_hwrite;
+  assign if_write_pos   = ahb3_if_haddr[TABLE_ENTRIES_PTRWIDTH+4:5];  // ptrwidth MUST be <= 7 (=128 entries)
+  assign if_write_en    = ahb3_if_hmastlock & ahb3_if_hsel & ahb3_if_hwrite;
 
-  assign if_valid_pos = ahb3_if_haddr[TABLE_ENTRIES_PTRWIDTH+4:5]; // ptrwidth MUST be <= 7 (=128 entries)
-  assign if_valid_en  = ahb3_if_hmastlock & ahb3_if_hsel & (ahb3_if_haddr[4:0] == 5'h14) & ahb3_if_hwrite;
+  assign if_valid_pos   = ahb3_if_haddr[TABLE_ENTRIES_PTRWIDTH+4:5];  // ptrwidth MUST be <= 7 (=128 entries)
+  assign if_valid_en    = ahb3_if_hmastlock & ahb3_if_hsel & (ahb3_if_haddr[4:0] == 5'h14) & ahb3_if_hwrite;
   assign if_validrd_en  = ahb3_if_hmastlock & ahb3_if_hsel & (ahb3_if_haddr[4:0] == 5'h14) & ~ahb3_if_hwrite;
-  assign if_valid_set = ahb3_if_hwrite | (~ahb3_if_hwrite & ~done[if_valid_pos]);
+  assign if_valid_set   = ahb3_if_hwrite | (~ahb3_if_hwrite & ~done[if_valid_pos]);
 
   assign ahb3_if_hready = ahb3_if_hmastlock & ahb3_if_hsel;
 
   always @(*) begin
     if (ahb3_if_haddr[4:0] == 5'h14) begin
-      ahb3_if_hrdata = {31'h0,done[if_valid_pos]};
+      ahb3_if_hrdata = {31'h0, done[if_valid_pos]};
     end
   end
 
   // This assumes, that mask and address match
   generate
-    for (i=0;i<DMA_REQMASK_WIDTH;i=i+1) begin
+    for (i = 0; i < DMA_REQMASK_WIDTH; i = i + 1) begin
       assign if_write_select[i] = (ahb3_if_haddr[4:2] == i);
     end
   endgenerate

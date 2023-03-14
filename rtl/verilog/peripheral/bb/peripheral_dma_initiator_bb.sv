@@ -51,10 +51,9 @@ module peripheral_dma_initiator_bb #(
   parameter TABLE_ENTRIES_PTRWIDTH = $clog2(4),
   parameter TILEID                 = 0,
   parameter NOC_PACKET_SIZE        = 16
-)
-  (
-  input  clk,
-  input  rst,
+) (
+  input clk,
+  input rst,
 
   // Control read (request) interface
   output [TABLE_ENTRIES_PTRWIDTH-1:0] ctrl_read_pos,
@@ -63,30 +62,30 @@ module peripheral_dma_initiator_bb #(
   output [TABLE_ENTRIES_PTRWIDTH-1:0] ctrl_done_pos,
   output                              ctrl_done_en,
 
-  input  [TABLE_ENTRIES         -1:0] valid,
+  input [TABLE_ENTRIES         -1:0] valid,
 
   // NOC-Interface
-  output [FLIT_WIDTH-1:0]                 noc_out_flit,
-  output                                  noc_out_valid,
-  input                                   noc_out_ready,
+  output [FLIT_WIDTH-1:0] noc_out_flit,
+  output                  noc_out_valid,
+  input                   noc_out_ready,
 
-  input  [FLIT_WIDTH-1:0]                 noc_in_flit,
-  input                                   noc_in_valid,
-  output                                  noc_in_ready,
-
-  // Blackbone interface for L2R data fetch
-  output [ADDR_WIDTH-1:0]                 bb_req_addr_o,
-  output [DATA_WIDTH-1:0]                 bb_req_din_o,
-  output                                  bb_req_en_o,
-  output                                  bb_req_we_o,
-  input  [DATA_WIDTH-1:0]                 bb_req_dout_i,
+  input  [FLIT_WIDTH-1:0] noc_in_flit,
+  input                   noc_in_valid,
+  output                  noc_in_ready,
 
   // Blackbone interface for L2R data fetch
-  output [ADDR_WIDTH-1:0]                 bb_res_addr_o,
-  output [DATA_WIDTH-1:0]                 bb_res_din_o,
-  output                                  bb_res_en_o,
-  output                                  bb_res_we_o,
-  input  [DATA_WIDTH-1:0]                 bb_res_dout_i
+  output [ADDR_WIDTH-1:0] bb_req_addr_o,
+  output [DATA_WIDTH-1:0] bb_req_din_o,
+  output                  bb_req_en_o,
+  output                  bb_req_we_o,
+  input  [DATA_WIDTH-1:0] bb_req_dout_i,
+
+  // Blackbone interface for L2R data fetch
+  output [ADDR_WIDTH-1:0] bb_res_addr_o,
+  output [DATA_WIDTH-1:0] bb_res_din_o,
+  output                  bb_res_en_o,
+  output                  bb_res_we_o,
+  input  [DATA_WIDTH-1:0] bb_res_dout_i
 );
 
   //////////////////////////////////////////////////////////////////////////////
@@ -100,7 +99,7 @@ module peripheral_dma_initiator_bb #(
   wire                                req_data_valid;
   wire                                req_is_l2r;
   wire [ADDR_WIDTH              -1:0] req_laddr;
-  wire [DMA_REQFIELD_SIZE_WIDTH-3:0] req_size;
+  wire [ DMA_REQFIELD_SIZE_WIDTH-3:0] req_size;
   wire                                req_start;
 
 
@@ -111,72 +110,70 @@ module peripheral_dma_initiator_bb #(
 
   peripheral_dma_initiator_req_bb dma_initiator_req_bb (
 
-    .clk                       (clk),
-    .rst                       (rst),
+    .clk(clk),
+    .rst(rst),
 
-    .bb_req_addr_o             (bb_req_addr_o[ADDR_WIDTH-1:0]),
-    .bb_req_din_o              (bb_req_din_o[DATA_WIDTH-1:0]),
-    .bb_req_en_o               (bb_req_en_o),
-    .bb_req_we_o               (bb_req_we_o),
-    .bb_req_dout_i             (bb_req_dout_i[DATA_WIDTH-1:0]),
+    .bb_req_addr_o(bb_req_addr_o[ADDR_WIDTH-1:0]),
+    .bb_req_din_o (bb_req_din_o[DATA_WIDTH-1:0]),
+    .bb_req_en_o  (bb_req_en_o),
+    .bb_req_we_o  (bb_req_we_o),
+    .bb_req_dout_i(bb_req_dout_i[DATA_WIDTH-1:0]),
 
-    .req_start                 (req_start),
-    .req_is_l2r                (req_is_l2r),
-    .req_size                  (req_size[DMA_REQFIELD_SIZE_WIDTH-3:0]),
-    .req_laddr                 (req_laddr[ADDR_WIDTH-1:0]),
-    .req_data_valid            (req_data_valid),
-    .req_data                  (req_data[DATA_WIDTH-1:0]),
-    .req_data_ready            (req_data_ready)
+    .req_start     (req_start),
+    .req_is_l2r    (req_is_l2r),
+    .req_size      (req_size[DMA_REQFIELD_SIZE_WIDTH-3:0]),
+    .req_laddr     (req_laddr[ADDR_WIDTH-1:0]),
+    .req_data_valid(req_data_valid),
+    .req_data      (req_data[DATA_WIDTH-1:0]),
+    .req_data_ready(req_data_ready)
   );
 
   peripheral_dma_initiator_nocreq #(
-  .TILEID          (TILEID),
-  .NOC_PACKET_SIZE (NOC_PACKET_SIZE)
-  )
-  dma_initiator_nocreq (
-    .clk                        (clk),
-    .rst                        (rst),
+    .TILEID         (TILEID),
+    .NOC_PACKET_SIZE(NOC_PACKET_SIZE)
+  ) dma_initiator_nocreq (
+    .clk(clk),
+    .rst(rst),
 
-    .noc_out_flit               (noc_out_flit[FLIT_WIDTH-1:0]),
-    .noc_out_valid              (noc_out_valid),
-    .noc_out_ready              (noc_out_ready),
+    .noc_out_flit (noc_out_flit[FLIT_WIDTH-1:0]),
+    .noc_out_valid(noc_out_valid),
+    .noc_out_ready(noc_out_ready),
 
-    .ctrl_read_pos              (ctrl_read_pos[TABLE_ENTRIES_PTRWIDTH-1:0]),
-    .ctrl_read_req              (ctrl_read_req[DMA_REQUEST_WIDTH-1:0]),
+    .ctrl_read_pos(ctrl_read_pos[TABLE_ENTRIES_PTRWIDTH-1:0]),
+    .ctrl_read_req(ctrl_read_req[DMA_REQUEST_WIDTH-1:0]),
 
-    .valid                      (valid[TABLE_ENTRIES-1:0]),
+    .valid(valid[TABLE_ENTRIES-1:0]),
 
-    .ctrl_done_pos              (ctrl_done_pos[TABLE_ENTRIES_PTRWIDTH-1:0]),
-    .ctrl_done_en               (ctrl_done_en),
+    .ctrl_done_pos(ctrl_done_pos[TABLE_ENTRIES_PTRWIDTH-1:0]),
+    .ctrl_done_en (ctrl_done_en),
 
-    .req_start                  (req_start),
-    .req_laddr                  (req_laddr[ADDR_WIDTH-1:0]),
-    .req_data_valid             (req_data_valid),
-    .req_data_ready             (req_data_ready),
-    .req_is_l2r                 (req_is_l2r),
-    .req_data                   (req_data[DATA_WIDTH-1:0]),
-    .req_size                   (req_size[DMA_REQFIELD_SIZE_WIDTH-3:0])
+    .req_start     (req_start),
+    .req_laddr     (req_laddr[ADDR_WIDTH-1:0]),
+    .req_data_valid(req_data_valid),
+    .req_data_ready(req_data_ready),
+    .req_is_l2r    (req_is_l2r),
+    .req_data      (req_data[DATA_WIDTH-1:0]),
+    .req_size      (req_size[DMA_REQFIELD_SIZE_WIDTH-3:0])
   );
 
   peripheral_dma_initiator_nocres_bb #(
-  .NOC_PACKET_SIZE(NOC_PACKET_SIZE)
-  )
-  dma_initiator_nocres_bb (
-    .clk                       (clk),
-    .rst                       (rst),
+    .NOC_PACKET_SIZE(NOC_PACKET_SIZE)
+  ) dma_initiator_nocres_bb (
+    .clk(clk),
+    .rst(rst),
 
-    .noc_in_flit               (noc_in_flit[FLIT_WIDTH-1:0]),
-    .noc_in_valid              (noc_in_valid),
-    .noc_in_ready              (noc_in_ready),
+    .noc_in_flit (noc_in_flit[FLIT_WIDTH-1:0]),
+    .noc_in_valid(noc_in_valid),
+    .noc_in_ready(noc_in_ready),
 
 
-    .bb_addr_o                 (bb_res_addr_o[ADDR_WIDTH-1:0]),
-    .bb_din_o                  (bb_res_din_o[DATA_WIDTH-1:0]),
-    .bb_en_o                   (bb_res_en_o),
-    .bb_we_o                   (bb_res_we_o),
-    .bb_dout_i                 (bb_res_dout_i[DATA_WIDTH-1:0]),
+    .bb_addr_o(bb_res_addr_o[ADDR_WIDTH-1:0]),
+    .bb_din_o (bb_res_din_o[DATA_WIDTH-1:0]),
+    .bb_en_o  (bb_res_en_o),
+    .bb_we_o  (bb_res_we_o),
+    .bb_dout_i(bb_res_dout_i[DATA_WIDTH-1:0]),
 
-    .ctrl_done_pos             (ctrl_done_pos[TABLE_ENTRIES_PTRWIDTH-1:0]),
-    .ctrl_done_en              (ctrl_done_en)
+    .ctrl_done_pos(ctrl_done_pos[TABLE_ENTRIES_PTRWIDTH-1:0]),
+    .ctrl_done_en (ctrl_done_en)
   );
 endmodule

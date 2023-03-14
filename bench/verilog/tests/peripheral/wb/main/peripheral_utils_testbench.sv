@@ -53,8 +53,8 @@ module peripheral_utils_testbench;
   //
   // Variables
   //
-  reg [63:0] timeout;
-  reg [63:0] heartbeat;
+  reg [                         63:0] timeout;
+  reg [                         63:0] heartbeat;
 
   reg [MAX_STRING_LEN*CHAR_WIDTH-1:0] testcase;
 
@@ -65,26 +65,23 @@ module peripheral_utils_testbench;
 
   //Force simulation stop after timeout cycles
   initial
-  if($value$plusargs("timeout=%d", timeout)) begin
-    #timeout $display("Timeout: Forcing end of simulation");
-    $finish;
-  end
+    if ($value$plusargs("timeout=%d", timeout)) begin
+      #timeout $display("Timeout: Forcing end of simulation");
+      $finish;
+    end
 
   //FIXME: Add more options for VCD logging
 
   initial begin
-    if($test$plusargs("vcd")) begin
-      if($value$plusargs("testcase=%s", testcase))
-        $dumpfile({testcase,".vcd"});
-      else
-        $dumpfile("testlog.vcd");
+    if ($test$plusargs("vcd")) begin
+      if ($value$plusargs("testcase=%s", testcase)) $dumpfile({testcase, ".vcd"});
+      else $dumpfile("testlog.vcd");
       $dumpvars;
     end
   end
 
   //Heartbeat timer for simulations
   initial begin
-    if($value$plusargs("heartbeat=%d", heartbeat))
-      forever #heartbeat $display("Heartbeat : Time=%0t", $time);
+    if ($value$plusargs("heartbeat=%d", heartbeat)) forever #heartbeat $display("Heartbeat : Time=%0t", $time);
   end
-endmodule // peripheral_utils_testbench
+endmodule  // peripheral_utils_testbench
