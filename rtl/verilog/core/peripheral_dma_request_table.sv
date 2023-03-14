@@ -52,34 +52,34 @@ module peripheral_dma_request_table #(
   parameter GENERATE_INTERRUPT = 1
 )
   (
-    input clk,
-    input rst,
+  input clk,
+  input rst,
 
-    // Interface write (request) interface
-    input [DMA_REQUEST_WIDTH     -1:0] if_write_req,
-    input [TABLE_ENTRIES_PTRWIDTH-1:0] if_write_pos,
-    input [DMA_REQMASK_WIDTH     -1:0] if_write_select,
-    input                              if_write_en,
+  // Interface write (request) interface
+  input [DMA_REQUEST_WIDTH     -1:0] if_write_req,
+  input [TABLE_ENTRIES_PTRWIDTH-1:0] if_write_pos,
+  input [DMA_REQMASK_WIDTH     -1:0] if_write_select,
+  input                              if_write_en,
 
-    input [TABLE_ENTRIES_PTRWIDTH-1:0] if_valid_pos,
-    input                              if_valid_set,
-    input                              if_valid_en,
-    input                              if_validrd_en,
+  input [TABLE_ENTRIES_PTRWIDTH-1:0] if_valid_pos,
+  input                              if_valid_set,
+  input                              if_valid_en,
+  input                              if_validrd_en,
 
-    // Control read (request) interface
-    output [DMA_REQUEST_WIDTH    -1:0] ctrl_read_req,
-    input [TABLE_ENTRIES_PTRWIDTH-1:0] ctrl_read_pos,
+  // Control read (request) interface
+  output [DMA_REQUEST_WIDTH    -1:0] ctrl_read_req,
+  input [TABLE_ENTRIES_PTRWIDTH-1:0] ctrl_read_pos,
 
-    // Control write (status) interface
-    input [TABLE_ENTRIES_PTRWIDTH-1:0] ctrl_done_pos,
-    input                              ctrl_done_en,
+  // Control write (status) interface
+  input [TABLE_ENTRIES_PTRWIDTH-1:0] ctrl_done_pos,
+  input                              ctrl_done_en,
 
-    // All valid bits of the entries
-    output [TABLE_ENTRIES-1:0] valid,
-    output [TABLE_ENTRIES-1:0] done,
+  // All valid bits of the entries
+  output [TABLE_ENTRIES-1:0] valid,
+  output [TABLE_ENTRIES-1:0] done,
 
-    output [TABLE_ENTRIES-1:0] irq
-  );
+  output [TABLE_ENTRIES-1:0] irq
+);
 
   //////////////////////////////////////////////////////////////////////////////
   //

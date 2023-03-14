@@ -55,20 +55,20 @@ module peripheral_dma_packet_buffer #(
   parameter READY = 1'b0, BUSY = 1'b1
 )
   (
-    //inputs
-    input                   clk,
-    input                   rst,
+  //inputs
+  input                   clk,
+  input                   rst,
 
-    input  [FLIT_WIDTH-1:0] in_flit,
-    input                   in_valid,
-    output                  in_ready,
+  input  [FLIT_WIDTH-1:0] in_flit,
+  input                   in_valid,
+  output                  in_ready,
 
-    output [FLIT_WIDTH-1:0] out_flit,
-    output                  out_valid,
-    input                   out_ready,
+  output [FLIT_WIDTH-1:0] out_flit,
+  output                  out_valid,
+  input                   out_ready,
 
-    output reg [SIZE_WIDTH-1:0] out_size
-  );
+  output reg [SIZE_WIDTH-1:0] out_size
+);
 
   //////////////////////////////////////////////////////////////////////////////
   //

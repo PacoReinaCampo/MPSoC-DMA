@@ -52,37 +52,37 @@ module peripheral_dma_initiator_nocreq #(
   parameter TABLE_ENTRIES          = 4,
   parameter TABLE_ENTRIES_PTRWIDTH = $clog2(4),
   parameter TILEID                 = 0,
-  parameter NOC_PACKET_SIZE        = 16  // flits per packet
+  parameter NOC_PACKET_SIZE        = 16 // flits per packet
 )
   (
-    input clk,
-    input rst,
+  input clk,
+  input rst,
 
-    // NOC-Interface
-    output reg [FLIT_WIDTH-1:0]             noc_out_flit,
-    output reg                              noc_out_valid,
-    input                                   noc_out_ready,
+  // NOC-Interface
+  output reg [FLIT_WIDTH-1:0]             noc_out_flit,
+  output reg                              noc_out_valid,
+  input                                   noc_out_ready,
 
-    // Control read (request) interface
-    output reg [TABLE_ENTRIES_PTRWIDTH-1:0] ctrl_read_pos,
-    input      [DMA_REQUEST_WIDTH     -1:0] ctrl_read_req,
+  // Control read (request) interface
+  output reg [TABLE_ENTRIES_PTRWIDTH-1:0] ctrl_read_pos,
+  input      [DMA_REQUEST_WIDTH     -1:0] ctrl_read_req,
 
-    input      [TABLE_ENTRIES         -1:0] valid,
+  input      [TABLE_ENTRIES         -1:0] valid,
 
-    // Feedback from response path
-    input [TABLE_ENTRIES_PTRWIDTH-1:0]      ctrl_done_pos,
-    input                                   ctrl_done_en,
+  // Feedback from response path
+  input [TABLE_ENTRIES_PTRWIDTH-1:0]      ctrl_done_pos,
+  input                                   ctrl_done_en,
 
 
-    // Interface to wishbone request
-    output reg                              req_start,
-    output [ADDR_WIDTH              -1:0]   req_laddr,
-    input                                   req_data_valid,
-    output reg                              req_data_ready,
-    input  [DATA_WIDTH              -1:0]   req_data,
-    output                                  req_is_l2r,
-    output [DMA_REQFIELD_SIZE_WIDTH-3:0]   req_size
-  );
+  // Interface to wishbone request
+  output reg                              req_start,
+  output [ADDR_WIDTH              -1:0]   req_laddr,
+  input                                   req_data_valid,
+  output reg                              req_data_ready,
+  input  [DATA_WIDTH              -1:0]   req_data,
+  output                                  req_is_l2r,
+  output [DMA_REQFIELD_SIZE_WIDTH-3:0]   req_size
+);
 
   //////////////////////////////////////////////////////////////////////////////
   //
@@ -138,7 +138,7 @@ module peripheral_dma_initiator_nocreq #(
    */
 
   // Selects the next entry from the table
-  reg  [TABLE_ENTRIES-1:0]           select;     // current grant of arbiter
+  reg  [TABLE_ENTRIES-1:0]           select; // current grant of arbiter
   wire [TABLE_ENTRIES-1:0]           nxt_select; // next grant of arbiter
 
   // Store open responses: table entry valid is not sufficient, as
@@ -164,7 +164,7 @@ module peripheral_dma_initiator_nocreq #(
 
   // Round Robin (rr) arbiter
   peripheral_arbiter_rr #(
-    .N(TABLE_ENTRIES)
+  .N(TABLE_ENTRIES)
   )
   arbiter_rr (
     // Outputs
@@ -197,9 +197,9 @@ module peripheral_dma_initiator_nocreq #(
   // This is a pulse that signals the start of a request to the wishbone and noc
   // part of the request generation.
   assign nxt_req_start = // start when any is valid and not already in progress
-    (|(valid & ~open_responses) &
-     // and we are not currently generating a request (pulse)
-     (noc_req_state == NOC_REQ_IDLE));
+  (|(valid & ~open_responses) &
+  // and we are not currently generating a request (pulse)
+  (noc_req_state == NOC_REQ_IDLE));
 
   // Convenience wires
   assign req_is_l2r = (ctrl_read_req[DMA_REQFIELD_DIR] == DMA_REQUEST_L2R);
@@ -235,14 +235,14 @@ module peripheral_dma_initiator_nocreq #(
           if (req_is_l2r)
             // L2R
             nxt_noc_req_state = NOC_REQ_L2R_GENHDR;
-        else
-          // R2L
-          nxt_noc_req_state = NOC_REQ_R2L_GENHDR;
+          else
+            // R2L
+            nxt_noc_req_state = NOC_REQ_R2L_GENHDR;
         else
           // wait for request
           nxt_noc_req_state = NOC_REQ_IDLE;
 
-        // Reset counter
+          // Reset counter
         nxt_noc_req_counter = 0;
       end
       NOC_REQ_L2R_GENHDR: begin

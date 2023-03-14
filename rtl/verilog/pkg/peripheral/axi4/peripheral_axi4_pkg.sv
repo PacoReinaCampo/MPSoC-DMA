@@ -44,7 +44,7 @@ package peripheral_axi4_pkg;
 
   localparam AXI_ADDR_WIDTH = 64;
   localparam AXI_DATA_WIDTH = 64;
-  
+
   // Burst length specifies the number of data transfers that occur within each burst
   localparam AXI_BURST_LENGTH_1  = 4'h0;
   localparam AXI_BURST_LENGTH_2  = 4'h1;
@@ -62,7 +62,7 @@ package peripheral_axi4_pkg;
   localparam AXI_BURST_LENGTH_14 = 4'hD;
   localparam AXI_BURST_LENGTH_15 = 4'he;
   localparam AXI_BURST_LENGTH_16 = 4'hF;
-  
+
   //Burst Size specifies the maximum number of data bytes to transfer in each beat, or data transfer, within a burst
   localparam AXI_BURST_SIZE_BYTE      = 3'b000;
   localparam AXI_BURST_SIZE_HALF      = 3'b001;
@@ -78,13 +78,13 @@ package peripheral_axi4_pkg;
   localparam AXI_BURST_TYPE_INCR  = 2'b01;
   localparam AXI_BURST_TYPE_WRAP  = 2'b10;
   localparam AXI_BURST_TYPE_RSRV  = 2'b11;
-  
+
   // Lock Type
   localparam AXI_LOCK_NORMAL    = 2'b00;
   localparam AXI_LOCK_EXCLUSIVE = 2'b01;
   localparam AXI_LOCK_LOCKED    = 2'b10;
   localparam AXI_LOCK__RESERVED = 2'b11;
-  
+
   // Protection Type
   localparam AXI_PROTECTION_NORMAL      = 3'b000;
   localparam AXI_PROTECTION_PRIVILEGED  = 3'b001;
@@ -92,7 +92,7 @@ package peripheral_axi4_pkg;
   localparam AXI_PROTECTION_NONSECURE   = 3'b010;
   localparam AXI_PROTECTION_INSTRUCTION = 3'b100;
   localparam AXI_PROTECTION_DATA        = 3'b000;
-  
+
   // Response Type
   localparam AXI_RESPONSE_OKAY         = 2'b00;
   localparam AXI_RESPONSE_EXOKAY       = 2'b01;

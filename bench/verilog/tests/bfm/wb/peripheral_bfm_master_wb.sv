@@ -52,21 +52,21 @@ module peripheral_bfm_master_wb #(
   parameter VERBOSE         = 0
 )
   (
-    input                 wb_clk_i,
-    input                 wb_rst_i,
-    output reg [AW  -1:0] wb_adr_o,
-    output reg [DW  -1:0] wb_dat_o,
-    output reg [DW/8-1:0] wb_sel_o,
-    output reg            wb_we_o,
-    output reg            wb_cyc_o,
-    output reg            wb_stb_o,
-    output reg [     2:0] wb_cti_o,
-    output reg [     1:0] wb_bte_o,
-    input      [DW  -1:0] wb_dat_i,
-    input                 wb_ack_i,
-    input                 wb_err_i,
-    input                 wb_rty_i
-  );
+  input                 wb_clk_i,
+  input                 wb_rst_i,
+  output reg [AW  -1:0] wb_adr_o,
+  output reg [DW  -1:0] wb_dat_o,
+  output reg [DW/8-1:0] wb_sel_o,
+  output reg            wb_we_o,
+  output reg            wb_cyc_o,
+  output reg            wb_stb_o,
+  output reg [     2:0] wb_cti_o,
+  output reg [     1:0] wb_bte_o,
+  input      [DW  -1:0] wb_dat_i,
+  input                 wb_ack_i,
+  input                 wb_err_i,
+  input                 wb_rty_i
+);
 
   //////////////////////////////////////////////////////////////////////////////
   //

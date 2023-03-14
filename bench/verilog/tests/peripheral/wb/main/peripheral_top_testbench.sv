@@ -46,15 +46,15 @@ module peripheral_top_testbench;
   //
   // Module Body
   //
-   peripheral_utils_testbench utils_testbench();
-   peripheral_tap_generator #("peripheral_dma_testbench.tap", 3) vtg();
+  peripheral_utils_testbench utils_testbench();
+  peripheral_tap_generator #("peripheral_dma_testbench.tap", 3) vtg();
 
-   peripheral_dma_testbench #(.AUTORUN (0)) peripheral_dma_testbench();
+  peripheral_dma_testbench #(.AUTORUN (0)) peripheral_dma_testbench();
 
-   initial begin
-      peripheral_dma_testbench.run;
-      vtg.ok("wb_dma: All tests passed!");
+  initial begin
+    peripheral_dma_testbench.run;
+    vtg.ok("wb_dma: All tests passed!");
 
-      #3 $finish;
-   end
+    #3 $finish;
+  end
 endmodule

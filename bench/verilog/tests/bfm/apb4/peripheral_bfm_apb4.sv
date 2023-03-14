@@ -44,25 +44,25 @@ module peripheral_bfm_apb4 #(
   parameter PDATA_SIZE = 32
 )
   (
-    input                         PRESETn,
-    input                         PCLK,
+  input                         PRESETn,
+  input                         PCLK,
 
-    output                        PSEL,
-    output                        PENABLE,
-    output     [             3:0] PADDR,
-    output     [PDATA_SIZE/8-1:0] PSTRB,
-    output     [PDATA_SIZE  -1:0] PWDATA,
-    input      [PDATA_SIZE  -1:0] PRDATA,
-    output                        PWRITE,
-    input                         PREADY,
-    input                         PSLVERR,
+  output                        PSEL,
+  output                        PENABLE,
+  output     [             3:0] PADDR,
+  output     [PDATA_SIZE/8-1:0] PSTRB,
+  output     [PDATA_SIZE  -1:0] PWDATA,
+  input      [PDATA_SIZE  -1:0] PRDATA,
+  output                        PWRITE,
+  input                         PREADY,
+  input                         PSLVERR,
 
-    input      [PDATA_SIZE  -1:0] gpio_o,
-    input      [PDATA_SIZE  -1:0] gpio_oe,
-    output reg [PDATA_SIZE  -1:0] gpio_i,
+  input      [PDATA_SIZE  -1:0] gpio_o,
+  input      [PDATA_SIZE  -1:0] gpio_oe,
+  output reg [PDATA_SIZE  -1:0] gpio_i,
 
-    input                         irq_o
-  );
+  input                         irq_o
+);
 
   //////////////////////////////////////////////////////////////////////////////
   //
@@ -96,26 +96,26 @@ module peripheral_bfm_apb4 #(
   // Instantiate the APB-Master
   //
   peripheral_bfm_master_apb4 #(
-    .PADDR_SIZE (          4 ),
-    .PDATA_SIZE ( PDATA_SIZE )
+  .PADDR_SIZE (          4 ),
+  .PDATA_SIZE ( PDATA_SIZE )
   )
   bfm_master_apb4 (
-    .*
+  .*
   );
 
   initial begin
-      errors         = 0;
-      reset_watchdog = 0;
-      got_reset      = 0;
+    errors         = 0;
+    reset_watchdog = 0;
+    got_reset      = 0;
 
-      forever begin
-        reset_watchdog++;
-        @(posedge PCLK);
-        if (!got_reset && reset_watchdog == 1000) begin
-          $fatal(-1,"PRESETn not asserted\nTestbench requires an APB reset");
-        end
+    forever begin
+      reset_watchdog++;
+      @(posedge PCLK);
+      if (!got_reset && reset_watchdog == 1000) begin
+        $fatal(-1,"PRESETn not asserted\nTestbench requires an APB reset");
       end
     end
+  end
 
   always @(negedge PRESETn) begin
     //wait for reset to negate
@@ -197,15 +197,15 @@ module peripheral_bfm_apb4 #(
 
   task finish_text();
     if (errors>0) begin
-        $display ("------------------------------------------------------------");
-        $display (" APB GPIO Testbench failed with (%0d) errors @%0t", errors, $time);
-        $display ("------------------------------------------------------------");
-      end
+      $display ("------------------------------------------------------------");
+      $display (" APB GPIO Testbench failed with (%0d) errors @%0t", errors, $time);
+      $display ("------------------------------------------------------------");
+    end
     else begin
-        $display ("------------------------------------------------------------");
-        $display (" APB GPIO Testbench finished successfully @%0t", $time);
-        $display ("------------------------------------------------------------");
-      end
+      $display ("------------------------------------------------------------");
+      $display (" APB GPIO Testbench finished successfully @%0t", $time);
+      $display ("------------------------------------------------------------");
+    end
   endtask : finish_text
 
   task check (
@@ -306,29 +306,29 @@ module peripheral_bfm_apb4 #(
 
     //basic output
     for (int run=0; run < runs; run++) begin
-        if (VERBOSE > 0) $display("Random IO test Run=%0d", run);
-        mode=$random;
-        dir =$random;
-        d   =$random;
+      if (VERBOSE > 0) $display("Random IO test Run=%0d", run);
+      mode=$random;
+      dir =$random;
+      d   =$random;
 
-        gpio_i = $random;
+      gpio_i = $random;
 
-        bfm_master_apb4.write(MODE     , {PSTRB_SIZE{1'b1}}, mode);
-        bfm_master_apb4.write(DIRECTION, {PSTRB_SIZE{1'b1}}, dir );
-        bfm_master_apb4.write(OUTPUT   , {PSTRB_SIZE{1'b1}}, d   );
-        bfm_master_apb4.read (INPUT    , readdata);
+      bfm_master_apb4.write(MODE     , {PSTRB_SIZE{1'b1}}, mode);
+      bfm_master_apb4.write(DIRECTION, {PSTRB_SIZE{1'b1}}, dir );
+      bfm_master_apb4.write(OUTPUT   , {PSTRB_SIZE{1'b1}}, d   );
+      bfm_master_apb4.read (INPUT    , readdata);
 
-        //check read data
-        check($sformatf("INPUT   (%0d %0d %0d %0d)", run, mode, dir, d), readdata, gpio_i);
+      //check read data
+      check($sformatf("INPUT   (%0d %0d %0d %0d)", run, mode, dir, d), readdata, gpio_i);
 
-        //check gpio_o
-        for (int b=0; b < PDATA_SIZE; b++) expected[b] = mode[b] ? 1'b0 : d[b];
-        check($sformatf("GPIO_O  (%0d %0d %0d %0d)", run, mode, dir, d), gpio_o, expected);
+      //check gpio_o
+      for (int b=0; b < PDATA_SIZE; b++) expected[b] = mode[b] ? 1'b0 : d[b];
+      check($sformatf("GPIO_O  (%0d %0d %0d %0d)", run, mode, dir, d), gpio_o, expected);
 
-        //check gpio_oe
-        for (int b=0; b < PDATA_SIZE; b++) expected[b] = mode[b] ? dir[b] & ~d[b] : dir[b];
-        check($sformatf("GPIO_OE (%0d %0d %0d %0d)", run, mode, dir, d), gpio_oe, expected);
-      end //next run
+      //check gpio_oe
+      for (int b=0; b < PDATA_SIZE; b++) expected[b] = mode[b] ? dir[b] & ~d[b] : dir[b];
+      check($sformatf("GPIO_OE (%0d %0d %0d %0d)", run, mode, dir, d), gpio_oe, expected);
+    end //next run
   endtask : test_io_random
 
   //Clear STATUS test
@@ -682,7 +682,7 @@ module peripheral_bfm_apb4 #(
 
     //IRQ should be low
     check("irq_o-0", irq_o, 1'b0);
-    
+
     //Test 1, check if trigger propagates to IRQ
 
     //enable level-high triggers
@@ -705,7 +705,7 @@ module peripheral_bfm_apb4 #(
     //check irq_o
     repeat(2) @(posedge PCLK); //it takes 2 cycles for irq_o to propagate and check
     check("irq_o-1", irq_o, 1'b1);
-    
+
     //Test 2, test IRQ_ENA
 
     //disable IRQs

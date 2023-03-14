@@ -41,28 +41,28 @@
  */
 
 module peripheral_gpio_apb4 #(
-  PDATA_SIZE = 8,  //must be a multiple of 8
+  PDATA_SIZE = 8, //must be a multiple of 8
   PADDR_SIZE = 4
 )
   (
-    input                         PRESETn,
-    input                         PCLK,
-    input                         PSEL,
-    input                         PENABLE,
-    input      [PADDR_SIZE  -1:0] PADDR,
-    input                         PWRITE,
-    input      [PDATA_SIZE/8-1:0] PSTRB,
-    input      [PDATA_SIZE  -1:0] PWDATA,
-    output reg [PDATA_SIZE  -1:0] PRDATA,
-    output                        PREADY,
-    output                        PSLVERR,
+  input                         PRESETn,
+  input                         PCLK,
+  input                         PSEL,
+  input                         PENABLE,
+  input      [PADDR_SIZE  -1:0] PADDR,
+  input                         PWRITE,
+  input      [PDATA_SIZE/8-1:0] PSTRB,
+  input      [PDATA_SIZE  -1:0] PWDATA,
+  output reg [PDATA_SIZE  -1:0] PRDATA,
+  output                        PREADY,
+  output                        PSLVERR,
 
-    output reg                    irq_o,
+  output reg                    irq_o,
 
-    input      [PDATA_SIZE  -1:0] gpio_i,
-    output reg [PDATA_SIZE  -1:0] gpio_o,
-    output reg [PDATA_SIZE  -1:0] gpio_oe
-  );
+  input      [PDATA_SIZE  -1:0] gpio_i,
+  output reg [PDATA_SIZE  -1:0] gpio_o,
+  output reg [PDATA_SIZE  -1:0] gpio_oe
+);
   //////////////////////////////////////////////////////////////////////////////
   //
   // Constants
@@ -175,7 +175,7 @@ module peripheral_gpio_apb4 #(
   always @(posedge PCLK,negedge PRESETn) begin
     if      (!PRESETn                  ) out_reg <= {PDATA_SIZE{1'b0}};
     else if ( is_write_to_adr(OUTPUT) ||
-             is_write_to_adr(INPUT )  ) out_reg <= get_write_value(out_reg);
+    is_write_to_adr(INPUT )  ) out_reg <= get_write_value(out_reg);
   end
 
   //APB write to Trigger Type register
@@ -282,9 +282,9 @@ module peripheral_gpio_apb4 #(
     for (int n=0; n<PDATA_SIZE; n++) begin
       case (tr_type_reg[n])
         0: tr_status[n] = (tr_lvl0_reg[n] & ~in_reg[n]) |
-          (tr_lvl1_reg[n] &  in_reg[n]);
+        (tr_lvl1_reg[n] &  in_reg[n]);
         1: tr_status[n] = (tr_lvl0_reg[n] & tr_falling_edge_reg[n]) |
-          (tr_lvl1_reg[n] & tr_rising_edge_reg [n]);
+        (tr_lvl1_reg[n] & tr_rising_edge_reg [n]);
       endcase
     end
   end

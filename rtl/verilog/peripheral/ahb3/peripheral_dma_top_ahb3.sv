@@ -55,55 +55,55 @@ module peripheral_dma_top_ahb3 #(
   parameter GENERATE_INTERRUPT = 1
 )
   (
-    input clk,
-    input rst,
+  input clk,
+  input rst,
 
-    input [FLIT_WIDTH-1:0]  noc_in_req_flit,
-    input                   noc_in_req_valid,
-    output                  noc_in_req_ready,
+  input [FLIT_WIDTH-1:0]  noc_in_req_flit,
+  input                   noc_in_req_valid,
+  output                  noc_in_req_ready,
 
-    input [FLIT_WIDTH-1:0]  noc_in_res_flit,
-    input                   noc_in_res_valid,
-    output                  noc_in_res_ready,
+  input [FLIT_WIDTH-1:0]  noc_in_res_flit,
+  input                   noc_in_res_valid,
+  output                  noc_in_res_ready,
 
-    output [FLIT_WIDTH-1:0]  noc_out_req_flit,
-    output                   noc_out_req_valid,
-    input                    noc_out_req_ready,
+  output [FLIT_WIDTH-1:0]  noc_out_req_flit,
+  output                   noc_out_req_valid,
+  input                    noc_out_req_ready,
 
-    output [FLIT_WIDTH-1:0]  noc_out_res_flit,
-    output                   noc_out_res_valid,
-    input                    noc_out_res_ready,
+  output [FLIT_WIDTH-1:0]  noc_out_res_flit,
+  output                   noc_out_res_valid,
+  input                    noc_out_res_ready,
 
-    input                    ahb3_if_hsel,
-    input  [ADDR_WIDTH-1:0]  ahb3_if_haddr,
-    input  [DATA_WIDTH-1:0]  ahb3_if_hwdata,
-    input                    ahb3_if_hwrite,
-    input  [           2:0]  ahb3_if_hsize,
-    input  [           2:0]  ahb3_if_hburst,
-    input  [           3:0]  ahb3_if_hprot,
-    input  [           1:0]  ahb3_if_htrans,
-    input                    ahb3_if_hmastlock,
+  input                    ahb3_if_hsel,
+  input  [ADDR_WIDTH-1:0]  ahb3_if_haddr,
+  input  [DATA_WIDTH-1:0]  ahb3_if_hwdata,
+  input                    ahb3_if_hwrite,
+  input  [           2:0]  ahb3_if_hsize,
+  input  [           2:0]  ahb3_if_hburst,
+  input  [           3:0]  ahb3_if_hprot,
+  input  [           1:0]  ahb3_if_htrans,
+  input                    ahb3_if_hmastlock,
 
-    output [DATA_WIDTH-1:0]  ahb3_if_hrdata,
-    output                   ahb3_if_hready,
-    output                   ahb3_if_hresp,
+  output [DATA_WIDTH-1:0]  ahb3_if_hrdata,
+  output                   ahb3_if_hready,
+  output                   ahb3_if_hresp,
 
-    output reg                  ahb3_hsel,
-    output reg [ADDR_WIDTH-1:0] ahb3_haddr,
-    output reg [DATA_WIDTH-1:0] ahb3_hwdata,
-    output reg                  ahb3_hwrite,
-    output     [2:0]            ahb3_hsize,
-    output reg [2:0]            ahb3_hburst,
-    output reg [3:0]            ahb3_hprot,
-    output reg [1:0]            ahb3_htrans,
-    output reg                  ahb3_hmastlock,
+  output reg                  ahb3_hsel,
+  output reg [ADDR_WIDTH-1:0] ahb3_haddr,
+  output reg [DATA_WIDTH-1:0] ahb3_hwdata,
+  output reg                  ahb3_hwrite,
+  output     [2:0]            ahb3_hsize,
+  output reg [2:0]            ahb3_hburst,
+  output reg [3:0]            ahb3_hprot,
+  output reg [1:0]            ahb3_htrans,
+  output reg                  ahb3_hmastlock,
 
-    input      [DATA_WIDTH-1:0] ahb3_hrdata,
-    input                       ahb3_hready,
-    input                       ahb3_hresp,
+  input      [DATA_WIDTH-1:0] ahb3_hrdata,
+  input                       ahb3_hready,
+  input                       ahb3_hresp,
 
-    output [TABLE_ENTRIES-1:0] irq
-  );
+  output [TABLE_ENTRIES-1:0] irq
+);
 
   //////////////////////////////////////////////////////////////////////////////
   //
@@ -155,21 +155,21 @@ module peripheral_dma_top_ahb3 #(
   reg                      ahb3_target_hready;
 
   // Beginning of automatic wires (for undeclared instantiated-module outputs)
-  wire                              ctrl_done_en;       // From ctrl_initiator
-  wire [TABLE_ENTRIES_PTRWIDTH-1:0] ctrl_done_pos;      // From ctrl_initiator
-  wire [TABLE_ENTRIES_PTRWIDTH-1:0] ctrl_read_pos;      // From ctrl_initiator
-  wire [DMA_REQUEST_WIDTH     -1:0] ctrl_read_req;      // From request_table
-  wire [TABLE_ENTRIES         -1:0] done;               // From request_table
-  wire                              if_valid_en;        // From wb interface
-  wire [TABLE_ENTRIES_PTRWIDTH-1:0] if_valid_pos;       // From wb interface
-  wire                              if_valid_set;       // From wb interface
-  wire                              if_validrd_en;      // From wb interface
-  wire                              if_write_en;        // From wb interface
-  wire [TABLE_ENTRIES_PTRWIDTH-1:0] if_write_pos;       // From wb interface
-  wire [DMA_REQUEST_WIDTH     -1:0] if_write_req;       // From wb interface
-  wire [DMA_REQMASK_WIDTH     -1:0] if_write_select;    // From wb interface
-  wire [TABLE_ENTRIES         -1:0] valid;              // From request_table
-  wire [                       3:0] ahb3_target_hprot;  // From target
+  wire                              ctrl_done_en; // From ctrl_initiator
+  wire [TABLE_ENTRIES_PTRWIDTH-1:0] ctrl_done_pos; // From ctrl_initiator
+  wire [TABLE_ENTRIES_PTRWIDTH-1:0] ctrl_read_pos; // From ctrl_initiator
+  wire [DMA_REQUEST_WIDTH     -1:0] ctrl_read_req; // From request_table
+  wire [TABLE_ENTRIES         -1:0] done; // From request_table
+  wire                              if_valid_en; // From wb interface
+  wire [TABLE_ENTRIES_PTRWIDTH-1:0] if_valid_pos; // From wb interface
+  wire                              if_valid_set; // From wb interface
+  wire                              if_validrd_en; // From wb interface
+  wire                              if_write_en; // From wb interface
+  wire [TABLE_ENTRIES_PTRWIDTH-1:0] if_write_pos; // From wb interface
+  wire [DMA_REQUEST_WIDTH     -1:0] if_write_req; // From wb interface
+  wire [DMA_REQMASK_WIDTH     -1:0] if_write_select; // From wb interface
+  wire [TABLE_ENTRIES         -1:0] valid; // From request_table
+  wire [                       3:0] ahb3_target_hprot; // From target
   // End of automatics
 
   wire [TABLE_ENTRIES_PTRWIDTH-1:0] ctrl_out_read_pos;
@@ -193,7 +193,7 @@ module peripheral_dma_top_ahb3 #(
   assign ctrl_write_pos = 0;
 
   peripheral_dma_interface_ahb3 #(
-    .TILEID(TILEID)
+  .TILEID(TILEID)
   )
   dma_interface_ahb3 (
     .clk                     (clk),
@@ -222,7 +222,7 @@ module peripheral_dma_top_ahb3 #(
   );
 
   peripheral_dma_request_table #(
-    .GENERATE_INTERRUPT(GENERATE_INTERRUPT)
+  .GENERATE_INTERRUPT(GENERATE_INTERRUPT)
   )
   dma_request_table (
     .clk                   (clk),
@@ -251,7 +251,7 @@ module peripheral_dma_top_ahb3 #(
   );
 
   peripheral_dma_initiator_ahb3 #(
-    .TILEID (TILEID)
+  .TILEID (TILEID)
   )
   dma_initiator_ahb3 (
     .clk                  (clk),
@@ -299,8 +299,8 @@ module peripheral_dma_top_ahb3 #(
   );
 
   peripheral_dma_target_ahb3 #(
-    .TILEID(TILEID),
-    .NOC_PACKET_SIZE(NOC_PACKET_SIZE)
+  .TILEID(TILEID),
+  .NOC_PACKET_SIZE(NOC_PACKET_SIZE)
   )
   dma_target_ahb3 (
     .clk                          (clk),
@@ -337,8 +337,8 @@ module peripheral_dma_top_ahb3 #(
   end
 
   assign ahb3_arb_active = ((ahb3_arb == ahb3_arb_req)    & ahb3_req_hmastlock) |
-                           ((ahb3_arb == ahb3_arb_res)    & ahb3_res_hmastlock) |
-                           ((ahb3_arb == ahb3_arb_target) & ahb3_target_hmastlock);
+  ((ahb3_arb == ahb3_arb_res)    & ahb3_res_hmastlock) |
+  ((ahb3_arb == ahb3_arb_target) & ahb3_target_hmastlock);
 
   always @(*) begin
     if (ahb3_arb_active) begin

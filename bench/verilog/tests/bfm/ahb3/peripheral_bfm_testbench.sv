@@ -41,7 +41,7 @@
  */
 
 module peripheral_bfm_testbench;
-  parameter TIMERS = 3;  //Number of timers
+  parameter TIMERS = 3; //Number of timers
 
   parameter HADDR_SIZE = 16;
   parameter HDATA_SIZE = 32;
@@ -95,21 +95,21 @@ module peripheral_bfm_testbench;
   //
 
   peripheral_bfm_ahb3 #(
-    .TIMERS     ( TIMERS     ),
-    .HADDR_SIZE ( HADDR_SIZE ),
-    .HDATA_SIZE ( HDATA_SIZE )
+  .TIMERS     ( TIMERS     ),
+  .HADDR_SIZE ( HADDR_SIZE ),
+  .HDATA_SIZE ( HDATA_SIZE )
   )
   tb (
-    .*
+  .*
   );
 
   peripheral_timer_ahb3 #(
-    .TIMERS     ( TIMERS     ),
-    .HADDR_SIZE ( HADDR_SIZE ),
-    .HDATA_SIZE ( HDATA_SIZE )
+  .TIMERS     ( TIMERS     ),
+  .HADDR_SIZE ( HADDR_SIZE ),
+  .HDATA_SIZE ( HDATA_SIZE )
   )
   dut (
-    .*
+  .*
   );
 
   assign HREADY = HREADYOUT;

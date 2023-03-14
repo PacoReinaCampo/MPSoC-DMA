@@ -53,28 +53,28 @@ module peripheral_dma_interface_bb #(
   parameter TILEID = 0
 )
   (
-    input clk,
-    input rst,
+  input clk,
+  input rst,
 
-    input      [ADDR_WIDTH-1:0] bb_if_addr_i,
-    input      [DATA_WIDTH-1:0] bb_if_din_i,
-    input                       bb_if_en_i,
-    input                       bb_if_we_i,
-    output reg [DATA_WIDTH-1:0] bb_if_dout_o,
+  input      [ADDR_WIDTH-1:0] bb_if_addr_i,
+  input      [DATA_WIDTH-1:0] bb_if_din_i,
+  input                       bb_if_en_i,
+  input                       bb_if_we_i,
+  output reg [DATA_WIDTH-1:0] bb_if_dout_o,
 
-    output [DMA_REQUEST_WIDTH     -1:0] if_write_req,
-    output [TABLE_ENTRIES_PTRWIDTH-1:0] if_write_pos,
-    output [DMA_REQMASK_WIDTH     -1:0] if_write_select,
-    output                              if_write_en,
+  output [DMA_REQUEST_WIDTH     -1:0] if_write_req,
+  output [TABLE_ENTRIES_PTRWIDTH-1:0] if_write_pos,
+  output [DMA_REQMASK_WIDTH     -1:0] if_write_select,
+  output                              if_write_en,
 
-    // Interface read (status) interface
-    output [TABLE_ENTRIES_PTRWIDTH-1:0]    if_valid_pos,
-    output                                 if_valid_set,
-    output                                 if_valid_en,
-    output                                 if_validrd_en,
+  // Interface read (status) interface
+  output [TABLE_ENTRIES_PTRWIDTH-1:0]    if_valid_pos,
+  output                                 if_valid_set,
+  output                                 if_valid_en,
+  output                                 if_validrd_en,
 
-    input [TABLE_ENTRIES-1:0]              done
-  );
+  input [TABLE_ENTRIES-1:0]              done
+);
 
   //////////////////////////////////////////////////////////////////////////////
   //
@@ -89,10 +89,10 @@ module peripheral_dma_interface_bb #(
   //
 
   assign if_write_req = { bb_if_din_i[DMA_REQFIELD_LADDR_WIDTH -1:0],
-                          bb_if_din_i[DMA_REQFIELD_SIZE_WIDTH  -1:0],
-                          bb_if_din_i[DMA_REQFIELD_RTILE_WIDTH -1:0],
-                          bb_if_din_i[DMA_REQFIELD_RADDR_WIDTH -1:0],
-                          bb_if_din_i[0] };
+  bb_if_din_i[DMA_REQFIELD_SIZE_WIDTH  -1:0],
+  bb_if_din_i[DMA_REQFIELD_RTILE_WIDTH -1:0],
+  bb_if_din_i[DMA_REQFIELD_RADDR_WIDTH -1:0],
+  bb_if_din_i[0] };
 
   assign if_write_pos = bb_if_addr_i[TABLE_ENTRIES_PTRWIDTH+4:5]; // ptrwidth MUST be <= 7 (=128 entries)
   assign if_write_en  = bb_if_en_i & bb_if_we_i;

@@ -49,21 +49,21 @@ module peripheral_bfm_slave_wb #(
   parameter DEBUG = 0
 )
   (
-    input                 wb_clk,
-    input                 wb_rst,
-    input      [AW  -1:0] wb_adr_i,
-    input      [DW  -1:0] wb_dat_i,
-    input      [DW/8-1:0] wb_sel_i,
-    input                 wb_we_i,
-    input                 wb_cyc_i,
-    input                 wb_stb_i,
-    input      [     2:0] wb_cti_i,
-    input      [     1:0] wb_bte_i,
-    output reg [  DW-1:0] wb_dat_o,
-    output reg            wb_ack_o,
-    output reg            wb_err_o,
-    output reg            wb_rty_o
-  );
+  input                 wb_clk,
+  input                 wb_rst,
+  input      [AW  -1:0] wb_adr_i,
+  input      [DW  -1:0] wb_dat_i,
+  input      [DW/8-1:0] wb_sel_i,
+  input                 wb_we_i,
+  input                 wb_cyc_i,
+  input                 wb_stb_i,
+  input      [     2:0] wb_cti_i,
+  input      [     1:0] wb_bte_i,
+  output reg [  DW-1:0] wb_dat_o,
+  output reg            wb_ack_o,
+  output reg            wb_err_o,
+  output reg            wb_rty_o
+);
 
   //////////////////////////////////////////////////////////////////////////////
   //

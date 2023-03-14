@@ -55,49 +55,49 @@ module peripheral_dma_wb_top #(
   parameter GENERATE_INTERRUPT     = 1
 )
   (
-    input clk,
-    input rst,
+  input clk,
+  input rst,
 
-    input [FLIT_WIDTH-1:0]  noc_in_req_flit,
-    input                   noc_in_req_valid,
-    output                  noc_in_req_ready,
+  input [FLIT_WIDTH-1:0]  noc_in_req_flit,
+  input                   noc_in_req_valid,
+  output                  noc_in_req_ready,
 
-    input [FLIT_WIDTH-1:0]  noc_in_res_flit,
-    input                   noc_in_res_valid,
-    output                  noc_in_res_ready,
+  input [FLIT_WIDTH-1:0]  noc_in_res_flit,
+  input                   noc_in_res_valid,
+  output                  noc_in_res_ready,
 
-    output [FLIT_WIDTH-1:0]  noc_out_req_flit,
-    output                   noc_out_req_valid,
-    input                    noc_out_req_ready,
+  output [FLIT_WIDTH-1:0]  noc_out_req_flit,
+  output                   noc_out_req_valid,
+  input                    noc_out_req_ready,
 
-    output [FLIT_WIDTH-1:0]  noc_out_res_flit,
-    output                   noc_out_res_valid,
-    input                    noc_out_res_ready,
+  output [FLIT_WIDTH-1:0]  noc_out_res_flit,
+  output                   noc_out_res_valid,
+  input                    noc_out_res_ready,
 
-    input  [ADDR_WIDTH-1:0]  wb_if_addr_i,
-    input  [DATA_WIDTH-1:0]  wb_if_dat_i,
-    input                    wb_if_cyc_i,
-    input                    wb_if_stb_i,
-    input                    wb_if_we_i,
-    output [DATA_WIDTH-1:0]  wb_if_dat_o,
-    output                   wb_if_ack_o,
-    output                   wb_if_err_o,
-    output                   wb_if_rty_o,
+  input  [ADDR_WIDTH-1:0]  wb_if_addr_i,
+  input  [DATA_WIDTH-1:0]  wb_if_dat_i,
+  input                    wb_if_cyc_i,
+  input                    wb_if_stb_i,
+  input                    wb_if_we_i,
+  output [DATA_WIDTH-1:0]  wb_if_dat_o,
+  output                   wb_if_ack_o,
+  output                   wb_if_err_o,
+  output                   wb_if_rty_o,
 
-    output reg [ADDR_WIDTH-1:0] wb_adr_o,
-    output reg [DATA_WIDTH-1:0] wb_dat_o,
-    output reg                  wb_cyc_o,
-    output reg                  wb_stb_o,
-    output reg [           3:0] wb_sel_o,
-    output reg                  wb_we_o,
-    output                      wb_cab_o,
-    output reg [           2:0] wb_cti_o,
-    output reg [           1:0] wb_bte_o,
-    input      [DATA_WIDTH-1:0] wb_dat_i,
-    input                       wb_ack_i,
+  output reg [ADDR_WIDTH-1:0] wb_adr_o,
+  output reg [DATA_WIDTH-1:0] wb_dat_o,
+  output reg                  wb_cyc_o,
+  output reg                  wb_stb_o,
+  output reg [           3:0] wb_sel_o,
+  output reg                  wb_we_o,
+  output                      wb_cab_o,
+  output reg [           2:0] wb_cti_o,
+  output reg [           1:0] wb_bte_o,
+  input      [DATA_WIDTH-1:0] wb_dat_i,
+  input                       wb_ack_i,
 
-    output [TABLE_ENTRIES-1:0] irq
-  );
+  output [TABLE_ENTRIES-1:0] irq
+);
 
   //////////////////////////////////////////////////////////////////////////////
   //
@@ -146,21 +146,21 @@ module peripheral_dma_wb_top #(
   reg                      wb_target_ack_i;
 
   // Beginning of automatic wires (for undeclared instantiated-module outputs)
-  wire                              ctrl_done_en;     // From initiator
-  wire [TABLE_ENTRIES_PTRWIDTH-1:0] ctrl_done_pos;    // From initiator
-  wire [TABLE_ENTRIES_PTRWIDTH-1:0] ctrl_read_pos;    // From initiator
-  wire [DMA_REQUEST_WIDTH     -1:0] ctrl_read_req;    // From request_table
-  wire [TABLE_ENTRIES         -1:0] done;             // From request_table
-  wire                              if_valid_en;      // From wb interface
-  wire [TABLE_ENTRIES_PTRWIDTH-1:0] if_valid_pos;     // From wb interface
-  wire                              if_valid_set;     // From wb interface
-  wire                              if_validrd_en;    // From wb interface
-  wire                              if_write_en;      // From wb interface
-  wire [TABLE_ENTRIES_PTRWIDTH-1:0] if_write_pos;     // From wb interface
-  wire [DMA_REQUEST_WIDTH     -1:0] if_write_req;     // From wb interface
-  wire [DMA_REQMASK_WIDTH     -1:0] if_write_select;  // From wb interface
-  wire [TABLE_ENTRIES         -1:0] valid;            // From request_table
-  wire [                       3:0] wb_target_sel_o;  // From target
+  wire                              ctrl_done_en; // From initiator
+  wire [TABLE_ENTRIES_PTRWIDTH-1:0] ctrl_done_pos; // From initiator
+  wire [TABLE_ENTRIES_PTRWIDTH-1:0] ctrl_read_pos; // From initiator
+  wire [DMA_REQUEST_WIDTH     -1:0] ctrl_read_req; // From request_table
+  wire [TABLE_ENTRIES         -1:0] done; // From request_table
+  wire                              if_valid_en; // From wb interface
+  wire [TABLE_ENTRIES_PTRWIDTH-1:0] if_valid_pos; // From wb interface
+  wire                              if_valid_set; // From wb interface
+  wire                              if_validrd_en; // From wb interface
+  wire                              if_write_en; // From wb interface
+  wire [TABLE_ENTRIES_PTRWIDTH-1:0] if_write_pos; // From wb interface
+  wire [DMA_REQUEST_WIDTH     -1:0] if_write_req; // From wb interface
+  wire [DMA_REQMASK_WIDTH     -1:0] if_write_select; // From wb interface
+  wire [TABLE_ENTRIES         -1:0] valid; // From request_table
+  wire [                       3:0] wb_target_sel_o; // From target
   // End of automatics
 
   wire [TABLE_ENTRIES_PTRWIDTH-1:0] ctrl_out_read_pos;
@@ -185,7 +185,7 @@ module peripheral_dma_wb_top #(
   assign ctrl_write_pos    = 0;
 
   peripheral_dma_interface_wb #(
-    .TILEID(TILEID)
+  .TILEID(TILEID)
   )
   dma_interface_wb (
     .clk                     (clk),
@@ -213,7 +213,7 @@ module peripheral_dma_wb_top #(
   );
 
   peripheral_dma_request_table #(
-    .GENERATE_INTERRUPT(GENERATE_INTERRUPT)
+  .GENERATE_INTERRUPT(GENERATE_INTERRUPT)
   )
   dma_request_table (
     .clk                   (clk),
@@ -242,7 +242,7 @@ module peripheral_dma_wb_top #(
   );
 
   peripheral_dma_initiator_wb #(
-    .TILEID (TILEID)
+  .TILEID (TILEID)
   )
   dma_initiator_wb (
     .clk                  (clk),
@@ -288,8 +288,8 @@ module peripheral_dma_wb_top #(
   );
 
   peripheral_dma_target_wb #(
-    .TILEID          (TILEID),
-    .NOC_PACKET_SIZE (NOC_PACKET_SIZE)
+  .TILEID          (TILEID),
+  .NOC_PACKET_SIZE (NOC_PACKET_SIZE)
   )
   dma_target_wb (
     // Outputs
@@ -326,8 +326,8 @@ module peripheral_dma_wb_top #(
   end
 
   assign wb_arb_active = ((wb_arb == wb_arb_req)    & wb_req_cyc_o) |
-                         ((wb_arb == wb_arb_resp)   & wb_res_cyc_o) |
-                         ((wb_arb == wb_arb_target) & wb_target_cyc_o);
+  ((wb_arb == wb_arb_resp)   & wb_res_cyc_o) |
+  ((wb_arb == wb_arb_target) & wb_target_cyc_o);
 
   always @(*) begin
     if (wb_arb_active) begin

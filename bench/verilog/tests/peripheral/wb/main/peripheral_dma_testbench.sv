@@ -129,9 +129,9 @@ module peripheral_dma_testbench #(
   always #3 wbs_clk <= ~wbs_clk;
 
   peripheral_bfm_transactor_wb #(
-    .MEM_HIGH (MEM_SIZE-1),
-    .AUTORUN  (0),
-    .VERBOSE  (0)
+  .MEM_HIGH (MEM_SIZE-1),
+  .AUTORUN  (0),
+  .VERBOSE  (0)
   )
   transactor (
     .wb_clk_i (wbm_clk),
@@ -153,8 +153,8 @@ module peripheral_dma_testbench #(
   );
 
   peripheral_dma_top_wb #(
-    .ADDR_WIDTH (AW),
-    .DATA_WIDTH (DW)
+  .ADDR_WIDTH (AW),
+  .DATA_WIDTH (DW)
   )
   dut (
     .clk (wbm_clk),
@@ -204,8 +204,8 @@ module peripheral_dma_testbench #(
   );
 
   peripheral_bfm_memory_wb #(
-    .DEBUG (0),
-    .MEM_SIZE_BYTES (MEM_SIZE)
+  .DEBUG (0),
+  .MEM_SIZE_BYTES (MEM_SIZE)
   )
   mem (
     .wb_clk_i (wbs_clk),

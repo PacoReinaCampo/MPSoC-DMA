@@ -61,28 +61,28 @@ module peripheral_dma_initiator_nocres_wb #(
   parameter STATE_GET_SIZE = 2'b11
 )
   (
-    input clk,
-    input rst,
+  input clk,
+  input rst,
 
-    input [FLIT_WIDTH-1:0]                  noc_in_flit,
-    input                                   noc_in_valid,
-    output                                  noc_in_ready,
+  input [FLIT_WIDTH-1:0]                  noc_in_flit,
+  input                                   noc_in_valid,
+  output                                  noc_in_ready,
 
-    // Wishbone interface for L2R data fetch
-    output     [ADDR_WIDTH-1:0]             wb_adr_o,
-    output     [ADDR_WIDTH-1:0]             wb_dat_o,
-    output     [           3:0]             wb_sel_o,
-    output reg                              wb_we_o,
-    output reg                              wb_cyc_o,
-    output reg                              wb_stb_o,
-    output reg [           2:0]             wb_cti_o,
-    output reg [           1:0]             wb_bte_o,
-    input      [ADDR_WIDTH-1:0]             wb_dat_i,
-    input                                   wb_ack_i,
+  // Wishbone interface for L2R data fetch
+  output     [ADDR_WIDTH-1:0]             wb_adr_o,
+  output     [ADDR_WIDTH-1:0]             wb_dat_o,
+  output     [           3:0]             wb_sel_o,
+  output reg                              wb_we_o,
+  output reg                              wb_cyc_o,
+  output reg                              wb_stb_o,
+  output reg [           2:0]             wb_cti_o,
+  output reg [           1:0]             wb_bte_o,
+  input      [ADDR_WIDTH-1:0]             wb_dat_i,
+  input                                   wb_ack_i,
 
-    output reg [TABLE_ENTRIES_PTRWIDTH-1:0] ctrl_done_pos,
-    output reg                              ctrl_done_en
-  );
+  output reg [TABLE_ENTRIES_PTRWIDTH-1:0] ctrl_done_pos,
+  output reg                              ctrl_done_en
+);
 
   //////////////////////////////////////////////////////////////////////////////
   //
@@ -114,7 +114,7 @@ module peripheral_dma_initiator_nocres_wb #(
   //
 
   peripheral_dma_packet_buffer #(
-    .FIFO_DEPTH (NOC_PACKET_SIZE)
+  .FIFO_DEPTH (NOC_PACKET_SIZE)
   )
   dma_packet_buffer (
     .clk                           (clk),
@@ -135,7 +135,7 @@ module peripheral_dma_initiator_nocres_wb #(
 
   // Is this the last flit of a packet?
   assign buf_last_flit = (buf_flit[FLIT_TYPE_MSB:FLIT_TYPE_LSB]==FLIT_TYPE_LAST) |
-                         (buf_flit[FLIT_TYPE_MSB:FLIT_TYPE_LSB]==FLIT_TYPE_SINGLE);
+  (buf_flit[FLIT_TYPE_MSB:FLIT_TYPE_LSB]==FLIT_TYPE_SINGLE);
 
   assign wb_adr_o = resp_address; //alias
 

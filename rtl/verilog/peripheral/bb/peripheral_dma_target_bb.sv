@@ -65,25 +65,25 @@ module peripheral_dma_target_bb #(
   parameter NOC_PACKET_SIZE = 16
 )
   (
-    input  clk,
-    input  rst,
+  input  clk,
+  input  rst,
 
-    // NOC-Interface
-    output reg [FLIT_WIDTH-1:0]  noc_out_flit,
-    output reg                   noc_out_valid,
-    input                        noc_out_ready,
+  // NOC-Interface
+  output reg [FLIT_WIDTH-1:0]  noc_out_flit,
+  output reg                   noc_out_valid,
+  input                        noc_out_ready,
 
-    input      [FLIT_WIDTH-1:0]  noc_in_flit,
-    input                        noc_in_valid,
-    output                       noc_in_ready,
+  input      [FLIT_WIDTH-1:0]  noc_in_flit,
+  input                        noc_in_valid,
+  output                       noc_in_ready,
 
-    // Blackbone interface for L2R data store
-    output     [ADDR_WIDTH-1:0]  bb_addr_o,
-    output     [DATA_WIDTH-1:0]  bb_din_o,
-    output reg                   bb_en_o,
-    output reg                   bb_we_o,
-    input      [DATA_WIDTH-1:0]  bb_dout_i
-  );
+  // Blackbone interface for L2R data store
+  output     [ADDR_WIDTH-1:0]  bb_addr_o,
+  output     [DATA_WIDTH-1:0]  bb_din_o,
+  output reg                   bb_en_o,
+  output reg                   bb_we_o,
+  input      [DATA_WIDTH-1:0]  bb_dout_i
+);
 
   //////////////////////////////////////////////////////////////////////////////
   //
@@ -142,11 +142,11 @@ module peripheral_dma_target_bb #(
 
   wire                                data_fifo_valid;
   reg [DATA_WIDTH-1:0]                data_fifo [0:2]; // data storage
-  reg                                 data_fifo_pop;   // NOC pushes
-  reg                                 data_fifo_push;  // WB pops
+  reg                                 data_fifo_pop; // NOC pushes
+  reg                                 data_fifo_push; // WB pops
 
   wire [DATA_WIDTH-1:0]               data_fifo_out; // Current first element
-  wire [DATA_WIDTH-1:0]               data_fifo_in;  // Push element
+  wire [DATA_WIDTH-1:0]               data_fifo_in; // Push element
   // Shift register for current position (4th bit is full mark)
   reg [3:0]                           data_fifo_pos;
 
@@ -164,7 +164,7 @@ module peripheral_dma_target_bb #(
 
   // Input buffer that stores flits until we have one complete packet
   peripheral_dma_packet_buffer #(
-    .FIFO_DEPTH (NOC_PACKET_SIZE)
+  .FIFO_DEPTH (NOC_PACKET_SIZE)
   )
   dma_packet_buffer (
     .clk                           (clk),
@@ -183,7 +183,7 @@ module peripheral_dma_target_bb #(
 
   // Is this the last flit of a packet?
   assign buf_last_flit = (buf_flit[FLIT_TYPE_MSB:FLIT_TYPE_LSB]==FLIT_TYPE_LAST) |
-                         (buf_flit[FLIT_TYPE_MSB:FLIT_TYPE_LSB]==FLIT_TYPE_SINGLE);
+  (buf_flit[FLIT_TYPE_MSB:FLIT_TYPE_LSB]==FLIT_TYPE_SINGLE);
 
   // The intermediate store a FIFO of three elements
   //
@@ -446,7 +446,7 @@ module peripheral_dma_target_bb #(
         end
         //FIFO-handling
         if (bb_waiting) begin //hidden state
-          //don't get data from the bus
+        //don't get data from the bus
           bb_en_o = 1'b0;
 
           data_fifo_push = 1'b0;
@@ -458,8 +458,8 @@ module peripheral_dma_target_bb #(
           end
         end
         else begin //not bb_waiting
-          // Signal cycle and strobe. We do bursts, but don't insert
-          // wait states, so both of them are always equal.
+        // Signal cycle and strobe. We do bursts, but don't insert
+        // wait states, so both of them are always equal.
           if ((noc_resp_packet_wcount==noc_resp_packet_wsize) & noc_out_valid & noc_out_ready) begin
             bb_en_o = 1'b0;
           end

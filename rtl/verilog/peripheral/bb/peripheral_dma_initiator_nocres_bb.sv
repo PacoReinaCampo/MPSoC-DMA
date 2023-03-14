@@ -61,23 +61,23 @@ module peripheral_dma_initiator_nocres_bb #(
   parameter STATE_GET_SIZE = 2'b11
 )
   (
-    input clk,
-    input rst,
+  input clk,
+  input rst,
 
-    input [FLIT_WIDTH-1:0]                  noc_in_flit,
-    input                                   noc_in_valid,
-    output                                  noc_in_ready,
+  input [FLIT_WIDTH-1:0]                  noc_in_flit,
+  input                                   noc_in_valid,
+  output                                  noc_in_ready,
 
-    // Blackbone interface for L2R data fetch
-    output     [ADDR_WIDTH-1:0]             bb_addr_o,
-    output     [ADDR_WIDTH-1:0]             bb_din_o,
-    output reg                              bb_en_o,
-    output reg                              bb_we_o,
-    input      [ADDR_WIDTH-1:0]             bb_dout_i,
+  // Blackbone interface for L2R data fetch
+  output     [ADDR_WIDTH-1:0]             bb_addr_o,
+  output     [ADDR_WIDTH-1:0]             bb_din_o,
+  output reg                              bb_en_o,
+  output reg                              bb_we_o,
+  input      [ADDR_WIDTH-1:0]             bb_dout_i,
 
-    output reg [TABLE_ENTRIES_PTRWIDTH-1:0] ctrl_done_pos,
-    output reg                              ctrl_done_en
-  );
+  output reg [TABLE_ENTRIES_PTRWIDTH-1:0] ctrl_done_pos,
+  output reg                              ctrl_done_en
+);
 
   //////////////////////////////////////////////////////////////////////////////
   //
@@ -109,7 +109,7 @@ module peripheral_dma_initiator_nocres_bb #(
   //
 
   peripheral_dma_packet_buffer #(
-    .FIFO_DEPTH (NOC_PACKET_SIZE)
+  .FIFO_DEPTH (NOC_PACKET_SIZE)
   )
   dma_packet_buffer (
     .clk                           (clk),
@@ -130,7 +130,7 @@ module peripheral_dma_initiator_nocres_bb #(
 
   // Is this the last flit of a packet?
   assign buf_last_flit = (buf_flit[FLIT_TYPE_MSB:FLIT_TYPE_LSB]==FLIT_TYPE_LAST) |
-                         (buf_flit[FLIT_TYPE_MSB:FLIT_TYPE_LSB]==FLIT_TYPE_SINGLE);
+  (buf_flit[FLIT_TYPE_MSB:FLIT_TYPE_LSB]==FLIT_TYPE_SINGLE);
 
   assign bb_addr_o = resp_address; //alias
 

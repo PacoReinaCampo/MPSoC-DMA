@@ -62,29 +62,29 @@ module peripheral_dma_initiator_nocres_ahb3 #(
   parameter STATE_GET_SIZE = 2'b11
 )
   (
-    input clk,
-    input rst,
+  input clk,
+  input rst,
 
-    input [FLIT_WIDTH-1:0]                  noc_in_flit,
-    input                                   noc_in_valid,
-    output                                  noc_in_ready,
+  input [FLIT_WIDTH-1:0]                  noc_in_flit,
+  input                                   noc_in_valid,
+  output                                  noc_in_ready,
 
-    // Wishbone interface for L2R data fetch
-    output reg                              ahb3_hsel,
-    output     [ADDR_WIDTH-1:0]             ahb3_haddr,
-    output     [ADDR_WIDTH-1:0]             ahb3_hwdata,
-    output reg                              ahb3_hwrite,
-    output reg [2:0]                        ahb3_hburst,
-    output     [3:0]                        ahb3_hprot,
-    output reg [1:0]                        ahb3_htrans,
-    output reg                              ahb3_hmastlock,
+  // Wishbone interface for L2R data fetch
+  output reg                              ahb3_hsel,
+  output     [ADDR_WIDTH-1:0]             ahb3_haddr,
+  output     [ADDR_WIDTH-1:0]             ahb3_hwdata,
+  output reg                              ahb3_hwrite,
+  output reg [2:0]                        ahb3_hburst,
+  output     [3:0]                        ahb3_hprot,
+  output reg [1:0]                        ahb3_htrans,
+  output reg                              ahb3_hmastlock,
 
-    input      [ADDR_WIDTH-1:0]             ahb3_hrdata,
-    input                                   ahb3_hready,
+  input      [ADDR_WIDTH-1:0]             ahb3_hrdata,
+  input                                   ahb3_hready,
 
-    output reg [TABLE_ENTRIES_PTRWIDTH-1:0] ctrl_done_pos,
-    output reg                              ctrl_done_en
-  );
+  output reg [TABLE_ENTRIES_PTRWIDTH-1:0] ctrl_done_pos,
+  output reg                              ctrl_done_en
+);
 
   //////////////////////////////////////////////////////////////////////////////
   //
@@ -116,7 +116,7 @@ module peripheral_dma_initiator_nocres_ahb3 #(
   //
 
   peripheral_dma_packet_buffer #(
-    .FIFO_DEPTH (NOC_PACKET_SIZE)
+  .FIFO_DEPTH (NOC_PACKET_SIZE)
   )
   dma_packet_buffer (
     .clk                           (clk),
@@ -137,7 +137,7 @@ module peripheral_dma_initiator_nocres_ahb3 #(
 
   // Is this the last flit of a packet?
   assign buf_last_flit = (buf_flit[FLIT_TYPE_MSB:FLIT_TYPE_LSB]==FLIT_TYPE_LAST) |
-                         (buf_flit[FLIT_TYPE_MSB:FLIT_TYPE_LSB]==FLIT_TYPE_SINGLE);
+  (buf_flit[FLIT_TYPE_MSB:FLIT_TYPE_LSB]==FLIT_TYPE_SINGLE);
 
   assign ahb3_haddr = resp_address; //alias
 

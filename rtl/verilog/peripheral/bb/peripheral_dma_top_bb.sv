@@ -55,39 +55,39 @@ module peripheral_dma_top_bb #(
   parameter GENERATE_INTERRUPT     = 1
 )
   (
-    input clk,
-    input rst,
+  input clk,
+  input rst,
 
-    input [FLIT_WIDTH-1:0]  noc_in_req_flit,
-    input                   noc_in_req_valid,
-    output                  noc_in_req_ready,
+  input [FLIT_WIDTH-1:0]  noc_in_req_flit,
+  input                   noc_in_req_valid,
+  output                  noc_in_req_ready,
 
-    input [FLIT_WIDTH-1:0]  noc_in_res_flit,
-    input                   noc_in_res_valid,
-    output                  noc_in_res_ready,
+  input [FLIT_WIDTH-1:0]  noc_in_res_flit,
+  input                   noc_in_res_valid,
+  output                  noc_in_res_ready,
 
-    output [FLIT_WIDTH-1:0]  noc_out_req_flit,
-    output                   noc_out_req_valid,
-    input                    noc_out_req_ready,
+  output [FLIT_WIDTH-1:0]  noc_out_req_flit,
+  output                   noc_out_req_valid,
+  input                    noc_out_req_ready,
 
-    output [FLIT_WIDTH-1:0]  noc_out_res_flit,
-    output                   noc_out_res_valid,
-    input                    noc_out_res_ready,
+  output [FLIT_WIDTH-1:0]  noc_out_res_flit,
+  output                   noc_out_res_valid,
+  input                    noc_out_res_ready,
 
-    input  [ADDR_WIDTH-1:0]  bb_if_addr_i,
-    input  [DATA_WIDTH-1:0]  bb_if_din_i,
-    input                    bb_if_en_i,
-    input                    bb_if_we_i,
-    output [DATA_WIDTH-1:0]  bb_if_dout_o,
+  input  [ADDR_WIDTH-1:0]  bb_if_addr_i,
+  input  [DATA_WIDTH-1:0]  bb_if_din_i,
+  input                    bb_if_en_i,
+  input                    bb_if_we_i,
+  output [DATA_WIDTH-1:0]  bb_if_dout_o,
 
-    output reg [ADDR_WIDTH-1:0] bb_addr_o,
-    output reg [DATA_WIDTH-1:0] bb_din_o,
-    output reg                  bb_en_o,
-    output reg                  bb_we_o,
-    input      [DATA_WIDTH-1:0] bb_dout_i,
+  output reg [ADDR_WIDTH-1:0] bb_addr_o,
+  output reg [DATA_WIDTH-1:0] bb_din_o,
+  output reg                  bb_en_o,
+  output reg                  bb_we_o,
+  input      [DATA_WIDTH-1:0] bb_dout_i,
 
-    output [TABLE_ENTRIES-1:0] irq
-  );
+  output [TABLE_ENTRIES-1:0] irq
+);
 
   //////////////////////////////////////////////////////////////////////////////
   //
@@ -122,21 +122,21 @@ module peripheral_dma_top_bb #(
   reg  [DATA_WIDTH-1:0]    bb_target_dout_i;
 
   // Beginning of automatic wires (for undeclared instantiated-module outputs)
-  wire                              ctrl_done_en;     // From initiator
-  wire [TABLE_ENTRIES_PTRWIDTH-1:0] ctrl_done_pos;    // From initiator
-  wire [TABLE_ENTRIES_PTRWIDTH-1:0] ctrl_read_pos;    // From initiator
-  wire [DMA_REQUEST_WIDTH     -1:0] ctrl_read_req;    // From request_table
-  wire [TABLE_ENTRIES         -1:0] done;             // From request_table
-  wire                              if_valid_en;      // From bb interface
-  wire [TABLE_ENTRIES_PTRWIDTH-1:0] if_valid_pos;     // From bb interface
-  wire                              if_valid_set;     // From bb interface
-  wire                              if_validrd_en;    // From bb interface
-  wire                              if_write_en;      // From bb interface
-  wire [TABLE_ENTRIES_PTRWIDTH-1:0] if_write_pos;     // From bb interface
-  wire [DMA_REQUEST_WIDTH     -1:0] if_write_req;     // From bb interface
-  wire [DMA_REQMASK_WIDTH     -1:0] if_write_select;  // From bb interface
-  wire [TABLE_ENTRIES         -1:0] valid;            // From request_table
-  wire [                       3:0] bb_target_sel_o;  // From target
+  wire                              ctrl_done_en; // From initiator
+  wire [TABLE_ENTRIES_PTRWIDTH-1:0] ctrl_done_pos; // From initiator
+  wire [TABLE_ENTRIES_PTRWIDTH-1:0] ctrl_read_pos; // From initiator
+  wire [DMA_REQUEST_WIDTH     -1:0] ctrl_read_req; // From request_table
+  wire [TABLE_ENTRIES         -1:0] done; // From request_table
+  wire                              if_valid_en; // From bb interface
+  wire [TABLE_ENTRIES_PTRWIDTH-1:0] if_valid_pos; // From bb interface
+  wire                              if_valid_set; // From bb interface
+  wire                              if_validrd_en; // From bb interface
+  wire                              if_write_en; // From bb interface
+  wire [TABLE_ENTRIES_PTRWIDTH-1:0] if_write_pos; // From bb interface
+  wire [DMA_REQUEST_WIDTH     -1:0] if_write_req; // From bb interface
+  wire [DMA_REQMASK_WIDTH     -1:0] if_write_select; // From bb interface
+  wire [TABLE_ENTRIES         -1:0] valid; // From request_table
+  wire [                       3:0] bb_target_sel_o; // From target
   // End of automatics
 
   wire [TABLE_ENTRIES_PTRWIDTH-1:0] ctrl_out_read_pos;
@@ -161,7 +161,7 @@ module peripheral_dma_top_bb #(
   assign ctrl_write_pos    = 0;
 
   peripheral_dma_interface_bb #(
-    .TILEID(TILEID)
+  .TILEID(TILEID)
   )
   dma_interface_bb (
     .clk                     (clk),
@@ -187,7 +187,7 @@ module peripheral_dma_top_bb #(
   );
 
   peripheral_dma_request_table #(
-    .GENERATE_INTERRUPT(GENERATE_INTERRUPT)
+  .GENERATE_INTERRUPT(GENERATE_INTERRUPT)
   )
   request_table (
     .clk                   (clk),
@@ -216,7 +216,7 @@ module peripheral_dma_top_bb #(
   );
 
   peripheral_dma_initiator_bb #(
-    .TILEID (TILEID)
+  .TILEID (TILEID)
   )
   dma_initiator_bb (
     .clk                  (clk),
@@ -252,8 +252,8 @@ module peripheral_dma_top_bb #(
   );
 
   peripheral_dma_target_bb #(
-    .TILEID(TILEID),
-    .NOC_PACKET_SIZE(NOC_PACKET_SIZE)
+  .TILEID(TILEID),
+  .NOC_PACKET_SIZE(NOC_PACKET_SIZE)
   )
   dma_target_bb (
     // Outputs
@@ -285,8 +285,8 @@ module peripheral_dma_top_bb #(
   end
 
   assign bb_arb_active = ((bb_arb == bb_arb_req)    & bb_req_en_o) |
-                         ((bb_arb == bb_arb_resp)   & bb_res_en_o) |
-                         ((bb_arb == bb_arb_target) & bb_target_en_o);
+  ((bb_arb == bb_arb_resp)   & bb_res_en_o) |
+  ((bb_arb == bb_arb_target) & bb_target_en_o);
 
   always @(*) begin
     if (bb_arb_active) begin

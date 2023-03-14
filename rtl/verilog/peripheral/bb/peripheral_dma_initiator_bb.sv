@@ -53,41 +53,41 @@ module peripheral_dma_initiator_bb #(
   parameter NOC_PACKET_SIZE        = 16
 )
   (
-    input  clk,
-    input  rst,
- 
-    // Control read (request) interface
-    output [TABLE_ENTRIES_PTRWIDTH-1:0] ctrl_read_pos,
-    input  [DMA_REQUEST_WIDTH     -1:0] ctrl_read_req,
+  input  clk,
+  input  rst,
 
-    output [TABLE_ENTRIES_PTRWIDTH-1:0] ctrl_done_pos,
-    output                              ctrl_done_en,
+  // Control read (request) interface
+  output [TABLE_ENTRIES_PTRWIDTH-1:0] ctrl_read_pos,
+  input  [DMA_REQUEST_WIDTH     -1:0] ctrl_read_req,
 
-    input  [TABLE_ENTRIES         -1:0] valid,
+  output [TABLE_ENTRIES_PTRWIDTH-1:0] ctrl_done_pos,
+  output                              ctrl_done_en,
 
-    // NOC-Interface
-    output [FLIT_WIDTH-1:0]                 noc_out_flit,
-    output                                  noc_out_valid,
-    input                                   noc_out_ready,
+  input  [TABLE_ENTRIES         -1:0] valid,
 
-    input  [FLIT_WIDTH-1:0]                 noc_in_flit,
-    input                                   noc_in_valid,
-    output                                  noc_in_ready,
+  // NOC-Interface
+  output [FLIT_WIDTH-1:0]                 noc_out_flit,
+  output                                  noc_out_valid,
+  input                                   noc_out_ready,
 
-    // Blackbone interface for L2R data fetch
-    output [ADDR_WIDTH-1:0]                 bb_req_addr_o,
-    output [DATA_WIDTH-1:0]                 bb_req_din_o,
-    output                                  bb_req_en_o,
-    output                                  bb_req_we_o,
-    input  [DATA_WIDTH-1:0]                 bb_req_dout_i,
+  input  [FLIT_WIDTH-1:0]                 noc_in_flit,
+  input                                   noc_in_valid,
+  output                                  noc_in_ready,
 
-    // Blackbone interface for L2R data fetch
-    output [ADDR_WIDTH-1:0]                 bb_res_addr_o,
-    output [DATA_WIDTH-1:0]                 bb_res_din_o,
-    output                                  bb_res_en_o,
-    output                                  bb_res_we_o,
-    input  [DATA_WIDTH-1:0]                 bb_res_dout_i
-  );
+  // Blackbone interface for L2R data fetch
+  output [ADDR_WIDTH-1:0]                 bb_req_addr_o,
+  output [DATA_WIDTH-1:0]                 bb_req_din_o,
+  output                                  bb_req_en_o,
+  output                                  bb_req_we_o,
+  input  [DATA_WIDTH-1:0]                 bb_req_dout_i,
+
+  // Blackbone interface for L2R data fetch
+  output [ADDR_WIDTH-1:0]                 bb_res_addr_o,
+  output [DATA_WIDTH-1:0]                 bb_res_din_o,
+  output                                  bb_res_en_o,
+  output                                  bb_res_we_o,
+  input  [DATA_WIDTH-1:0]                 bb_res_dout_i
+);
 
   //////////////////////////////////////////////////////////////////////////////
   //
@@ -130,8 +130,8 @@ module peripheral_dma_initiator_bb #(
   );
 
   peripheral_dma_initiator_nocreq #(
-    .TILEID          (TILEID),
-    .NOC_PACKET_SIZE (NOC_PACKET_SIZE)
+  .TILEID          (TILEID),
+  .NOC_PACKET_SIZE (NOC_PACKET_SIZE)
   )
   dma_initiator_nocreq (
     .clk                        (clk),
@@ -159,7 +159,7 @@ module peripheral_dma_initiator_bb #(
   );
 
   peripheral_dma_initiator_nocres_bb #(
-    .NOC_PACKET_SIZE(NOC_PACKET_SIZE)
+  .NOC_PACKET_SIZE(NOC_PACKET_SIZE)
   )
   dma_initiator_nocres_bb (
     .clk                       (clk),

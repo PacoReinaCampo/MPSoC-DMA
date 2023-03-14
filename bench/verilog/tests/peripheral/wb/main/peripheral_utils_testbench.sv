@@ -65,10 +65,10 @@ module peripheral_utils_testbench;
 
   //Force simulation stop after timeout cycles
   initial
-    if($value$plusargs("timeout=%d", timeout)) begin
-      #timeout $display("Timeout: Forcing end of simulation");
-      $finish;
-    end
+  if($value$plusargs("timeout=%d", timeout)) begin
+    #timeout $display("Timeout: Forcing end of simulation");
+    $finish;
+  end
 
   //FIXME: Add more options for VCD logging
 

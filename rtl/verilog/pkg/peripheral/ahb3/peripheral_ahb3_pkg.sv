@@ -56,8 +56,8 @@ package peripheral_ahb3_pkg;
   localparam HSIZE_B16   = 3'b001;
   localparam HSIZE_B32   = 3'b010;
   localparam HSIZE_B64   = 3'b011;
-  localparam HSIZE_B128  = 3'b100;  //4-word line
-  localparam HSIZE_B256  = 3'b101;  //8-word line
+  localparam HSIZE_B128  = 3'b100; //4-word line
+  localparam HSIZE_B256  = 3'b101; //8-word line
   localparam HSIZE_B512  = 3'b110;
   localparam HSIZE_B1024 = 3'b111;
   localparam HSIZE_BYTE  = HSIZE_B8;

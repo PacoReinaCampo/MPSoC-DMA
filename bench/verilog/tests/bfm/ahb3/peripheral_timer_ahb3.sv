@@ -48,29 +48,29 @@ module peripheral_timer_ahb3 #(
   parameter HDATA_SIZE = 32,
 
   //Timer Parameters
-  parameter TIMERS  = 3  //Number of timers
+  parameter TIMERS  = 3 //Number of timers
 )
   (
-    input                       HRESETn,
-    input                       HCLK,
+  input                       HRESETn,
+  input                       HCLK,
 
-    //AHB Slave Interfaces (receive data from AHB Masters)
-    //AHB Masters connect to these ports
-    input                       HSEL,
-    input      [HADDR_SIZE-1:0] HADDR,
-    input      [HDATA_SIZE-1:0] HWDATA,
-    output reg [HDATA_SIZE-1:0] HRDATA,
-    input                       HWRITE,
-    input      [           2:0] HSIZE,
-    input      [           2:0] HBURST,
-    input      [           3:0] HPROT,
-    input      [           1:0] HTRANS,
-    output reg                  HREADYOUT,
-    input                       HREADY,
-    output                      HRESP,
+  //AHB Slave Interfaces (receive data from AHB Masters)
+  //AHB Masters connect to these ports
+  input                       HSEL,
+  input      [HADDR_SIZE-1:0] HADDR,
+  input      [HDATA_SIZE-1:0] HWDATA,
+  output reg [HDATA_SIZE-1:0] HRDATA,
+  input                       HWRITE,
+  input      [           2:0] HSIZE,
+  input      [           2:0] HBURST,
+  input      [           3:0] HPROT,
+  input      [           1:0] HTRANS,
+  output reg                  HREADYOUT,
+  input                       HREADY,
+  output                      HRESP,
 
-    output reg                  tint  //Timer Interrupt
-  );
+  output reg                  tint //Timer Interrupt
+);
 
   //////////////////////////////////////////////////////////////////////////////
   //
@@ -80,24 +80,24 @@ module peripheral_timer_ahb3 #(
   localparam BE_SIZE = (HDATA_SIZE+7)/8;
 
   /*
- * address    description                comment
- * 0x0   32   Prescale Register          Global Prescale register
- * 0x4   32   reserved                                         
- * 0x8   32   Interrupt Pending Register Pending interrupt p.timer
- * 0xC   32   Interrupt Enable Register  Enable interrupt p.timer
- * 0x10  64   'time' Register            'time[n]'
- * 0x18  64   'timecmp' Register         'timecmp[n]'
- */
+   * address    description                comment
+   * 0x0   32   Prescale Register          Global Prescale register
+   * 0x4   32   reserved                                         
+   * 0x8   32   Interrupt Pending Register Pending interrupt p.timer
+   * 0xC   32   Interrupt Enable Register  Enable interrupt p.timer
+   * 0x10  64   'time' Register            'time[n]'
+   * 0x18  64   'timecmp' Register         'timecmp[n]'
+   */
 
   localparam [HADDR_SIZE-1:0] PRESCALE         = 'h0;
   localparam [HADDR_SIZE-1:0] RESERVED         = 'h4;
   localparam [HADDR_SIZE-1:0] IPENDING         = 'h8;
   localparam [HADDR_SIZE-1:0] IENABLE          = 'hc;
-  localparam [HADDR_SIZE-1:0] IPENDING_IENABLE = IPENDING;  //for 64bit access
+  localparam [HADDR_SIZE-1:0] IPENDING_IENABLE = IPENDING; //for 64bit access
   localparam [HADDR_SIZE-1:0] TIME             = 'h10;
-  localparam [HADDR_SIZE-1:0] TIME_MSB         = 'h14;      //for 32bit access
-  localparam [HADDR_SIZE-1:0] TIMECMP          = 'h18;      //address = n*'h08 + 'h18;
-  localparam [HADDR_SIZE-1:0] TIMECMP_MSB      = 'h1C;      //address = n*'h08 + 'h1C;
+  localparam [HADDR_SIZE-1:0] TIME_MSB         = 'h14; //for 32bit access
+  localparam [HADDR_SIZE-1:0] TIMECMP          = 'h18; //address = n*'h08 + 'h18;
+  localparam [HADDR_SIZE-1:0] TIMECMP_MSB      = 'h1C; //address = n*'h08 + 'h1C;
 
   //////////////////////////////////////////////////////////////////////////////
   //
@@ -119,7 +119,7 @@ module peripheral_timer_ahb3 #(
   logic             [31:0] ienable_rd;
   logic             [63:0] time_reg;
   logic [TIMERS-1:0][63:0] timecmp_reg;
-  logic                    enabled;     //first write to PRESCALE enables TIME
+  logic                    enabled; //first write to PRESCALE enables TIME
   logic                    prescale_wr; //write to PRESCALE registers
 
   //timer count enable
@@ -144,7 +144,7 @@ module peripheral_timer_ahb3 #(
 
     //What are the lesser bits in HADDR?
     case (HDATA_SIZE)
-      1024    : address_offset = 7'b111_1111; 
+      1024    : address_offset = 7'b111_1111;
       512     : address_offset = 7'b011_1111;
       256     : address_offset = 7'b001_1111;
       128     : address_offset = 7'b000_1111;
@@ -174,7 +174,7 @@ module peripheral_timer_ahb3 #(
 
     //get number of active lanes for a 1024bit databus (max width) for this HSIZE
     case (hsize)
-      HSIZE_B1024: full_be = 'hffff_ffff_ffff_ffff_ffff_ffff_ffff_ffff; 
+      HSIZE_B1024: full_be = 'hffff_ffff_ffff_ffff_ffff_ffff_ffff_ffff;
       HSIZE_B512 : full_be = 'hffff_ffff_ffff_ffff;
       HSIZE_B256 : full_be = 'hffff_ffff;
       HSIZE_B128 : full_be = 'hffff;
@@ -206,12 +206,12 @@ module peripheral_timer_ahb3 #(
 
   function integer timer_idx;
     //Returns the timer index
-    input [HADDR_SIZE-1:0] address,  //HADDR
-    offset;   //offset in HADDR space
+    input [HADDR_SIZE-1:0] address, //HADDR
+    offset; //offset in HADDR space
 
-    timer_idx = address - offset;    //remove offset
-    timer_idx &= 'hff;               //masking to remove upper bits and get only timer address space
-    timer_idx >>= 4;                 //MSBs determine index
+    timer_idx = address - offset; //remove offset
+    timer_idx &= 'hff; //masking to remove upper bits and get only timer address space
+    timer_idx >>= 4; //MSBs determine index
   endfunction : timer_idx
 
   //////////////////////////////////////////////////////////////////////////////
@@ -222,7 +222,7 @@ module peripheral_timer_ahb3 #(
   // AHB accesses
 
   //The core supports zero-wait state accesses on all transfers.
-  assign HREADYOUT = 1'b1;       //always ready
+  assign HREADYOUT = 1'b1; //always ready
   assign HRESP     = HRESP_OKAY; //Never an error
 
   // AHB Writes
@@ -288,14 +288,14 @@ module peripheral_timer_ahb3 #(
               TIME    : time_reg[31: 0] <= gen_wval(time_reg[31: 0], HWDATA, ahb_be);
               TIME_MSB: time_reg[63:32] <= gen_wval(time_reg[63:32], HWDATA, ahb_be);
               default : begin //all other addresses are considered 'timecmp'
-                //write timecmp register
+              //write timecmp register
                 case (ahb_waddr[2])
                   1'b0: timecmp_reg[timer_idx(ahb_waddr,TIMECMP)][31: 0] <= gen_wval(timecmp_reg[timer_idx(ahb_waddr,TIMECMP)][31: 0], HWDATA, ahb_be);
                   1'b1: timecmp_reg[timer_idx(ahb_waddr,TIMECMP)][63:32] <= gen_wval(timecmp_reg[timer_idx(ahb_waddr,TIMECMP)][63:32], HWDATA, ahb_be);
                 endcase
 
                 //a write to timecmp also clears the interrupt-pending bit
-                ipending_wr[timer_idx(ahb_waddr,TIMECMP)] <= 1'b0; 
+                ipending_wr[timer_idx(ahb_waddr,TIMECMP)] <= 1'b0;
               end
             endcase
           end
@@ -341,7 +341,7 @@ module peripheral_timer_ahb3 #(
                 timecmp_reg[timer_idx(ahb_waddr,TIMECMP)] <= gen_wval(timecmp_reg[timer_idx(ahb_waddr,TIMECMP)], HWDATA, ahb_be);
 
                 //a write to timecmp also clears the interrupt-pending bit
-                ipending_wr[timer_idx(ahb_waddr,TIMECMP)] <= 1'b0; 
+                ipending_wr[timer_idx(ahb_waddr,TIMECMP)] <= 1'b0;
               end
             endcase
           end

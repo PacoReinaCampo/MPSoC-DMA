@@ -60,22 +60,22 @@ module peripheral_bfm_transactor_wb # (
   parameter                SEED_PARAM            = 0
 )
   (
-    input 	      wb_clk_i,
-    input 	      wb_rst_i,
-    output [AW-1:0]   wb_adr_o,
-    output [DW-1:0]   wb_dat_o,
-    output [DW/8-1:0] wb_sel_o,
-    output 	      wb_we_o,
-    output 	      wb_cyc_o,
-    output 	      wb_stb_o,
-    output [2:0]      wb_cti_o,
-    output [1:0]      wb_bte_o,
-    input [DW-1:0]    wb_dat_i,
-    input 	      wb_ack_i,
-    input 	      wb_err_i,
-    input 	      wb_rty_i,
-    output reg 	      done
-  );
+  input 	      wb_clk_i,
+  input 	      wb_rst_i,
+  output [AW-1:0]   wb_adr_o,
+  output [DW-1:0]   wb_dat_o,
+  output [DW/8-1:0] wb_sel_o,
+  output 	      wb_we_o,
+  output 	      wb_cyc_o,
+  output 	      wb_stb_o,
+  output [2:0]      wb_cti_o,
+  output [1:0]      wb_bte_o,
+  input [DW-1:0]    wb_dat_i,
+  input 	      wb_ack_i,
+  input 	      wb_err_i,
+  input 	      wb_rty_i,
+  output reg 	      done
+);
 
   //////////////////////////////////////////////////////////////////////////////
   //
@@ -407,13 +407,13 @@ module peripheral_bfm_transactor_wb # (
         else if(!(transaction%(SUBTRANSACTIONS/10)))
           $display("%m : Transaction: %0d/%0d", transaction, TRANSACTIONS);
 
-        // Generate the random value for the number of wait states. This will
-        // be used for all of this transaction
+          // Generate the random value for the number of wait states. This will
+          // be used for all of this transaction
         bfm_master_wb.wait_states                 = {$random(SEED)} % (MAX_WAIT_STATES+1);
         if (VERBOSE>2)
           $display("  Number of Wait States for Transaction %0d is %0d", transaction, bfm_master_wb.wait_states);
 
-        //If running in segment mode, cap mem_high/mem_low to a segment
+          //If running in segment mode, cap mem_high/mem_low to a segment
         if (NUM_SEGMENTS > 0) begin
           segment = {$random(SEED)} % NUM_SEGMENTS;
           mem_lo =  MEM_LOW + segment    * SEGMENT_SIZE;
@@ -437,7 +437,7 @@ module peripheral_bfm_transactor_wb # (
         if (VERBOSE>0)
           $display("  Transaction %0d Initialisation (Write): Start Address: %h, Burst Length: %0d", transaction, t_address, MAX_BURST_LEN);
 
-        // Fill Write Array then Send the Write Transaction
+          // Fill Write Array then Send the Write Transaction
         fill_wdata_array(MAX_BURST_LEN);
         bfm_master_wb.write_burst(t_address, t_address, {DW/8{1'b1}}, CTI_INC_BURST, BTE_LINEAR, MAX_BURST_LEN, err);
         update_stats(cycle_type, burst_type, burst_length);
@@ -451,7 +451,7 @@ module peripheral_bfm_transactor_wb # (
         if (VERBOSE>0)
           $display("Transaction %0d initialisation ok (Start Address: %h, Cycle Type: %b, Burst Type: %b, Burst Length: %0d)", transaction, t_address, CTI_INC_BURST, BTE_LINEAR, MAX_BURST_LEN);
 
-        // Start subtransaction loop.
+          // Start subtransaction loop.
         for (subtransaction = 1; subtransaction <= SUBTRANSACTIONS ; subtransaction = subtransaction + 1) begin
 
           // Transaction Type: 0=Read, 1=Write
@@ -483,7 +483,7 @@ module peripheral_bfm_transactor_wb # (
         if (VERBOSE>0)
           $display("Transaction %0d Completed Successfully", transaction);
 
-        // Clear Buffer Data before next transaction
+          // Clear Buffer Data before next transaction
         bfm_master_wb.clear_buffer_data;
       end // for (transaction=0;...
       done = 1;
@@ -513,10 +513,10 @@ module peripheral_bfm_transactor_wb # (
   end
 
   peripheral_bfm_master_wb #(
-    .DW (DW),
-    .MAX_BURST_LEN           (MAX_BURST_LEN),
-    .MAX_WAIT_STATES         (MAX_WAIT_STATES),
-    .VERBOSE                 (VERBOSE)
+  .DW (DW),
+  .MAX_BURST_LEN           (MAX_BURST_LEN),
+  .MAX_WAIT_STATES         (MAX_WAIT_STATES),
+  .VERBOSE                 (VERBOSE)
   )
   bfm_master_wb (
     .wb_clk_i                (wb_clk_i),

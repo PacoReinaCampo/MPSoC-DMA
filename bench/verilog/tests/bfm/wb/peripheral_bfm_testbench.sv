@@ -86,9 +86,9 @@ module peripheral_bfm_testbench;
   initial  #100 wb_rst <= 0;
 
   peripheral_bfm_transactor_wb #(
-    .MEM_HIGH (32'h00007fff),
-    .AUTORUN (0),
-    .VERBOSE (0)
+  .MEM_HIGH (32'h00007fff),
+  .AUTORUN (0),
+  .VERBOSE (0)
   )
   bfm_transactor_wb (
     .wb_clk_i (wb_clk),
@@ -109,7 +109,7 @@ module peripheral_bfm_testbench;
   );
 
   peripheral_bfm_memory_wb #(
-    .DEBUG (0)
+  .DEBUG (0)
   )
   bfm_memory_wb (
     .wb_clk_i (wb_clk),

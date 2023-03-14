@@ -47,23 +47,23 @@ module peripheral_bfm_master_ahb3 #(
   parameter HDATA_SIZE = 32
 )
   (
-    input                       HRESETn,
-    input                       HCLK,
+  input                       HRESETn,
+  input                       HCLK,
 
-    //AHB Master Interface
-    output reg                  HSEL,
-    output reg [HADDR_SIZE-1:0] HADDR,
-    output reg [HDATA_SIZE-1:0] HWDATA,
-    input      [HDATA_SIZE-1:0] HRDATA,
-    output reg                  HWRITE,
-    output reg [           2:0] HSIZE,
-    output reg [           2:0] HBURST,
-    output reg [           3:0] HPROT,
-    output reg [           1:0] HTRANS,
-    output reg                  HMASTLOCK,
-    input                       HREADY,
-    input                       HRESP
-  );
+  //AHB Master Interface
+  output reg                  HSEL,
+  output reg [HADDR_SIZE-1:0] HADDR,
+  output reg [HDATA_SIZE-1:0] HWDATA,
+  input      [HDATA_SIZE-1:0] HRDATA,
+  output reg                  HWRITE,
+  output reg [           2:0] HSIZE,
+  output reg [           2:0] HBURST,
+  output reg [           3:0] HPROT,
+  output reg [           1:0] HTRANS,
+  output reg                  HMASTLOCK,
+  input                       HREADY,
+  input                       HRESP
+);
 
   always @(negedge HRESETn) reset();
 
@@ -272,7 +272,7 @@ module peripheral_bfm_master_ahb3 #(
     case (hburst)
       HBURST_WRAP4 : next_address = (HADDR & ~addr_mask) | ((HADDR + get_bytes_per_beat(hsize)) & addr_mask);
       HBURST_WRAP8 : next_address = (HADDR & ~addr_mask) | ((HADDR + get_bytes_per_beat(hsize)) & addr_mask);
-      HBURST_WRAP16: next_address = (HADDR & ~addr_mask) | ((HADDR + get_bytes_per_beat(hsize)) & addr_mask); 
+      HBURST_WRAP16: next_address = (HADDR & ~addr_mask) | ((HADDR + get_bytes_per_beat(hsize)) & addr_mask);
       default      : next_address = HADDR + get_bytes_per_beat(hsize);
     endcase
   endfunction : next_address

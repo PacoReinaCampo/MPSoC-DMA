@@ -53,53 +53,53 @@ module peripheral_dma_initiator_ahb3 #(
   parameter NOC_PACKET_SIZE = 16
 )
   (
-    input  clk,
-    input  rst,
- 
-    // Control read (request) interface
-    output [TABLE_ENTRIES_PTRWIDTH-1:0] ctrl_read_pos,
-    input  [DMA_REQUEST_WIDTH-1:0]     ctrl_read_req,
+  input  clk,
+  input  rst,
 
-    output [TABLE_ENTRIES_PTRWIDTH-1:0] ctrl_done_pos,
-    output                              ctrl_done_en,
+  // Control read (request) interface
+  output [TABLE_ENTRIES_PTRWIDTH-1:0] ctrl_read_pos,
+  input  [DMA_REQUEST_WIDTH-1:0]     ctrl_read_req,
 
-    input  [TABLE_ENTRIES-1:0]          valid,
+  output [TABLE_ENTRIES_PTRWIDTH-1:0] ctrl_done_pos,
+  output                              ctrl_done_en,
 
-    // NOC-Interface
-    output [FLIT_WIDTH-1:0]                 noc_out_flit,
-    output                                  noc_out_valid,
-    input                                   noc_out_ready,
+  input  [TABLE_ENTRIES-1:0]          valid,
 
-    input  [FLIT_WIDTH-1:0]                 noc_in_flit,
-    input                                   noc_in_valid,
-    output                                  noc_in_ready,
+  // NOC-Interface
+  output [FLIT_WIDTH-1:0]                 noc_out_flit,
+  output                                  noc_out_valid,
+  input                                   noc_out_ready,
 
-    // Wishbone interface for L2R data fetch
-    output                                  ahb3_req_hsel,
-    output [ADDR_WIDTH-1:0]                 ahb3_req_haddr,
-    output [DATA_WIDTH-1:0]                 ahb3_req_hwdata,
-    output                                  ahb3_req_hwrite,
-    output [           2:0]                 ahb3_req_hburst,
-    output [           3:0]                 ahb3_req_hprot,
-    output [           1:0]                 ahb3_req_htrans,
-    output                                  ahb3_req_hmastlock,
+  input  [FLIT_WIDTH-1:0]                 noc_in_flit,
+  input                                   noc_in_valid,
+  output                                  noc_in_ready,
 
-    input  [DATA_WIDTH-1:0]                 ahb3_req_hrdata,
-    input                                   ahb3_req_hready,
+  // Wishbone interface for L2R data fetch
+  output                                  ahb3_req_hsel,
+  output [ADDR_WIDTH-1:0]                 ahb3_req_haddr,
+  output [DATA_WIDTH-1:0]                 ahb3_req_hwdata,
+  output                                  ahb3_req_hwrite,
+  output [           2:0]                 ahb3_req_hburst,
+  output [           3:0]                 ahb3_req_hprot,
+  output [           1:0]                 ahb3_req_htrans,
+  output                                  ahb3_req_hmastlock,
 
-    // Wishbone interface for L2R data fetch
-    output                                  ahb3_res_hsel,
-    output [ADDR_WIDTH-1:0]                 ahb3_res_haddr,
-    output [DATA_WIDTH-1:0]                 ahb3_res_hwdata,
-    output                                  ahb3_res_hwrite,
-    output [           2:0]                 ahb3_res_hburst,
-    output [           3:0]                 ahb3_res_hprot,
-    output [           1:0]                 ahb3_res_htrans,
-    output                                  ahb3_res_hmastlock,
+  input  [DATA_WIDTH-1:0]                 ahb3_req_hrdata,
+  input                                   ahb3_req_hready,
 
-    input  [DATA_WIDTH-1:0]                 ahb3_res_hrdata,
-    input                                   ahb3_res_hready
-  );
+  // Wishbone interface for L2R data fetch
+  output                                  ahb3_res_hsel,
+  output [ADDR_WIDTH-1:0]                 ahb3_res_haddr,
+  output [DATA_WIDTH-1:0]                 ahb3_res_hwdata,
+  output                                  ahb3_res_hwrite,
+  output [           2:0]                 ahb3_res_hburst,
+  output [           3:0]                 ahb3_res_hprot,
+  output [           1:0]                 ahb3_res_htrans,
+  output                                  ahb3_res_hmastlock,
+
+  input  [DATA_WIDTH-1:0]                 ahb3_res_hrdata,
+  input                                   ahb3_res_hready
+);
 
   //////////////////////////////////////////////////////////////////////////////
   //
@@ -146,8 +146,8 @@ module peripheral_dma_initiator_ahb3 #(
   );
 
   peripheral_dma_initiator_nocreq #(
-    .TILEID          (TILEID),
-    .NOC_PACKET_SIZE (NOC_PACKET_SIZE)
+  .TILEID          (TILEID),
+  .NOC_PACKET_SIZE (NOC_PACKET_SIZE)
   )
   dma_initiator_nocreq (
     .clk                        (clk),
@@ -175,7 +175,7 @@ module peripheral_dma_initiator_ahb3 #(
   );
 
   peripheral_dma_initiator_nocres_ahb3 #(
-    .NOC_PACKET_SIZE(NOC_PACKET_SIZE)
+  .NOC_PACKET_SIZE(NOC_PACKET_SIZE)
   )
   dma_initiator_nocres_ahb3 (
     .clk                       (clk),
@@ -198,6 +198,6 @@ module peripheral_dma_initiator_ahb3 #(
     .ahb3_hready               (ahb3_res_hready),
 
     .ctrl_done_pos             (ctrl_done_pos[TABLE_ENTRIES_PTRWIDTH-1:0]),
-    .ctrl_done_en              (ctrl_done_en) 
+    .ctrl_done_en              (ctrl_done_en)
   );
 endmodule

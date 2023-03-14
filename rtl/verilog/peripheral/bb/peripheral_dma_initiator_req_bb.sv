@@ -48,23 +48,23 @@ module peripheral_dma_initiator_req_bb #(
   parameter DATA_WIDTH = 32
 )
   (
-    input clk,
-    input rst,
+  input clk,
+  input rst,
 
-    output reg [ADDR_WIDTH-1:0] bb_req_addr_o,
-    output     [DATA_WIDTH-1:0] bb_req_din_o,
-    output reg                  bb_req_en_o,
-    output                      bb_req_we_o,
-    input      [DATA_WIDTH-1:0] bb_req_dout_i,
+  output reg [ADDR_WIDTH-1:0] bb_req_addr_o,
+  output     [DATA_WIDTH-1:0] bb_req_din_o,
+  output reg                  bb_req_en_o,
+  output                      bb_req_we_o,
+  input      [DATA_WIDTH-1:0] bb_req_dout_i,
 
-    input                                 req_start,
-    input                                 req_is_l2r,
-    input  [DMA_REQFIELD_SIZE_WIDTH-3:0] req_size,
-    input  [ADDR_WIDTH              -1:0] req_laddr,
-    output                                req_data_valid,
-    output [DATA_WIDTH              -1:0] req_data,
-    input                                 req_data_ready
-  );
+  input                                 req_start,
+  input                                 req_is_l2r,
+  input  [DMA_REQFIELD_SIZE_WIDTH-3:0] req_size,
+  input  [ADDR_WIDTH              -1:0] req_laddr,
+  output                                req_data_valid,
+  output [DATA_WIDTH              -1:0] req_data,
+  input                                 req_data_ready
+);
 
   //////////////////////////////////////////////////////////////////////////////
   //
@@ -90,11 +90,11 @@ module peripheral_dma_initiator_req_bb #(
   reg [DMA_REQFIELD_SIZE_WIDTH-3:0] bb_req_count;
   reg [DMA_REQFIELD_SIZE_WIDTH-3:0] nxt_bb_req_count;
 
-   /*
-    * The wishbone data fetch and the NoC interface are seperated by a FIFO.
-    * This FIFO relaxes problems with bursts and their termination and decouples
-    * the timing of the NoC side and the wishbone side (in terms of termination).
-    */
+  /*
+   * The wishbone data fetch and the NoC interface are seperated by a FIFO.
+   * This FIFO relaxes problems with bursts and their termination and decouples
+   * the timing of the NoC side and the wishbone side (in terms of termination).
+   */
 
   // The intermediate store a FIFO of three elements
   //
@@ -106,11 +106,11 @@ module peripheral_dma_initiator_req_bb #(
   // element in the FIFO that is the normal timing decoupling.
 
   reg  [DATA_WIDTH-1:0]               data_fifo [0:2]; // data storage
-  wire                                data_fifo_pop;   // NoC pops
-  reg                                 data_fifo_push;  // WB pushes
+  wire                                data_fifo_pop; // NoC pops
+  reg                                 data_fifo_push; // WB pushes
 
   wire [DATA_WIDTH-1:0]               data_fifo_out; // Current first element
-  wire [DATA_WIDTH-1:0]               data_fifo_in;  // Push element
+  wire [DATA_WIDTH-1:0]               data_fifo_in; // Push element
   // Shift register for current position (4th bit is full mark)
   reg [            3:0]               data_fifo_pos;
 

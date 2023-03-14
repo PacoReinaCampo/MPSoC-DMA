@@ -65,31 +65,31 @@ module peripheral_dma_target_ahb3 #(
   parameter NOC_PACKET_SIZE = 16
 )
   (
-    input  clk,
-    input  rst,
+  input  clk,
+  input  rst,
 
-    // NOC-Interface
-    output reg [FLIT_WIDTH-1:0]  noc_out_flit,
-    output reg                   noc_out_valid,
-    input                        noc_out_ready,
+  // NOC-Interface
+  output reg [FLIT_WIDTH-1:0]  noc_out_flit,
+  output reg                   noc_out_valid,
+  input                        noc_out_ready,
 
-    input [FLIT_WIDTH-1:0]       noc_in_flit,
-    input                        noc_in_valid,
-    output                       noc_in_ready,
+  input [FLIT_WIDTH-1:0]       noc_in_flit,
+  input                        noc_in_valid,
+  output                       noc_in_ready,
 
-    // Wishbone interface for L2R data store
-    output reg                   ahb3_hsel,
-    output     [ADDR_WIDTH-1:0]  ahb3_haddr,
-    output     [DATA_WIDTH-1:0]  ahb3_hwdata,
-    output reg                   ahb3_hwrite,
-    output reg [2:0]             ahb3_hburst,
-    output     [3:0]             ahb3_hprot,
-    output reg [1:0]             ahb3_htrans,
-    output reg                   ahb3_hmastlock,
+  // Wishbone interface for L2R data store
+  output reg                   ahb3_hsel,
+  output     [ADDR_WIDTH-1:0]  ahb3_haddr,
+  output     [DATA_WIDTH-1:0]  ahb3_hwdata,
+  output reg                   ahb3_hwrite,
+  output reg [2:0]             ahb3_hburst,
+  output     [3:0]             ahb3_hprot,
+  output reg [1:0]             ahb3_htrans,
+  output reg                   ahb3_hmastlock,
 
-    input      [DATA_WIDTH-1:0]  ahb3_hrdata,
-    input                        ahb3_hready
-  );
+  input      [DATA_WIDTH-1:0]  ahb3_hrdata,
+  input                        ahb3_hready
+);
 
   //////////////////////////////////////////////////////////////////////////////
   //
@@ -148,11 +148,11 @@ module peripheral_dma_target_ahb3 #(
 
   wire                                data_fifo_valid;
   reg  [DATA_WIDTH-1:0]               data_fifo [0:2]; // data storage
-  reg                                 data_fifo_pop;   // NOC pushes
-  reg                                 data_fifo_push;  // AHB3 pops
+  reg                                 data_fifo_pop; // NOC pushes
+  reg                                 data_fifo_push; // AHB3 pops
 
   wire [DATA_WIDTH-1:0]               data_fifo_out; // Current first element
-  wire [DATA_WIDTH-1:0]               data_fifo_in;  // Push element
+  wire [DATA_WIDTH-1:0]               data_fifo_in; // Push element
   // Shift register for current position (4th bit is full mark)
   reg  [3:0]                          data_fifo_pos;
 
@@ -170,7 +170,7 @@ module peripheral_dma_target_ahb3 #(
 
   // Input buffer that stores flits until we have one complete packet
   peripheral_dma_packet_buffer #(
-    .FIFO_DEPTH (NOC_PACKET_SIZE)
+  .FIFO_DEPTH (NOC_PACKET_SIZE)
   )
   dma_packet_buffer (
     .clk                           (clk),
@@ -191,7 +191,7 @@ module peripheral_dma_target_ahb3 #(
 
   // Is this the last flit of a packet?
   assign buf_last_flit = (buf_flit[FLIT_TYPE_MSB:FLIT_TYPE_LSB]==FLIT_TYPE_LAST) |
-    (buf_flit[FLIT_TYPE_MSB:FLIT_TYPE_LSB]==FLIT_TYPE_SINGLE);
+  (buf_flit[FLIT_TYPE_MSB:FLIT_TYPE_LSB]==FLIT_TYPE_SINGLE);
 
   // The intermediate store a FIFO of three elements
   //
