@@ -55,9 +55,9 @@ module peripheral_dma_initiator_req_ahb3 #(
   output reg [ADDR_WIDTH-1:0] ahb3_req_haddr,
   output     [DATA_WIDTH-1:0] ahb3_req_hwdata,
   output                      ahb3_req_hwrite,
-  output reg [2:0]            ahb3_req_hburst,
-  output     [3:0]            ahb3_req_hprot,
-  output     [1:0]            ahb3_req_htrans,
+  output reg [           2:0] ahb3_req_hburst,
+  output     [           3:0] ahb3_req_hprot,
+  output     [           1:0] ahb3_req_htrans,
   output reg                  ahb3_req_hmastlock,
 
   input      [DATA_WIDTH-1:0] ahb3_req_hrdata,

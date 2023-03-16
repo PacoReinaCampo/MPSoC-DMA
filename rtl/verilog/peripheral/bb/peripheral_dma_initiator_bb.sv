@@ -62,7 +62,7 @@ module peripheral_dma_initiator_bb #(
   output [TABLE_ENTRIES_PTRWIDTH-1:0] ctrl_done_pos,
   output                              ctrl_done_en,
 
-  input [TABLE_ENTRIES         -1:0] valid,
+  input [TABLE_ENTRIES-1:0] valid,
 
   // NOC-Interface
   output [FLIT_WIDTH-1:0] noc_out_flit,

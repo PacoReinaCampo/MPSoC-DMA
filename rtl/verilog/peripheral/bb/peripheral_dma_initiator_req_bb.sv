@@ -57,13 +57,13 @@ module peripheral_dma_initiator_req_bb #(
   output                      bb_req_we_o,
   input      [DATA_WIDTH-1:0] bb_req_dout_i,
 
-  input                                 req_start,
-  input                                 req_is_l2r,
+  input                                req_start,
+  input                                req_is_l2r,
   input  [DMA_REQFIELD_SIZE_WIDTH-3:0] req_size,
-  input  [ADDR_WIDTH              -1:0] req_laddr,
-  output                                req_data_valid,
-  output [DATA_WIDTH              -1:0] req_data,
-  input                                 req_data_ready
+  input  [ADDR_WIDTH             -1:0] req_laddr,
+  output                               req_data_valid,
+  output [DATA_WIDTH             -1:0] req_data,
+  input                                req_data_ready
 );
 
   //////////////////////////////////////////////////////////////////////////////

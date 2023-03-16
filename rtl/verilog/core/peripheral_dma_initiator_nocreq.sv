@@ -59,9 +59,9 @@ module peripheral_dma_initiator_nocreq #(
   input rst,
 
   // NOC-Interface
-  output reg [FLIT_WIDTH-1:0]             noc_out_flit,
-  output reg                              noc_out_valid,
-  input                                   noc_out_ready,
+  output reg [FLIT_WIDTH-1:0] noc_out_flit,
+  output reg                  noc_out_valid,
+  input                       noc_out_ready,
 
   // Control read (request) interface
   output reg [TABLE_ENTRIES_PTRWIDTH-1:0] ctrl_read_pos,
@@ -70,18 +70,18 @@ module peripheral_dma_initiator_nocreq #(
   input      [TABLE_ENTRIES         -1:0] valid,
 
   // Feedback from response path
-  input [TABLE_ENTRIES_PTRWIDTH-1:0]      ctrl_done_pos,
-  input                                   ctrl_done_en,
+  input [TABLE_ENTRIES_PTRWIDTH-1:0] ctrl_done_pos,
+  input                              ctrl_done_en,
 
 
   // Interface to wishbone request
-  output reg                              req_start,
-  output [ADDR_WIDTH              -1:0]   req_laddr,
-  input                                   req_data_valid,
-  output reg                              req_data_ready,
-  input  [DATA_WIDTH              -1:0]   req_data,
-  output                                  req_is_l2r,
-  output [DMA_REQFIELD_SIZE_WIDTH-3:0]   req_size
+  output reg                               req_start,
+  output     [ADDR_WIDTH             -1:0] req_laddr,
+  input                                    req_data_valid,
+  output reg                               req_data_ready,
+  input      [DATA_WIDTH             -1:0] req_data,
+  output                                   req_is_l2r,
+  output     [DMA_REQFIELD_SIZE_WIDTH-3:0] req_size
 );
 
   //////////////////////////////////////////////////////////////////////////////
@@ -151,7 +151,7 @@ module peripheral_dma_initiator_nocreq #(
   wire nxt_req_start;
 
   wire [DMA_REQFIELD_RTILE_WIDTH-1:0] req_rtile;
-  wire [ADDR_WIDTH               -1:0] req_raddr;
+  wire [ADDR_WIDTH              -1:0] req_raddr;
 
   integer d;
 
