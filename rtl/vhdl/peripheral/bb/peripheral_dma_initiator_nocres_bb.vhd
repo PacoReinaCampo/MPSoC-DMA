@@ -215,11 +215,11 @@ begin
             ctrl_done_pos <= nxt_resp_id;
           elsif (buf_flit(PACKET_TYPE_MSB downto PACKET_TYPE_LSB) = PACKET_TYPE_R2L_RESP) then
             nxt_state <= STATE_GET_SIZE;
-          else  -- now we have a problem...
+          else                          -- now we have a problem...
             -- must not happen
             nxt_state <= STATE_IDLE;
           end if;
-        else  -- if (buf_valid)
+        else                            -- if (buf_valid)
           nxt_state <= STATE_IDLE;
         end if;
       when "11" =>

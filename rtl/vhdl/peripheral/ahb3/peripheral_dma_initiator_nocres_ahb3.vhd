@@ -155,7 +155,7 @@ begin
   packet_buffer : peripheral_dma_packet_buffer
     generic map (
       FIFO_DEPTH => NOC_PACKET_SIZE
-    )
+      )
     port map (
       -- Outputs
       in_ready  => noc_in_ready,                        -- Templated
@@ -218,7 +218,7 @@ begin
             -- must not happen
             nxt_state <= STATE_IDLE;
           end if;
-        else  -- if (buf_valid)
+        else                            -- if (buf_valid)
           nxt_state <= STATE_IDLE;
         end if;
       when "11" =>

@@ -59,30 +59,29 @@ module peripheral_dma_target_bb #(
   parameter STATE_R2L_GENADDR  = 4'b0111,
   parameter STATE_R2L_DATA     = 4'b1000,
 
-  parameter TABLE_ENTRIES = 4,
+  parameter TABLE_ENTRIES          = 4,
   parameter TABLE_ENTRIES_PTRWIDTH = $clog2(4),
-  parameter TILEID = 0,
-  parameter NOC_PACKET_SIZE = 16
-)
-  (
-  input  clk,
-  input  rst,
+  parameter TILEID                 = 0,
+  parameter NOC_PACKET_SIZE        = 16
+) (
+  input clk,
+  input rst,
 
   // NOC-Interface
-  output reg [FLIT_WIDTH-1:0]  noc_out_flit,
-  output reg                   noc_out_valid,
-  input                        noc_out_ready,
+  output reg [FLIT_WIDTH-1:0] noc_out_flit,
+  output reg                  noc_out_valid,
+  input                       noc_out_ready,
 
-  input      [FLIT_WIDTH-1:0]  noc_in_flit,
-  input                        noc_in_valid,
-  output                       noc_in_ready,
+  input  [FLIT_WIDTH-1:0] noc_in_flit,
+  input                   noc_in_valid,
+  output                  noc_in_ready,
 
   // Blackbone interface for L2R data store
-  output     [ADDR_WIDTH-1:0]  bb_addr_o,
-  output     [DATA_WIDTH-1:0]  bb_din_o,
-  output reg                   bb_en_o,
-  output reg                   bb_we_o,
-  input      [DATA_WIDTH-1:0]  bb_dout_i
+  output     [ADDR_WIDTH-1:0] bb_addr_o,
+  output     [DATA_WIDTH-1:0] bb_din_o,
+  output reg                  bb_en_o,
+  output reg                  bb_we_o,
+  input      [DATA_WIDTH-1:0] bb_dout_i
 );
 
   //////////////////////////////////////////////////////////////////////////////
@@ -93,69 +92,69 @@ module peripheral_dma_target_bb #(
   // There is a buffer between the NoC input and the wishbone
   // handling by the state machine. Those are the connection signals
   // from buffer to wishbone
-  wire [FLIT_WIDTH-1:0]        buf_flit;
-  wire                         buf_valid;
-  reg                          buf_ready;
+  wire    [              FLIT_WIDTH-1:0] buf_flit;
+  wire                                   buf_valid;
+  reg                                    buf_ready;
 
   // One FSM that handles the flow from the input
   // buffer to the wishbone interface
 
   // FSM state
-  reg [STATE_WIDTH-1:0]        state;
-  reg [STATE_WIDTH-1:0]        nxt_state;
+  reg     [             STATE_WIDTH-1:0] state;
+  reg     [             STATE_WIDTH-1:0] nxt_state;
 
   //FSM hidden state
-  reg                          bb_waiting;
-  reg                          nxt_bb_waiting;
+  reg                                    bb_waiting;
+  reg                                    nxt_bb_waiting;
 
   // Store request parameters: address, last packet and source
-  reg [ADDR_WIDTH-1:0]         src_address;
-  reg [ADDR_WIDTH-1:0]         nxt_src_address;
-  reg [ADDR_WIDTH-1:0]         address;
-  reg [ADDR_WIDTH-1:0]         nxt_address;
-  reg                          end_of_request;
-  reg                          nxt_end_of_request;
-  reg [SOURCE_WIDTH   -1:0]   src_tile;
-  reg [SOURCE_WIDTH   -1:0]   nxt_src_tile;
-  reg [PACKET_ID_WIDTH-1:0]   packet_id;
-  reg [PACKET_ID_WIDTH-1:0]   nxt_packet_id;
+  reg     [              ADDR_WIDTH-1:0] src_address;
+  reg     [              ADDR_WIDTH-1:0] nxt_src_address;
+  reg     [              ADDR_WIDTH-1:0] address;
+  reg     [              ADDR_WIDTH-1:0] nxt_address;
+  reg                                    end_of_request;
+  reg                                    nxt_end_of_request;
+  reg     [         SOURCE_WIDTH   -1:0] src_tile;
+  reg     [         SOURCE_WIDTH   -1:0] nxt_src_tile;
+  reg     [         PACKET_ID_WIDTH-1:0] packet_id;
+  reg     [         PACKET_ID_WIDTH-1:0] nxt_packet_id;
 
   // Counter for flits/words in request
-  reg [SIZE_WIDTH-1:0] noc_resp_wcounter;
-  reg [SIZE_WIDTH-1:0] nxt_noc_resp_wcounter;
+  reg     [              SIZE_WIDTH-1:0] noc_resp_wcounter;
+  reg     [              SIZE_WIDTH-1:0] nxt_noc_resp_wcounter;
 
   // Current packet flit/word counter
-  reg [4:0]             noc_resp_packet_wcount;
-  reg [4:0]             nxt_noc_resp_packet_wcount;
+  reg     [                         4:0] noc_resp_packet_wcount;
+  reg     [                         4:0] nxt_noc_resp_packet_wcount;
 
   // Current packet total number of flits/words
-  reg [4:0]             noc_resp_packet_wsize;
-  reg [4:0]             nxt_noc_resp_packet_wsize;
+  reg     [                         4:0] noc_resp_packet_wsize;
+  reg     [                         4:0] nxt_noc_resp_packet_wsize;
 
   // TODO: correct define!
-  reg [DMA_REQFIELD_SIZE_WIDTH -3:0]  resp_wsize;
-  reg [DMA_REQFIELD_SIZE_WIDTH -3:0]  nxt_resp_wsize;
-  reg [DMA_RESPFIELD_SIZE_WIDTH-3:0]  bb_resp_count;
-  reg [DMA_RESPFIELD_SIZE_WIDTH-3:0]  nxt_bb_resp_count;
+  reg     [DMA_REQFIELD_SIZE_WIDTH -3:0] resp_wsize;
+  reg     [DMA_REQFIELD_SIZE_WIDTH -3:0] nxt_resp_wsize;
+  reg     [DMA_RESPFIELD_SIZE_WIDTH-3:0] bb_resp_count;
+  reg     [DMA_RESPFIELD_SIZE_WIDTH-3:0] nxt_bb_resp_count;
 
   //FIFO-Stuff
 
-  wire                                data_fifo_valid;
-  reg [DATA_WIDTH-1:0]                data_fifo [0:2]; // data storage
-  reg                                 data_fifo_pop; // NOC pushes
-  reg                                 data_fifo_push; // WB pops
+  wire                                   data_fifo_valid;
+  reg     [              DATA_WIDTH-1:0] data_fifo                                     [0:2];  // data storage
+  reg                                    data_fifo_pop;  // NOC pushes
+  reg                                    data_fifo_push;  // WB pops
 
-  wire [DATA_WIDTH-1:0]               data_fifo_out; // Current first element
-  wire [DATA_WIDTH-1:0]               data_fifo_in; // Push element
+  wire    [              DATA_WIDTH-1:0] data_fifo_out;  // Current first element
+  wire    [              DATA_WIDTH-1:0] data_fifo_in;  // Push element
   // Shift register for current position (4th bit is full mark)
-  reg [3:0]                           data_fifo_pos;
+  reg     [                         3:0] data_fifo_pos;
 
-  wire        data_fifo_empty; // FIFO empty
-  wire        data_fifo_ready; // FIFO accepts new elements
+  wire                                   data_fifo_empty;  // FIFO empty
+  wire                                   data_fifo_ready;  // FIFO accepts new elements
 
-  wire buf_last_flit;
+  wire                                   buf_last_flit;
 
-  integer i;
+  integer                                i;
 
   //////////////////////////////////////////////////////////////////////////////
   //
@@ -164,26 +163,24 @@ module peripheral_dma_target_bb #(
 
   // Input buffer that stores flits until we have one complete packet
   peripheral_dma_packet_buffer #(
-  .FIFO_DEPTH (NOC_PACKET_SIZE)
-  )
-  dma_packet_buffer (
-    .clk                           (clk),
-    .rst                           (rst),
+    .FIFO_DEPTH(NOC_PACKET_SIZE)
+  ) dma_packet_buffer (
+    .clk(clk),
+    .rst(rst),
 
-    .in_flit                       (noc_in_flit[FLIT_WIDTH-1:0]),
-    .in_valid                      (noc_in_valid),
-    .in_ready                      (noc_in_ready),
+    .in_flit (noc_in_flit[FLIT_WIDTH-1:0]),
+    .in_valid(noc_in_valid),
+    .in_ready(noc_in_ready),
 
-    .out_flit                      (buf_flit[FLIT_WIDTH-1:0]),
-    .out_valid                     (buf_valid),
-    .out_ready                     (buf_ready),
+    .out_flit (buf_flit[FLIT_WIDTH-1:0]),
+    .out_valid(buf_valid),
+    .out_ready(buf_ready),
 
-    .out_size                      ()
+    .out_size()
   );
 
   // Is this the last flit of a packet?
-  assign buf_last_flit = (buf_flit[FLIT_TYPE_MSB:FLIT_TYPE_LSB]==FLIT_TYPE_LAST) |
-  (buf_flit[FLIT_TYPE_MSB:FLIT_TYPE_LSB]==FLIT_TYPE_SINGLE);
+  assign buf_last_flit   = (buf_flit[FLIT_TYPE_MSB:FLIT_TYPE_LSB] == FLIT_TYPE_LAST) | (buf_flit[FLIT_TYPE_MSB:FLIT_TYPE_LSB] == FLIT_TYPE_SINGLE);
 
   // The intermediate store a FIFO of three elements
   //
@@ -197,26 +194,23 @@ module peripheral_dma_target_bb #(
   // Connect the fifo signals to the ports
   // assign data_fifo_pop = resp_data_ready;
   assign data_fifo_valid = ~data_fifo_empty;
-  assign data_fifo_empty = data_fifo_pos[0]; // Empty when pushing to first one
-  assign data_fifo_ready = ~|data_fifo_pos[3:2]; //equal to not full
-  assign data_fifo_in = bb_dout_i;
-  assign data_fifo_out = data_fifo[0]; // First element is out
+  assign data_fifo_empty = data_fifo_pos[0];  // Empty when pushing to first one
+  assign data_fifo_ready = ~|data_fifo_pos[3:2];  //equal to not full
+  assign data_fifo_in    = bb_dout_i;
+  assign data_fifo_out   = data_fifo[0];  // First element is out
 
   // FIFO position pointer logic
   always @(posedge clk) begin
     if (rst) begin
       data_fifo_pos <= 4'b001;
-    end
-    else begin
+    end else begin
       if (data_fifo_push & ~data_fifo_pop) begin
         // push and no pop
         data_fifo_pos <= data_fifo_pos << 1;
-      end
-      else if (~data_fifo_push & data_fifo_pop) begin
+      end else if (~data_fifo_push & data_fifo_pop) begin
         // pop and no push
         data_fifo_pos <= data_fifo_pos >> 1;
-      end
-      else begin
+      end else begin
         // * no push or pop or
         // * both push and pop
         data_fifo_pos <= data_fifo_pos;
@@ -227,26 +221,24 @@ module peripheral_dma_target_bb #(
   // FIFO data shifting logic
   always @(posedge clk) begin : data_fifo_shift
     // Iterate all fifo elements, starting from lowest
-    for (i=0;i<3;i=i+1) begin
+    for (i = 0; i < 3; i = i + 1) begin
       if (data_fifo_pop) begin
         // when popping data..
         if (data_fifo_push & data_fifo_pos[i+1])
           // .. and we also push this cycle, we need to check
           // whether the pointer was on the next one
           data_fifo[i] <= data_fifo_in;
-        else if (i<2)
+        else if (i < 2)
           // .. otherwise shift if not last
           data_fifo[i] <= data_fifo[i+1];
         else
           // the last stays static
           data_fifo[i] <= data_fifo[i];
-      end
-      else if (data_fifo_push & data_fifo_pos[i]) begin
+      end else if (data_fifo_push & data_fifo_pos[i]) begin
         // when pushing only and this is the current write
         // position
         data_fifo[i] <= data_fifo_in;
-      end
-      else begin
+      end else begin
         // else just keep
         data_fifo[i] <= data_fifo[i];
       end
@@ -256,7 +248,7 @@ module peripheral_dma_target_bb #(
   // Blackbone signal generation
 
   // The data of the payload flits
-  assign bb_din_o = buf_flit[FLIT_CONTENT_MSB:FLIT_CONTENT_LSB];
+  assign bb_din_o  = buf_flit[FLIT_CONTENT_MSB:FLIT_CONTENT_LSB];
 
   // Assign stored (and incremented) address to wishbone interface
   assign bb_addr_o = address;
@@ -266,72 +258,68 @@ module peripheral_dma_target_bb #(
   // Next state, counting, control signals
   always @(*) begin
     // Default values are old values
-    nxt_address = address;
-    nxt_resp_wsize = resp_wsize;
-    nxt_end_of_request = end_of_request;
-    nxt_src_address = src_address;
-    nxt_src_tile = src_tile;
-    nxt_end_of_request = end_of_request;
-    nxt_packet_id = packet_id;
-    nxt_bb_resp_count = bb_resp_count;
+    nxt_address                = address;
+    nxt_resp_wsize             = resp_wsize;
+    nxt_end_of_request         = end_of_request;
+    nxt_src_address            = src_address;
+    nxt_src_tile               = src_tile;
+    nxt_end_of_request         = end_of_request;
+    nxt_packet_id              = packet_id;
+    nxt_bb_resp_count          = bb_resp_count;
     nxt_noc_resp_packet_wcount = noc_resp_packet_wcount;
-    nxt_noc_resp_packet_wsize = noc_resp_packet_wsize;
-    nxt_bb_waiting = bb_waiting;
-    nxt_noc_resp_wcounter = noc_resp_wcounter;
+    nxt_noc_resp_packet_wsize  = noc_resp_packet_wsize;
+    nxt_bb_waiting             = bb_waiting;
+    nxt_noc_resp_wcounter      = noc_resp_wcounter;
     // Default control signals
-    bb_en_o = 1'b0;
-    bb_we_o = 1'b0;
-    noc_out_valid = 1'b0;
-    noc_out_flit  = 34'h0;
-    data_fifo_push = 1'b0;
-    data_fifo_pop = 1'b0;
-    buf_ready = 1'b0;
+    bb_en_o                    = 1'b0;
+    bb_we_o                    = 1'b0;
+    noc_out_valid              = 1'b0;
+    noc_out_flit               = 34'h0;
+    data_fifo_push             = 1'b0;
+    data_fifo_pop              = 1'b0;
+    buf_ready                  = 1'b0;
     case (state)
       STATE_IDLE: begin
-        buf_ready= 1'b1;
-        nxt_end_of_request = buf_flit[PACKET_REQ_LAST];
-        nxt_src_tile = buf_flit[SOURCE_MSB:SOURCE_LSB];
-        nxt_resp_wsize = buf_flit[SIZE_MSB:SIZE_LSB];
-        nxt_packet_id = buf_flit[PACKET_ID_MSB:PACKET_ID_LSB];
+        buf_ready             = 1'b1;
+        nxt_end_of_request    = buf_flit[PACKET_REQ_LAST];
+        nxt_src_tile          = buf_flit[SOURCE_MSB:SOURCE_LSB];
+        nxt_resp_wsize        = buf_flit[SIZE_MSB:SIZE_LSB];
+        nxt_packet_id         = buf_flit[PACKET_ID_MSB:PACKET_ID_LSB];
         nxt_noc_resp_wcounter = 0;
-        nxt_bb_resp_count = 1;
+        nxt_bb_resp_count     = 1;
         if (buf_valid) begin
           if (buf_flit[PACKET_TYPE_MSB:PACKET_TYPE_LSB] == PACKET_TYPE_L2R_REQ) begin
             nxt_state = STATE_L2R_GETADDR;
-          end
-          else if(buf_flit[PACKET_TYPE_MSB:PACKET_TYPE_LSB] == PACKET_TYPE_R2L_REQ) begin
+          end else if (buf_flit[PACKET_TYPE_MSB:PACKET_TYPE_LSB] == PACKET_TYPE_R2L_REQ) begin
             nxt_state = STATE_R2L_GETLADDR;
-          end
-          else begin
+          end else begin
             // now we have a problem...
             // must not happen
             nxt_state = STATE_IDLE;
           end
-        end
-        else begin
+        end else begin
           nxt_state = STATE_IDLE;
         end
-      end // case: STATE_IDLE
+      end  // case: STATE_IDLE
       //L2R-handling
       STATE_L2R_GETADDR: begin
-        buf_ready = 1'b1;
+        buf_ready   = 1'b1;
         nxt_address = buf_flit[FLIT_CONTENT_MSB:FLIT_CONTENT_LSB];
         if (buf_valid) begin
           nxt_state = STATE_L2R_DATA;
-        end
-        else begin
+        end else begin
           nxt_state = STATE_L2R_GETADDR;
         end
       end
       STATE_L2R_DATA: begin
-        bb_en_o = 1'b1;
-        bb_we_o = 1'b1;
+        bb_en_o   = 1'b1;
+        bb_we_o   = 1'b1;
 
         buf_ready = 1'b0;
         nxt_state = STATE_L2R_DATA;
-      end // case: STATE_L2R_DATA
+      end  // case: STATE_L2R_DATA
       STATE_L2R_SENDRESP: begin
-        noc_out_valid = 1'b1;
+        noc_out_valid                                   = 1'b1;
         noc_out_flit[FLIT_TYPE_MSB:FLIT_TYPE_LSB]       = FLIT_TYPE_SINGLE;
         noc_out_flit[FLIT_DEST_MSB:FLIT_DEST_LSB]       = src_tile;
         noc_out_flit[PACKET_CLASS_MSB:PACKET_CLASS_LSB] = PACKET_CLASS_DMA;
@@ -339,34 +327,31 @@ module peripheral_dma_target_bb #(
         noc_out_flit[PACKET_TYPE_MSB:PACKET_TYPE_LSB]   = PACKET_TYPE_L2R_RESP;
         if (noc_out_ready) begin
           nxt_state = STATE_IDLE;
-        end
-        else begin
+        end else begin
           nxt_state = STATE_L2R_SENDRESP;
         end
-      end // case: STATE_L2R_SENDRESP
+      end  // case: STATE_L2R_SENDRESP
       //R2L handling
       STATE_R2L_GETLADDR: begin
-        buf_ready = 1'b1;
+        buf_ready   = 1'b1;
         nxt_address = buf_flit[FLIT_CONTENT_MSB:FLIT_CONTENT_LSB];
         if (buf_valid) begin
           nxt_state = STATE_R2L_GETRADDR;
-        end
-        else begin
+        end else begin
           nxt_state = STATE_R2L_GETLADDR;
         end
       end
       STATE_R2L_GETRADDR: begin
-        buf_ready = 1'b1;
+        buf_ready       = 1'b1;
         nxt_src_address = buf_flit[FLIT_CONTENT_MSB:FLIT_CONTENT_LSB];
         if (buf_valid) begin
           nxt_state = STATE_R2L_GENHDR;
-        end
-        else begin
+        end else begin
           nxt_state = STATE_R2L_GETRADDR;
         end
       end
       STATE_R2L_GENHDR: begin
-        noc_out_valid = 1'b1;
+        noc_out_valid                                   = 1'b1;
         noc_out_flit[FLIT_TYPE_MSB:FLIT_TYPE_LSB]       = FLIT_TYPE_HEADER;
         noc_out_flit[FLIT_DEST_MSB:FLIT_DEST_LSB]       = src_tile;
         noc_out_flit[PACKET_CLASS_MSB:PACKET_CLASS_LSB] = PACKET_CLASS_DMA;
@@ -374,104 +359,94 @@ module peripheral_dma_target_bb #(
         noc_out_flit[SOURCE_MSB:SOURCE_LSB]             = TILEID;
         noc_out_flit[PACKET_TYPE_MSB:PACKET_TYPE_LSB]   = PACKET_TYPE_R2L_RESP;
 
-        if ((noc_resp_wcounter + (NOC_PACKET_SIZE -2)) < resp_wsize) begin
+        if ((noc_resp_wcounter + (NOC_PACKET_SIZE - 2)) < resp_wsize) begin
           // This is not the last packet in the respuest ((NOC_PACKET_SIZE -2) words*4 bytes=120)
           // Only (NOC_PACKET_SIZE -2) flits are availabel for the payload,
           // because we need a header-flit and an address-flit, too.
           noc_out_flit[SIZE_MSB:SIZE_LSB] = 7'd120;
-          noc_out_flit[PACKET_RESP_LAST]   = 1'b0;
-          nxt_noc_resp_packet_wsize = NOC_PACKET_SIZE -2;
+          noc_out_flit[PACKET_RESP_LAST]  = 1'b0;
+          nxt_noc_resp_packet_wsize       = NOC_PACKET_SIZE - 2;
           // count is the current transfer number
-          nxt_noc_resp_packet_wcount = 5'd1;
-        end
-        else begin
+          nxt_noc_resp_packet_wcount      = 5'd1;
+        end else begin
           // This is the last packet in the respuest
           noc_out_flit[SIZE_MSB:SIZE_LSB] = resp_wsize - noc_resp_wcounter;
-          noc_out_flit[PACKET_RESP_LAST] = 1'b1;
-          nxt_noc_resp_packet_wsize = resp_wsize - noc_resp_wcounter;
+          noc_out_flit[PACKET_RESP_LAST]  = 1'b1;
+          nxt_noc_resp_packet_wsize       = resp_wsize - noc_resp_wcounter;
           // count is the current transfer number
-          nxt_noc_resp_packet_wcount = 5'd1;
-        end // else: !if((noc_resp_wcounter + (NOC_PACKET_SIZE -2)) < resp_wsize)
+          nxt_noc_resp_packet_wcount      = 5'd1;
+        end  // else: !if((noc_resp_wcounter + (NOC_PACKET_SIZE -2)) < resp_wsize)
         // change to next state if successful
-        if (noc_out_ready)
-          nxt_state = STATE_R2L_GENADDR;
-        else
-          nxt_state = STATE_R2L_GENHDR;
-      end // case: STATE_R2L_GENHDR
+        if (noc_out_ready) nxt_state = STATE_R2L_GENADDR;
+        else nxt_state = STATE_R2L_GENHDR;
+      end  // case: STATE_R2L_GENHDR
       STATE_R2L_GENADDR: begin
-        noc_out_valid = 1'b1;
-        noc_out_flit[FLIT_TYPE_MSB:FLIT_TYPE_LSB] = FLIT_TYPE_PAYLOAD;
+        noc_out_valid                                   = 1'b1;
+        noc_out_flit[FLIT_TYPE_MSB:FLIT_TYPE_LSB]       = FLIT_TYPE_PAYLOAD;
         noc_out_flit[FLIT_CONTENT_MSB:FLIT_CONTENT_LSB] = src_address + (noc_resp_wcounter << 2);
         if (noc_out_ready) begin
           nxt_state = STATE_R2L_DATA;
-        end
-        else begin
+        end else begin
           nxt_state = STATE_R2L_GENADDR;
         end
-      end // case: `NOC_RESP_R2L_GENADDR
+      end  // case: `NOC_RESP_R2L_GENADDR
       STATE_R2L_DATA: begin
         // NOC-handling
         // transfer data to noc if available
-        noc_out_valid = data_fifo_valid;
+        noc_out_valid                                   = data_fifo_valid;
         noc_out_flit[FLIT_CONTENT_MSB:FLIT_CONTENT_LSB] = data_fifo_out;
         //TODO: Rearange ifs
-        if (noc_resp_packet_wcount==noc_resp_packet_wsize) begin
+        if (noc_resp_packet_wcount == noc_resp_packet_wsize) begin
           noc_out_flit[FLIT_TYPE_MSB:FLIT_TYPE_LSB] = FLIT_TYPE_LAST;
           if (noc_out_valid & noc_out_ready) begin
             data_fifo_pop = 1'b1;
-            if ((noc_resp_wcounter + (NOC_PACKET_SIZE -2)) < resp_wsize) begin
+            if ((noc_resp_wcounter + (NOC_PACKET_SIZE - 2)) < resp_wsize) begin
               // Only (NOC_PACKET_SIZE -2) flits are availabel for the payload,
               // because we need a header-flit and an address-flit, too.
 
               //this was not the last packet of the response
-              nxt_state = STATE_R2L_GENHDR;
+              nxt_state             = STATE_R2L_GENHDR;
               nxt_noc_resp_wcounter = noc_resp_wcounter + noc_resp_packet_wcount;
-            end
-            else begin
+            end else begin
               //this is the last packet of the response
               nxt_state = STATE_IDLE;
             end
-          end
-          else begin
+          end else begin
             nxt_state = STATE_R2L_DATA;
           end
-        end
-        else begin //not LAST
+        end else begin  //not LAST
           noc_out_flit[FLIT_TYPE_MSB:FLIT_TYPE_LSB] = FLIT_TYPE_PAYLOAD;
           if (noc_out_valid & noc_out_ready) begin
-            data_fifo_pop = 1'b1;
+            data_fifo_pop              = 1'b1;
             nxt_noc_resp_packet_wcount = noc_resp_packet_wcount + 1;
           end
           nxt_state = STATE_R2L_DATA;
         end
         //FIFO-handling
-        if (bb_waiting) begin //hidden state
-        //don't get data from the bus
-          bb_en_o = 1'b0;
+        if (bb_waiting) begin  //hidden state
+          //don't get data from the bus
+          bb_en_o        = 1'b0;
 
           data_fifo_push = 1'b0;
           if (data_fifo_ready) begin
             nxt_bb_waiting = 1'b0;
-          end
-          else begin
+          end else begin
             nxt_bb_waiting = 1'b1;
           end
-        end
-        else begin //not bb_waiting
-        // Signal cycle and strobe. We do bursts, but don't insert
-        // wait states, so both of them are always equal.
-          if ((noc_resp_packet_wcount==noc_resp_packet_wsize) & noc_out_valid & noc_out_ready) begin
+        end else begin  //not bb_waiting
+          // Signal cycle and strobe. We do bursts, but don't insert
+          // wait states, so both of them are always equal.
+          if ((noc_resp_packet_wcount == noc_resp_packet_wsize) & noc_out_valid & noc_out_ready) begin
             bb_en_o = 1'b0;
-          end
-          else begin
+          end else begin
             bb_en_o = 1'b1;
           end
           // TODO: why not generate address from the base address + counter<<2?
           // ..otherwise we still wait for the acknowledgement
           nxt_bb_resp_count = bb_resp_count;
-          nxt_address = address;
-          data_fifo_push = 1'b0;
-          nxt_bb_waiting = 1'b0;
+          nxt_address       = address;
+          data_fifo_push    = 1'b0;
+          nxt_bb_waiting    = 1'b0;
         end
       end
       default: begin
@@ -482,33 +457,32 @@ module peripheral_dma_target_bb #(
 
   always @(posedge clk) begin
     if (rst) begin
-      state <= STATE_IDLE;
-      address <= 32'h0;
-      end_of_request <= 1'b0;
-      src_tile <= 0;
-      resp_wsize <= 0;
-      packet_id <= 0;
-      src_address <= 0;
-      noc_resp_wcounter <= 0;
-      noc_resp_packet_wsize <= 5'h0;
+      state                  <= STATE_IDLE;
+      address                <= 32'h0;
+      end_of_request         <= 1'b0;
+      src_tile               <= 0;
+      resp_wsize             <= 0;
+      packet_id              <= 0;
+      src_address            <= 0;
+      noc_resp_wcounter      <= 0;
+      noc_resp_packet_wsize  <= 5'h0;
       noc_resp_packet_wcount <= 5'h0;
       noc_resp_packet_wcount <= 0;
-      bb_resp_count <= 0;
-      bb_waiting <= 0;
-    end
-    else begin
-      state <= nxt_state;
-      address <= nxt_address;
-      end_of_request <= nxt_end_of_request;
-      src_tile <= nxt_src_tile;
-      resp_wsize <= nxt_resp_wsize;
-      packet_id <= nxt_packet_id;
-      src_address <= nxt_src_address;
-      noc_resp_wcounter <= nxt_noc_resp_wcounter;
-      noc_resp_packet_wsize <= nxt_noc_resp_packet_wsize;
+      bb_resp_count          <= 0;
+      bb_waiting             <= 0;
+    end else begin
+      state                  <= nxt_state;
+      address                <= nxt_address;
+      end_of_request         <= nxt_end_of_request;
+      src_tile               <= nxt_src_tile;
+      resp_wsize             <= nxt_resp_wsize;
+      packet_id              <= nxt_packet_id;
+      src_address            <= nxt_src_address;
+      noc_resp_wcounter      <= nxt_noc_resp_wcounter;
+      noc_resp_packet_wsize  <= nxt_noc_resp_packet_wsize;
       noc_resp_packet_wcount <= nxt_noc_resp_packet_wcount;
-      bb_resp_count <= nxt_bb_resp_count;
-      bb_waiting <= nxt_bb_waiting;
+      bb_resp_count          <= nxt_bb_resp_count;
+      bb_waiting             <= nxt_bb_waiting;
     end
   end
 endmodule

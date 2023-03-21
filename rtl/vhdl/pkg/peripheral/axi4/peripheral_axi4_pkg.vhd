@@ -85,13 +85,13 @@ package peripheral_axi4_pkg is
   constant AXI_BURST_TYPE_INCR  : std_logic_vector(1 downto 0) := "01";
   constant AXI_BURST_TYPE_WRAP  : std_logic_vector(1 downto 0) := "10";
   constant AXI_BURST_TYPE_RSRV  : std_logic_vector(1 downto 0) := "11";
-  
+
   -- Lock Type
   constant AXI_LOCK_NORMAL    : std_logic_vector(1 downto 0) := "00";
   constant AXI_LOCK_EXCLUSIVE : std_logic_vector(1 downto 0) := "01";
   constant AXI_LOCK_LOCKED    : std_logic_vector(1 downto 0) := "10";
   constant AXI_LOCK__RESERVED : std_logic_vector(1 downto 0) := "11";
-  
+
   -- Protection Type
   constant AXI_PROTECTION_NORMAL      : std_logic_vector(2 downto 0) := "000";
   constant AXI_PROTECTION_PRIVILEGED  : std_logic_vector(2 downto 0) := "001";
@@ -99,7 +99,7 @@ package peripheral_axi4_pkg is
   constant AXI_PROTECTION_NONSECURE   : std_logic_vector(2 downto 0) := "010";
   constant AXI_PROTECTION_INSTRUCTION : std_logic_vector(2 downto 0) := "100";
   constant AXI_PROTECTION_DATA        : std_logic_vector(2 downto 0) := "000";
-  
+
   -- Response Type
   constant AXI_RESPONSE_OKAY         : std_logic_vector(1 downto 0) := "00";
   constant AXI_RESPONSE_EXOKAY       : std_logic_vector(1 downto 0) := "01";

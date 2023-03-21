@@ -112,7 +112,7 @@ architecture rtl of peripheral_dma_packet_buffer is
   ------------------------------------------------------------------------------
   function reduce_or (
     reduce_or_in : std_logic_vector
-  ) return std_logic is
+    ) return std_logic is
     variable reduce_or_out : std_logic := '0';
   begin
     for i in reduce_or_in'range loop
@@ -142,7 +142,7 @@ begin
   full_packet <= reduce_or(last_flits(FIFO_DEPTH-1 downto 0) and valid_flits);
 
   pop  <= full_packet and out_ready;
-  push <= in_valid and  not fifo_write_ptr(FIFO_DEPTH);
+  push <= in_valid and not fifo_write_ptr(FIFO_DEPTH);
 
   out_flit  <= fifo_data(0);
   out_valid <= full_packet;
@@ -166,7 +166,7 @@ begin
   begin
     if (rising_edge(clk)) then
       if (rst = '1') then
-        --fifo_write_ptr <= std_logic_vector(to_unsigned(1, FIFO_DEPTH));
+      --fifo_write_ptr <= std_logic_vector(to_unsigned(1, FIFO_DEPTH));
       elsif (push = '1' and pop = '0') then
         fifo_write_ptr <= std_logic_vector(unsigned(fifo_write_ptr) sll 1);
       elsif (push = '0' and pop = '1') then

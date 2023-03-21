@@ -46,8 +46,7 @@ import peripheral_dma_pkg::*;
 module peripheral_dma_initiator_req_wb #(
   parameter ADDR_WIDTH = 32,
   parameter DATA_WIDTH = 32
-)
-  (
+) (
   input clk,
   input rst,
 
@@ -78,9 +77,9 @@ module peripheral_dma_initiator_req_wb #(
 
   // Wishbone state machine
   localparam WB_REQ_WIDTH = 2;
-  localparam WB_REQ_IDLE  = 2'b00;
-  localparam WB_REQ_DATA  = 2'b01;
-  localparam WB_REQ_WAIT  = 2'b10;
+  localparam WB_REQ_IDLE = 2'b00;
+  localparam WB_REQ_DATA = 2'b01;
+  localparam WB_REQ_WAIT = 2'b10;
 
   //////////////////////////////////////////////////////////////////////////////
   //
@@ -88,12 +87,12 @@ module peripheral_dma_initiator_req_wb #(
   //
 
   // State logic
-  reg [WB_REQ_WIDTH-1:0] wb_req_state;
-  reg [WB_REQ_WIDTH-1:0] nxt_wb_req_state;
+  reg     [           WB_REQ_WIDTH-1:0] wb_req_state;
+  reg     [           WB_REQ_WIDTH-1:0] nxt_wb_req_state;
 
   // Counter for the state machine for loaded words
-  reg [DMA_REQFIELD_SIZE_WIDTH-3:0] wb_req_count;
-  reg [DMA_REQFIELD_SIZE_WIDTH-3:0] nxt_wb_req_count;
+  reg     [DMA_REQFIELD_SIZE_WIDTH-3:0] wb_req_count;
+  reg     [DMA_REQFIELD_SIZE_WIDTH-3:0] nxt_wb_req_count;
 
   /*
    * The wishbone data fetch and the NoC interface are seperated by a FIFO.
@@ -110,19 +109,19 @@ module peripheral_dma_initiator_req_wb #(
   // should be stored and not discarded. Finally, there is one
   // element in the FIFO that is the normal timing decoupling.
 
-  reg  [DATA_WIDTH-1:0]               data_fifo [0:2]; // data storage
-  wire                                data_fifo_pop; // NoC pops
-  reg                                 data_fifo_push; // WB pushes
+  reg     [             DATA_WIDTH-1:0] data_fifo                                     [0:2];  // data storage
+  wire                                  data_fifo_pop;  // NoC pops
+  reg                                   data_fifo_push;  // WB pushes
 
-  wire [DATA_WIDTH-1:0]               data_fifo_out; // Current first element
-  wire [DATA_WIDTH-1:0]               data_fifo_in; // Push element
+  wire    [             DATA_WIDTH-1:0] data_fifo_out;  // Current first element
+  wire    [             DATA_WIDTH-1:0] data_fifo_in;  // Push element
   // Shift register for current position (4th bit is full mark)
-  reg [            3:0]               data_fifo_pos;
+  reg     [                        3:0] data_fifo_pos;
 
-  wire        data_fifo_empty; // FIFO empty
-  wire        data_fifo_ready; // FIFO accepts new elements
+  wire                                  data_fifo_empty;  // FIFO empty
+  wire                                  data_fifo_ready;  // FIFO accepts new elements
 
-  integer i;
+  integer                               i;
 
   //////////////////////////////////////////////////////////////////////////////
   //
@@ -130,12 +129,12 @@ module peripheral_dma_initiator_req_wb #(
   //
 
   // Connect the fifo signals to the ports
-  assign data_fifo_pop = req_data_ready;
-  assign req_data_valid = ~data_fifo_empty;
-  assign req_data = data_fifo_out;
+  assign data_fifo_pop   = req_data_ready;
+  assign req_data_valid  = ~data_fifo_empty;
+  assign req_data        = data_fifo_out;
 
-  assign data_fifo_empty = data_fifo_pos[0]; // Empty when pushing to first one
-  assign data_fifo_out = data_fifo[0]; // First element is out
+  assign data_fifo_empty = data_fifo_pos[0];  // Empty when pushing to first one
+  assign data_fifo_out   = data_fifo[0];  // First element is out
 
   // FIFO is not ready when back-pressure would result in discarded data,
   // that is, we need one store element (high-water).
@@ -145,17 +144,14 @@ module peripheral_dma_initiator_req_wb #(
   always @(posedge clk) begin
     if (rst) begin
       data_fifo_pos <= 4'b001;
-    end
-    else begin
+    end else begin
       if (data_fifo_push & ~data_fifo_pop) begin
         // push and no pop
         data_fifo_pos <= data_fifo_pos << 1;
-      end
-      else if (~data_fifo_push & data_fifo_pop) begin
+      end else if (~data_fifo_push & data_fifo_pop) begin
         // pop and no push
         data_fifo_pos <= data_fifo_pos >> 1;
-      end
-      else begin
+      end else begin
         // * no push or pop or
         // * both push and pop
         data_fifo_pos <= data_fifo_pos;
@@ -166,26 +162,24 @@ module peripheral_dma_initiator_req_wb #(
   // FIFO data shifting logic
   always @(posedge clk) begin : data_fifo_shift
     // Iterate all fifo elements, starting from lowest
-    for (i=0;i<3;i=i+1) begin
+    for (i = 0; i < 3; i = i + 1) begin
       if (data_fifo_pop) begin
         // when popping data..
         if (data_fifo_push & data_fifo_pos[i+1])
           // .. and we also push this cycle, we need to check
           // whether the pointer was on the next one
           data_fifo[i] <= data_fifo_in;
-        else if (i<2)
+        else if (i < 2)
           // .. otherwise shift if not last
           data_fifo[i] <= data_fifo[i+1];
         else
           // the last stays static
           data_fifo[i] <= data_fifo[i];
-      end
-      else if (data_fifo_push & data_fifo_pos[i]) begin
+      end else if (data_fifo_push & data_fifo_pos[i]) begin
         // when pushing only and this is the current write
         // position
         data_fifo[i] <= data_fifo_in;
-      end
-      else begin
+      end else begin
         // else just keep
         data_fifo[i] <= data_fifo[i];
       end
@@ -196,7 +190,7 @@ module peripheral_dma_initiator_req_wb #(
 
   // Statically zero (this interface reads)
   assign wb_req_dat_o = 32'h0000_0000;
-  assign wb_req_we_o = 1'b0;
+  assign wb_req_we_o  = 1'b0;
 
   // We only support full (aligned) word transfers
   assign wb_req_sel_o = 4'b1111;
@@ -215,8 +209,8 @@ module peripheral_dma_initiator_req_wb #(
     wb_req_cyc_o     = 1'b0;
     data_fifo_push   = 1'b0;
 
-    wb_req_adr_o = 32'hx;
-    wb_req_cti_o = 3'b000;
+    wb_req_adr_o     = 32'hx;
+    wb_req_cti_o     = 3'b000;
 
     case (wb_req_state)
       WB_REQ_IDLE: begin
@@ -246,11 +240,10 @@ module peripheral_dma_initiator_req_wb #(
         // Counter counts words, not bytes
         wb_req_adr_o = req_laddr + (wb_req_count << 2);
 
-        if (~data_fifo_ready | (wb_req_count==req_size-1)) begin
+        if (~data_fifo_ready | (wb_req_count == req_size - 1)) begin
           // If fifo gets full next cycle, do cycle termination
           wb_req_cti_o = 3'b111;
-        end
-        else begin
+        end else begin
           // As long as we can also store the _next_ element in
           // the fifo, signal we are in an incrementing burst
           wb_req_cti_o = 3'b010;
@@ -262,9 +255,9 @@ module peripheral_dma_initiator_req_wb #(
           // increment word counter
           nxt_wb_req_count = wb_req_count + 1;
           // signal push to data fifo
-          data_fifo_push = 1'b1;
+          data_fifo_push   = 1'b1;
 
-          if (wb_req_count==req_size-1)
+          if (wb_req_count == req_size - 1)
             // This was the last word
             nxt_wb_req_state = WB_REQ_IDLE;
           else if (data_fifo_ready)
@@ -273,9 +266,8 @@ module peripheral_dma_initiator_req_wb #(
           else
             // .. otherwise we wait for FIFO to become ready
             nxt_wb_req_state = WB_REQ_WAIT;
-        end
-        else begin // if (wb_req_ack_i)
-        // ..otherwise we still wait for the acknowledgement
+        end else begin  // if (wb_req_ack_i)
+          // ..otherwise we still wait for the acknowledgement
           nxt_wb_req_state = WB_REQ_DATA;
         end
       end
@@ -299,8 +291,7 @@ module peripheral_dma_initiator_req_wb #(
     if (rst) begin
       wb_req_state <= WB_REQ_IDLE;
       wb_req_count <= 0;
-    end
-    else begin
+    end else begin
       wb_req_state <= nxt_wb_req_state;
       wb_req_count <= nxt_wb_req_count;
     end

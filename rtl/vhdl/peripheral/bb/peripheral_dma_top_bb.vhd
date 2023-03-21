@@ -83,14 +83,14 @@ entity peripheral_dma_top_bb is
     noc_out_res_ready : in  std_logic;
 
     wb_if_addr_i : in  std_logic_vector(ADDR_WIDTH-1 downto 0);
-    wb_if_dat_i : in  std_logic_vector(DATA_WIDTH-1 downto 0);
-    wb_if_cyc_i : in  std_logic;
-    wb_if_stb_i : in  std_logic;
-    wb_if_we_i  : in  std_logic;
-    wb_if_dat_o : out std_logic_vector(DATA_WIDTH-1 downto 0);
-    wb_if_ack_o : out std_logic;
-    wb_if_err_o : out std_logic;
-    wb_if_rty_o : out std_logic;
+    wb_if_dat_i  : in  std_logic_vector(DATA_WIDTH-1 downto 0);
+    wb_if_cyc_i  : in  std_logic;
+    wb_if_stb_i  : in  std_logic;
+    wb_if_we_i   : in  std_logic;
+    wb_if_dat_o  : out std_logic_vector(DATA_WIDTH-1 downto 0);
+    wb_if_ack_o  : out std_logic;
+    wb_if_err_o  : out std_logic;
+    wb_if_rty_o  : out std_logic;
 
     wb_adr_o : out std_logic_vector(ADDR_WIDTH-1 downto 0);
     wb_dat_o : out std_logic_vector(DATA_WIDTH-1 downto 0);
@@ -127,12 +127,12 @@ architecture rtl of peripheral_dma_top_bb is
       rst : in std_logic;
 
       wb_if_addr_i : in  std_logic_vector(ADDR_WIDTH-1 downto 0);
-      wb_if_dat_i : in  std_logic_vector(DATA_WIDTH-1 downto 0);
-      wb_if_cyc_i : in  std_logic;
-      wb_if_stb_i : in  std_logic;
-      wb_if_we_i  : in  std_logic;
-      wb_if_dat_o : out std_logic_vector(DATA_WIDTH-1 downto 0);
-      wb_if_ack_o : out std_logic;
+      wb_if_dat_i  : in  std_logic_vector(DATA_WIDTH-1 downto 0);
+      wb_if_cyc_i  : in  std_logic;
+      wb_if_stb_i  : in  std_logic;
+      wb_if_we_i   : in  std_logic;
+      wb_if_dat_o  : out std_logic_vector(DATA_WIDTH-1 downto 0);
+      wb_if_ack_o  : out std_logic;
 
       if_write_req    : out std_logic_vector(DMA_REQUEST_WIDTH-1 downto 0);
       if_write_pos    : out std_logic_vector(TABLE_ENTRIES_PTRWIDTH-1 downto 0);
@@ -335,16 +335,16 @@ architecture rtl of peripheral_dma_top_bb is
   signal wb_target_ack_i : std_logic;
 
   -- Beginning of automatic wires (for undeclared instantiated-module outputs)
-  signal ctrl_done_en    : std_logic;  -- From ctrl_initiator
+  signal ctrl_done_en    : std_logic;   -- From ctrl_initiator
   signal ctrl_done_pos   : std_logic_vector(TABLE_ENTRIES_PTRWIDTH-1 downto 0);  -- From ctrl_initiator
   signal ctrl_read_pos   : std_logic_vector(TABLE_ENTRIES_PTRWIDTH-1 downto 0);  -- From ctrl_initiator
   signal ctrl_read_req   : std_logic_vector(DMA_REQUEST_WIDTH-1 downto 0);  -- From request_table
   signal done            : std_logic_vector(TABLE_ENTRIES-1 downto 0);  -- From request_table
-  signal if_valid_en     : std_logic;  -- From wb interface
+  signal if_valid_en     : std_logic;   -- From wb interface
   signal if_valid_pos    : std_logic_vector(TABLE_ENTRIES_PTRWIDTH-1 downto 0);  -- From wb interface
-  signal if_valid_set    : std_logic;  -- From wb interface
-  signal if_validrd_en   : std_logic;  -- From wb interface
-  signal if_write_en     : std_logic;  -- From wb interface
+  signal if_valid_set    : std_logic;   -- From wb interface
+  signal if_validrd_en   : std_logic;   -- From wb interface
+  signal if_write_en     : std_logic;   -- From wb interface
   signal if_write_pos    : std_logic_vector(TABLE_ENTRIES_PTRWIDTH-1 downto 0);  -- From wb interface
   signal if_write_req    : std_logic_vector(DMA_REQUEST_WIDTH-1 downto 0);  -- From wb interface
   signal if_write_select : std_logic_vector(DMA_REQMASK_WIDTH-1 downto 0);  -- From wb interface
@@ -391,7 +391,7 @@ begin
       -- Inputs
       clk             => clk,
       rst             => rst,
-      wb_if_addr_i     => wb_if_addr_i(ADDR_WIDTH-1 downto 0),
+      wb_if_addr_i    => wb_if_addr_i(ADDR_WIDTH-1 downto 0),
       wb_if_dat_i     => wb_if_dat_i(DATA_WIDTH-1 downto 0),
       wb_if_cyc_i     => wb_if_cyc_i,
       wb_if_stb_i     => wb_if_stb_i,

@@ -63,12 +63,12 @@ entity peripheral_dma_interface_bb is
     rst : in std_logic;
 
     wb_if_addr_i : in  std_logic_vector(ADDR_WIDTH-1 downto 0);
-    wb_if_dat_i : in  std_logic_vector(DATA_WIDTH-1 downto 0);
-    wb_if_cyc_i : in  std_logic;
-    wb_if_stb_i : in  std_logic;
-    wb_if_we_i  : in  std_logic;
-    wb_if_dat_o : out std_logic_vector(DATA_WIDTH-1 downto 0);
-    wb_if_ack_o : out std_logic;
+    wb_if_dat_i  : in  std_logic_vector(DATA_WIDTH-1 downto 0);
+    wb_if_cyc_i  : in  std_logic;
+    wb_if_stb_i  : in  std_logic;
+    wb_if_we_i   : in  std_logic;
+    wb_if_dat_o  : out std_logic_vector(DATA_WIDTH-1 downto 0);
+    wb_if_ack_o  : out std_logic;
 
     if_write_req    : out std_logic_vector(DMA_REQUEST_WIDTH-1 downto 0);
     if_write_pos    : out std_logic_vector(TABLE_ENTRIES_PTRWIDTH-1 downto 0);

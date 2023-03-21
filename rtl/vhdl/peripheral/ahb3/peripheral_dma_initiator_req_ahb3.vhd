@@ -130,15 +130,15 @@ architecture rtl of peripheral_dma_initiator_req_ahb3 is
   -- Shift register for current position (4th bit is full mark)
   signal data_fifo_pos : std_logic_vector(3 downto 0);
 
-  signal data_fifo_empty : std_logic;  -- FIFO empty
-  signal data_fifo_ready : std_logic;  -- FIFO accepts new elements
+  signal data_fifo_empty : std_logic;   -- FIFO empty
+  signal data_fifo_ready : std_logic;   -- FIFO accepts new elements
 
   ------------------------------------------------------------------------------
   -- Functions
   ------------------------------------------------------------------------------
   function reduce_nor (
     reduce_nor_in : std_logic_vector
-  ) return std_logic is
+    ) return std_logic is
     variable reduce_nor_out : std_logic := '0';
   begin
     for i in reduce_nor_in'range loop
@@ -291,7 +291,7 @@ begin
           else  -- .. otherwise we wait for FIFO to become ready
             nxt_ahb3_req_state <= WB_REQ_WAIT;
           end if;
-        else  -- if (ahb3_req_hready)
+        else                            -- if (ahb3_req_hready)
           -- ..otherwise we still wait for the acknowledgement
           nxt_ahb3_req_state <= WB_REQ_DATA;
         end if;

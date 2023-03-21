@@ -188,7 +188,7 @@ architecture rtl of peripheral_dma_initiator_nocreq is
   ------------------------------------------------------------------------------
   function reduce_or (
     reduce_or_in : std_logic_vector
-  ) return std_logic is
+    ) return std_logic is
     variable reduce_or_out : std_logic := '0';
   begin
     for i in reduce_or_in'range loop
@@ -214,7 +214,7 @@ begin
       nxt_gnt => nxt_select,
 
       -- Inputs
-      req => requests, 
+      req => requests,
       en  => '1',
       gnt => ini_select
       );
@@ -373,11 +373,11 @@ begin
               -- add the current counter to overall counter
               nxt_noc_req_counter <= std_logic_vector(unsigned(noc_req_counter)+unsigned(noc_req_packet_count));
             end if;
-          else  -- if (noc_req_packet_count == noc_req_packet_size)
+          else    -- if (noc_req_packet_count == noc_req_packet_size)
             -- we transfered a flit inside the packet
             nxt_noc_req_state <= NOC_REQ_L2R_DATA;
           end if;
-        else  -- if (noc_out_ready & noc_sgn_valid)
+        else                            -- if (noc_out_ready & noc_sgn_valid)
           -- no success
           nxt_noc_req_state <= NOC_REQ_L2R_DATA;
         end if;

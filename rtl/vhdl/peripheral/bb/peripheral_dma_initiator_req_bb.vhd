@@ -138,7 +138,7 @@ architecture rtl of peripheral_dma_initiator_req_bb is
   ------------------------------------------------------------------------------
   function reduce_nor (
     reduce_nor_in : std_logic_vector
-  ) return std_logic is
+    ) return std_logic is
     variable reduce_nor_out : std_logic := '0';
   begin
     for i in reduce_nor_in'range loop
@@ -291,7 +291,7 @@ begin
           else  -- .. otherwise we wait for FIFO to become ready
             nxt_bb_req_state <= WB_REQ_WAIT;
           end if;
-        else  -- if (wb_req_ack_i)
+        else                            -- if (wb_req_ack_i)
           -- ..otherwise we still wait for the acknowledgement
           nxt_bb_req_state <= WB_REQ_DATA;
         end if;

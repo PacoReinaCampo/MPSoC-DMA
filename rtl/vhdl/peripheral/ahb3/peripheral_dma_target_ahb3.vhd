@@ -502,7 +502,7 @@ begin
               --this was not the last packet of the response
               nxt_state             <= STATE_R2L_GENHDR;
               nxt_noc_resp_wcounter <= std_logic_vector(unsigned(noc_resp_wcounter)+unsigned(noc_resp_packet_wcount));
-            else                --this is the last packet of the response
+            else                      --this is the last packet of the response
               nxt_state <= STATE_IDLE;
             end if;
           else
@@ -517,7 +517,7 @@ begin
           nxt_state <= STATE_R2L_DATA;
         end if;
         --FIFO-handling
-        if (ahb3_waiting = '1') then  --hidden state
+        if (ahb3_waiting = '1') then    --hidden state
           --don't get data from the bus
           ahb3_hsel      <= '0';
           ahb3_hmastlock <= '0';

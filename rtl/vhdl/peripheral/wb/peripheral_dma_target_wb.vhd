@@ -213,7 +213,7 @@ architecture rtl of peripheral_dma_target_wb is
   ------------------------------------------------------------------------------
   function reduce_nor (
     reduce_nor_in : std_logic_vector
-  ) return std_logic is
+    ) return std_logic is
     variable reduce_nor_out : std_logic := '0';
   begin
     for i in reduce_nor_in'range loop
@@ -503,7 +503,7 @@ begin
               --this was not the last packet of the response
               nxt_state             <= STATE_R2L_GENHDR;
               nxt_noc_resp_wcounter <= std_logic_vector(unsigned(noc_resp_wcounter)+unsigned(noc_resp_packet_wcount));
-            else              --this is the last packet of the response
+            else                    --this is the last packet of the response
               nxt_state <= STATE_IDLE;
             end if;
           else
@@ -518,7 +518,7 @@ begin
           nxt_state <= STATE_R2L_DATA;
         end if;
         --FIFO-handling
-        if (wb_waiting = '1') then            --hidden state
+        if (wb_waiting = '1') then      --hidden state
           --don't get data from the bus
           wb_stb_o       <= '0';
           wb_cyc_o       <= '0';

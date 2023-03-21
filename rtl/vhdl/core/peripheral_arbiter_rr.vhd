@@ -78,7 +78,7 @@ architecture rtl of peripheral_arbiter_rr is
   ------------------------------------------------------------------------------
   function reduce_nor (
     reduce_nor_in : std_logic_vector
-  ) return std_logic is
+    ) return std_logic is
     variable reduce_nor_out : std_logic := '0';
   begin
     for i in reduce_nor_in'range loop

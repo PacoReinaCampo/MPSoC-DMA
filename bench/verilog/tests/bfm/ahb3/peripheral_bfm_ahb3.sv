@@ -260,7 +260,7 @@ module peripheral_bfm_ahb3 #(
         $write("  Testing byte burst (8bit) accesses ... ");
       end
 
-      for (n = 0; n < reg_cnt; n++)
+      for (n = 0; n < reg_cnt; n++) begin
         if (hsize == HSIZE_WORD) begin
           wbuffer[n]    = new[1];
           rbuffer[n]    = new[1];
@@ -270,6 +270,7 @@ module peripheral_bfm_ahb3 #(
           rbuffer[n] = new[4];
           for (int i = 0; i < 4; i++) wbuffer[n][i] = $random & 'hff;
         end
+      end
 
       for (n = 0; n < reg_cnt; n++) bfm_master_ahb3.write(registers[n], wbuffer[n], hsize, hburst);  // write register
 
@@ -282,7 +283,7 @@ module peripheral_bfm_ahb3 #(
       bfm_master_ahb3.idle();  // Idle bus
       wait fork;  // wait for all threads to complete
 
-      for (n = 0; n < reg_cnt; n++)
+      for (n = 0; n < reg_cnt; n++) begin
         for (int beat = 0; beat < rbuffer[n].size(); beat++) begin
           //mask byte ...
           if (HSIZE == HSIZE_BYTE) rbuffer[n][beat] &= 'hff;
@@ -298,6 +299,7 @@ module peripheral_bfm_ahb3 #(
             errors++;
           end
         end
+      end
 
       if (error) $display("FAILED");
       else $display("OK");
