@@ -42,13 +42,13 @@
 //                                                                               //
 ///////////////////////////////////////////////////////////////////////////////////
 
-vhdl2008 work ../../../../../../rtl/vhdl/ahb3/pkg/mpsoc_uart_ahb3_pkg.vhd
+vhdl2008 work ../../../../../../rtl/vhdl/code/ahb3/pkg/mpsoc_uart_ahb3_pkg.vhd
 
-vhdl2008 work ../../../../../../rtl/vhdl/ahb3/core/mpsoc_bridge_apb2ahb.vhd
-vhdl2008 work ../../../../../../rtl/vhdl/ahb3/core/mpsoc_apb4_uart.vhd
-vhdl2008 work ../../../../../../rtl/vhdl/ahb3/core/mpsoc_uart_fifo.vhd
-vhdl2008 work ../../../../../../rtl/vhdl/ahb3/core/mpsoc_uart_interrupt.vhd
-vhdl2008 work ../../../../../../rtl/vhdl/ahb3/core/mpsoc_uart_rx.vhd
-vhdl2008 work ../../../../../../rtl/vhdl/ahb3/core/mpsoc_uart_tx.vhd
+vhdl2008 work ../../../../../../rtl/vhdl/code/ahb3/core/mpsoc_bridge_apb2ahb.vhd
+vhdl2008 work ../../../../../../rtl/vhdl/code/ahb3/core/mpsoc_apb4_uart.vhd
+vhdl2008 work ../../../../../../rtl/vhdl/code/ahb3/core/mpsoc_uart_fifo.vhd
+vhdl2008 work ../../../../../../rtl/vhdl/code/ahb3/core/mpsoc_uart_interrupt.vhd
+vhdl2008 work ../../../../../../rtl/vhdl/code/ahb3/core/mpsoc_uart_rx.vhd
+vhdl2008 work ../../../../../../rtl/vhdl/code/ahb3/core/mpsoc_uart_tx.vhd
 
-vhdl2008 work ../../../../../../bench/vhdl/tests/core/ahb3/mpsoc_uart_testbench.vhd
+vhdl2008 work ../../../../../../bench/vhdl/code/tests/core/ahb3/mpsoc_uart_testbench.vhd

@@ -42,18 +42,4 @@
 ##                                                                               ##
 ###################################################################################
 
-../../../../../../rtl/verilog/code/pkg/core/peripheral_dma_pkg.sv
-
-../../../../../../rtl/verilog/code/peripheral/ahb3/peripheral_dma_initiator_ahb3.sv
-../../../../../../rtl/verilog/code/peripheral/ahb3/peripheral_dma_initiator_nocres_ahb3.sv
-../../../../../../rtl/verilog/code/peripheral/ahb3/peripheral_dma_initiator_req_ahb3.sv
-../../../../../../rtl/verilog/code/peripheral/ahb3/peripheral_dma_interface_ahb3.sv
-../../../../../../rtl/verilog/code/peripheral/ahb3/peripheral_dma_target_ahb3.sv
-../../../../../../rtl/verilog/code/peripheral/ahb3/peripheral_dma_top_ahb3.sv
-
-../../../../../../rtl/verilog/code/core/peripheral_arbiter_rr.sv
-../../../../../../rtl/verilog/code/core/peripheral_dma_initiator_nocreq.sv
-../../../../../../rtl/verilog/code/core/peripheral_dma_packet_buffer.sv
-../../../../../../rtl/verilog/code/core/peripheral_dma_request_table.sv
-
-../../../../../../bench/verilog/code/tests/peripheral/ahb3/peripheral_dma_testbench.sv
+tree -P '*.sv' code > TREE-VERILOG.txt
