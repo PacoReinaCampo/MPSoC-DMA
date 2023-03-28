@@ -42,14 +42,10 @@
 ##                                                                               ##
 ###################################################################################
 
-../../../../../../../rtl/vhdl/code/pkg/core/vhdl_pkg.vhd
-../../../../../../../rtl/vhdl/code/pkg/peripheral/ahb3/peripheral_ahb3_pkg.vhd
+../../../../../../../validation/osvvm/application/bfm/apb4/peripheral_osvvm_design.vhd
+../../../../../../../validation/osvvm/application/bfm/apb4/peripheral_osvvm_design_pkg.vhd
 
-../../../../../../../rtl/vhdl/code/peripheral/ahb3/peripheral_apb2ahb.vhd
-../../../../../../../rtl/vhdl/code/peripheral/ahb3/peripheral_uart_apb4.vhd
-../../../../../../../rtl/vhdl/code/peripheral/ahb3/peripheral_uart_fifo.vhd
-../../../../../../../rtl/vhdl/code/peripheral/ahb3/peripheral_uart_interrupt.vhd
-../../../../../../../rtl/vhdl/code/peripheral/ahb3/peripheral_uart_rx.vhd
-../../../../../../../rtl/vhdl/code/peripheral/ahb3/peripheral_uart_tx.vhd
+../../../../../../../validation/osvvm/library/bfm/apb4/peripheral_osvvm_model.vhd
+../../../../../../../validation/osvvm/library/bfm/apb4/peripheral_osvvm_model_pkg.vhd
 
-../../../../../../../bench/vhdl/code/tests/peripheral/ahb3/peripheral_uart_testbench.vhd
+../../../../../../../validation/osvvm/library/bfm/apb4/peripheral_osvvm_testbench.vhd

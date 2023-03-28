@@ -1,4 +1,4 @@
-../../../../../../../../../../../../../../../../../../../../../../../../..////////////
+///////////////////////////////////////////////////////////////////////////////////
 //                                            __ _      _     _                  //
 //                                           / _(_)    | |   | |                 //
 //                __ _ _   _  ___  ___ _ __ | |_ _  ___| | __| |                 //
@@ -12,9 +12,9 @@
 //              Peripheral for MPSoC                                             //
 //              Multi-Processor System on Chip                                   //
 //                                                                               //
-../../../../../../../../../../../../../../../../../../../../../../../../..////////////
+///////////////////////////////////////////////////////////////////////////////////
 
-../../../../../../../../../../../../../../../../../../../../../../../../..////////////
+///////////////////////////////////////////////////////////////////////////////////
 //                                                                               //
 // Copyright (c) 2015-2016 by the author(s)                                      //
 //                                                                               //
@@ -40,15 +40,12 @@
 // Author(s):                                                                    //
 //   Paco Reina Campo <pacoreinacampo@queenfield.tech>                           //
 //                                                                               //
-../../../../../../../../../../../../../../../../../../../../../../../../..////////////
+///////////////////////////////////////////////////////////////////////////////////
 
-vhdl2008 work ../../../../../../../rtl/vhdl/code/ahb3/pkg/mpsoc_uart_ahb3_pkg.vhd
+vhdl2008 work ../../../../../../../validation/osvvm/application/bfm/axi4/peripheral_osvvm_design.vhd
+vhdl2008 work ../../../../../../../validation/osvvm/application/bfm/axi4/peripheral_osvvm_design_pkg.vhd
 
-vhdl2008 work ../../../../../../../rtl/vhdl/code/ahb3/core/mpsoc_bridge_apb2ahb.vhd
-vhdl2008 work ../../../../../../../rtl/vhdl/code/ahb3/core/mpsoc_apb4_uart.vhd
-vhdl2008 work ../../../../../../../rtl/vhdl/code/ahb3/core/mpsoc_uart_fifo.vhd
-vhdl2008 work ../../../../../../../rtl/vhdl/code/ahb3/core/mpsoc_uart_interrupt.vhd
-vhdl2008 work ../../../../../../../rtl/vhdl/code/ahb3/core/mpsoc_uart_rx.vhd
-vhdl2008 work ../../../../../../../rtl/vhdl/code/ahb3/core/mpsoc_uart_tx.vhd
+vhdl2008 work ../../../../../../../validation/osvvm/library/bfm/axi4/peripheral_osvvm_model.vhd
+vhdl2008 work ../../../../../../../validation/osvvm/library/bfm/axi4/peripheral_osvvm_model_pkg.vhd
 
-vhdl2008 work ../../../../../../../bench/vhdl/code/tests/core/ahb3/mpsoc_uart_testbench.vhd
+vhdl2008 work ../../../../../../../validation/osvvm/library/bfm/axi4/peripheral_osvvm_testbench.vhd

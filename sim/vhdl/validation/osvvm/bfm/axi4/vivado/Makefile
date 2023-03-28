@@ -48,8 +48,8 @@ build:
 	xvhdl -prj system.prj
 
 simulate:
-	xelab peripheral_uart_testbench
-	xsim -R peripheral_uart_testbench
+	xelab peripheral_osvvm_testbench
+	xsim -R peripheral_osvvm_testbench
 
 clean:
 	rm -rf *.dir *.jou *.log *.pb .Xil
