@@ -45,11 +45,10 @@
 all: build simulate
 
 build:
-	xvlog -i ../../../../../../../uvm/src -prj system.prj
+	xvlog -i ../../../../../../../verification/uvm/src -prj system.prj
 
 simulate:
-	xelab test
-	xsim -R test
-
+	xelab peripheral_uvm_testbench
+	xsim -R peripheral_uvm_testbench
 clean:
 	rm -rf *.dir *.jou *.log *.pb
