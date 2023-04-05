@@ -41,6 +41,8 @@
  *   Paco Reina Campo <pacoreinacampo@queenfield.tech>
  */
 
+import peripheral_wb_pkg::*;
+
 module peripheral_bfm_memory_wb #(
   //Wishbone parameters
   parameter DW             = 32,
@@ -74,8 +76,6 @@ module peripheral_bfm_memory_wb #(
   //
   // Constants
   //
-
-  `include "peripheral_wb_pkg.sv"
 
   localparam bytes_per_dw = (DW / 8);
   localparam mem_words = (MEM_SIZE_BYTES / bytes_per_dw);

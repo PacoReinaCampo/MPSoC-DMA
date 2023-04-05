@@ -41,6 +41,8 @@
  *   Paco Reina Campo <pacoreinacampo@queenfield.tech>
  */
 
+import peripheral_wb_pkg::*;
+
 module peripheral_bfm_slave_wb #(
   parameter DW    = 32,
   parameter AW    = 32,
@@ -67,14 +69,13 @@ module peripheral_bfm_slave_wb #(
   // Constants
   //
 
-  `include "peripheral_wb_pkg.sv"
-
   localparam TP = 1;
 
   //////////////////////////////////////////////////////////////////////////////
   //
   // Variables
   //
+
   reg            has_next = 1'b0;
 
   reg            op = READ;

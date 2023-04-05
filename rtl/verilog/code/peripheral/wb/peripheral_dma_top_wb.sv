@@ -44,7 +44,7 @@
 
 import peripheral_dma_pkg::*;
 
-module peripheral_dma_wb_top #(
+module peripheral_dma_top_wb #(
   parameter ADDR_WIDTH = 32,
   parameter DATA_WIDTH = 32,
 
