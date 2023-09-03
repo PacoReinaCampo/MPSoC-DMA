@@ -96,4 +96,4 @@ simulate:
 	xsim -R peripheral_bfm_testbench
 
 clean:
-	rm -rf *.dir *.jou *.log *.pb .Xil *.vcd
+	rm -rf *.dir *.jou *.log *.pb *.vcd .Xil
