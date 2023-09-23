@@ -62,6 +62,6 @@ ghdl -a --std=08 ../../../../../../../rtl/vhdl/code/core/peripheral_dma_request_
 
 ghdl -a --std=08 ../../../../../../../bench/vhdl/code/tests/peripheral/wb/peripheral_dma_testbench.vhd
 
-ghdl -m --std=08 peripheral_dma_testbench
-ghdl -r --std=08 peripheral_dma_testbench --ieee-asserts=disable-at-0 --disp-tree=inst > peripheral_dma_testbench.tree
+ghdl -e --std=08 peripheral_dma_testbench
+ghdl -r --std=08 peripheral_dma_testbench --ieee-asserts=disable-at-0 --vcd=peripheral_dma_testbench.vcd --wave=system.ghw --stop-time=1ms
 pause
