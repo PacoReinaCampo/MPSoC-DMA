@@ -57,4 +57,3 @@
 ../../../../../../../rtl/verilog/code/core/peripheral_dma_request_table.sv
 
 ../../../../../../../bench/verilog/code/tests/peripheral/wb/main/peripheral_dma_testbench.sv
-
