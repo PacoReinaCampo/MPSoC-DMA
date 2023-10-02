@@ -42,12 +42,17 @@
 ##                                                                               ##
 ###################################################################################
 
-all: build simulate
+all: build
 
 build:
 	verilator -Wno-lint -Wno-UNOPTFLAT -Wno-COMBDLY --cc -f system.vc --top-module peripheral_dma_testbench
 
 simulate:
+	make -C obj_dir -j -f Vperipheral_dma_testbench.mk Vperipheral_dma_testbench
+	obj_dir/Vperipheral_dma_testbench
+
+test:
+	gtkwave peripheral_dma_testbench.vcd
 
 clean:
 	rm -rf obj_dir

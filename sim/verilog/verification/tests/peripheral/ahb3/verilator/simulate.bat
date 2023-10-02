@@ -46,4 +46,6 @@
 call ../../../../../../../settings64_verilator.bat
 
 verilator -Wno-lint -Wno-UNOPTFLAT -Wno-COMBDLY --cc -f system.vc --top-module peripheral_dma_testbench
+make -C obj_dir -j -f Vperipheral_dma_testbench.mk Vperipheral_dma_testbench
+obj_dir/Vperipheral_dma_testbench
 pause
