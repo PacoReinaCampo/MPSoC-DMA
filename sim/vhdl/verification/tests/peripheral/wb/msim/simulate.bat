@@ -46,7 +46,7 @@
 call ../../../../../../../settings64_msim.bat
 
 vlib work
-vcom -2008 -f system.vc
+vcom -2008 -f system.f
 vsim -c -do run.do work.peripheral_dma_testbench
 pause
 co
