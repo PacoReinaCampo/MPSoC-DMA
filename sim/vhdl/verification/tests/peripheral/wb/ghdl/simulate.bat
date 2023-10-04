@@ -44,23 +44,7 @@
 
 @echo off
 call ../../../../../../../settings64_ghdl.bat
-
-ghdl -a --std=08 ../../../../../../../rtl/vhdl/code/pkg/core/vhdl_pkg.vhd
-ghdl -a --std=08 ../../../../../../../rtl/vhdl/code/pkg/core/peripheral_dma_pkg.vhd
-
-ghdl -a --std=08 ../../../../../../../rtl/vhdl/code/peripheral/wb/peripheral_dma_initiator_wb.vhd
-ghdl -a --std=08 ../../../../../../../rtl/vhdl/code/peripheral/wb/peripheral_dma_initiator_nocres_wb.vhd
-ghdl -a --std=08 ../../../../../../../rtl/vhdl/code/peripheral/wb/peripheral_dma_initiator_req_wb.vhd
-ghdl -a --std=08 ../../../../../../../rtl/vhdl/code/peripheral/wb/peripheral_dma_interface_wb.vhd
-ghdl -a --std=08 ../../../../../../../rtl/vhdl/code/peripheral/wb/peripheral_dma_target_wb.vhd
-ghdl -a --std=08 ../../../../../../../rtl/vhdl/code/peripheral/wb/peripheral_dma_top_wb.vhd
-
-ghdl -a --std=08 ../../../../../../../rtl/vhdl/code/core/peripheral_arbiter_rr.vhd
-ghdl -a --std=08 ../../../../../../../rtl/vhdl/code/core/peripheral_dma_initiator_nocreq.vhd
-ghdl -a --std=08 ../../../../../../../rtl/vhdl/code/core/peripheral_dma_packet_buffer.vhd
-ghdl -a --std=08 ../../../../../../../rtl/vhdl/code/core/peripheral_dma_request_table.vhd
-
-ghdl -a --std=08 ../../../../../../../bench/vhdl/code/tests/peripheral/wb/peripheral_dma_testbench.vhd
+sh system.s
 
 ghdl -e --std=08 peripheral_dma_testbench
 ghdl -r --std=08 peripheral_dma_testbench --ieee-asserts=disable-at-0 --vcd=peripheral_dma_testbench.vcd --wave=system.ghw --stop-time=1ms
