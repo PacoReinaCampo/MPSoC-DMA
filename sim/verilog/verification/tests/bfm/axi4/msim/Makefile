@@ -52,4 +52,4 @@ simulate:
 	vsim -c -do run.do work.peripheral_bfm_testbench
 
 clean:
-	rm -rf work transcript *.fd
+	rm -rf work transcript *.vcd
