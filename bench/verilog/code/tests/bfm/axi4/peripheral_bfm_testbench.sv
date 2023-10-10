@@ -100,68 +100,11 @@ module peripheral_bfm_testbench;
   wire        wvalid;
 
   peripheral_bfm_master_generic_axi4 master (
-
-    // Outputs
-    .awid     (awid[3:0]),
-    .awadr    (awadr[31:0]),
-    .awlen    (awlen[3:0]),
-    .awsize   (awsize[2:0]),
-    .awburst  (awburst[1:0]),
-    .awlock   (awlock[1:0]),
-    .awcache  (awcache[3:0]),
-    .awprot   (awprot[2:0]),
-    .awvalid  (awvalid),
-    .wid      (wid[3:0]),
-    .wrdata   (wrdata[31:0]),
-    .wstrb    (wstrb[3:0]),
-    .wlast    (wlast),
-    .wvalid   (wvalid),
-    .bid      (bid[3:0]),
-    .bresp    (bresp[1:0]),
-    .bvalid   (bvalid),
-    .arid     (arid[3:0]),
-    .araddr   (araddr[31:0]),
-    .arlen    (arlen[3:0]),
-    .arsize   (arsize[2:0]),
-    .arlock   (arlock[1:0]),
-    .arcache  (arcache[3:0]),
-    .arprot   (arprot[2:0]),
-    .arvalid  (arvalid),
-    .rready   (rready),
-    .test_fail(test_fail),
-
-    // Inputs
+    // Global Signals
     .aclk   (aclk),
     .aresetn(aresetn),
-    .awready(awready),
-    .wready (wready),
-    .bready (bready),
-    .arready(arready),
-    .rid    (rid[3:0]),
-    .rdata  (rdata[31:0]),
-    .rresp  (rresp[1:0]),
-    .rlast  (rlast),
-    .rvalid (rvalid)
-  );
 
-  peripheral_bfm_slave_generic_axi4 slave (
-
-    // Outputs
-    .awready(awready),
-    .wready (wready),
-    .bid    (bid[3:0]),
-    .bresp  (bresp[1:0]),
-    .bvalid (bvalid),
-    .arready(arready),
-    .rid    (rid[3:0]),
-    .rdata  (rdata[31:0]),
-    .rresp  (rresp[1:0]),
-    .rlast  (rlast),
-    .rvalid (rvalid),
-
-    // Inputs
-    .aclk   (aclk),
-    .aresetn(aresetn),
+    // Write Address Channel
     .awid   (awid[3:0]),
     .awadr  (awadr[31:0]),
     .awlen  (awlen[3:0]),
@@ -171,12 +114,23 @@ module peripheral_bfm_testbench;
     .awcache(awcache[3:0]),
     .awprot (awprot[2:0]),
     .awvalid(awvalid),
-    .wid    (wid[3:0]),
-    .wrdata (wrdata[31:0]),
-    .wstrb  (wstrb[3:0]),
-    .wlast  (wlast),
-    .wvalid (wvalid),
-    .bready (bready),
+    .awready(awready),
+
+    // Write Data Channel
+    .wid   (wid[3:0]),
+    .wrdata(wrdata[31:0]),
+    .wstrb (wstrb[3:0]),
+    .wlast (wlast),
+    .wvalid(wvalid),
+    .wready(wready),
+
+    // Write Response Channel
+    .bid   (bid[3:0]),
+    .bresp (bresp[1:0]),
+    .bvalid(bvalid),
+    .bready(bready),
+
+    // Read Address Channel
     .arid   (arid[3:0]),
     .araddr (araddr[31:0]),
     .arlen  (arlen[3:0]),
@@ -185,7 +139,69 @@ module peripheral_bfm_testbench;
     .arcache(arcache[3:0]),
     .arprot (arprot[2:0]),
     .arvalid(arvalid),
-    .rready (rready)
+    .arready(arready),
+
+    // Read Data Channel
+    .rid   (rid[3:0]),
+    .rdata (rdata[31:0]),
+    .rresp (rresp[1:0]),
+    .rlast (rlast),
+    .rvalid(rvalid),
+    .rready(rready),
+
+    // Test Signals
+    .test_fail(test_fail)
+  );
+
+  peripheral_bfm_slave_generic_axi4 slave (
+    // Global Signals
+    .aclk   (aclk),
+    .aresetn(aresetn),
+
+    // Write Address Channel
+    .awid   (awid[3:0]),
+    .awadr  (awadr[31:0]),
+    .awlen  (awlen[3:0]),
+    .awsize (awsize[2:0]),
+    .awburst(awburst[1:0]),
+    .awlock (awlock[1:0]),
+    .awcache(awcache[3:0]),
+    .awprot (awprot[2:0]),
+    .awvalid(awvalid),
+    .awready(awready),
+
+    // Write Data Channel
+    .wid   (wid[3:0]),
+    .wrdata(wrdata[31:0]),
+    .wstrb (wstrb[3:0]),
+    .wlast (wlast),
+    .wvalid(wvalid),
+    .wready(wready),
+
+    // Write Response Channel
+    .bid   (bid[3:0]),
+    .bresp (bresp[1:0]),
+    .bvalid(bvalid),
+    .bready(bready),
+
+    // Read Address Channel
+    .arid   (arid[3:0]),
+    .araddr (araddr[31:0]),
+    .arlen  (arlen[3:0]),
+    .arsize (arsize[2:0]),
+    .arlock (arlock[1:0]),
+    .arcache(arcache[3:0]),
+    .arprot (arprot[2:0]),
+    .arvalid(arvalid),
+    .arready(arready),
+
+    // Read Data Channel
+    .rid   (rid[3:0]),
+    .rdata (rdata[31:0]),
+    .rresp (rresp[1:0]),
+    .rlast (rlast),
+    .rvalid(rvalid),
+    .rready(rready)
   );
 
   peripheral_bfm_basic test ();
