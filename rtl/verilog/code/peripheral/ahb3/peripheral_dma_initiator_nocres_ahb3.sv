@@ -136,7 +136,7 @@ module peripheral_dma_initiator_nocres_ahb3 #(
   // Is this the last flit of a packet?
   assign buf_last_flit = (buf_flit[FLIT_TYPE_MSB:FLIT_TYPE_LSB] == FLIT_TYPE_LAST) | (buf_flit[FLIT_TYPE_MSB:FLIT_TYPE_LSB] == FLIT_TYPE_SINGLE);
 
-  assign ahb3_haddr    = resp_address;  //alias
+  assign ahb3_haddr    = resp_address;  // alias
 
   assign ahb3_hwdata   = buf_flit[FLIT_CONTENT_MSB:FLIT_CONTENT_LSB];
 

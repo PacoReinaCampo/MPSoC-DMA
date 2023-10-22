@@ -78,7 +78,6 @@ module peripheral_bfm_testbench;
   end : gen_PCLK
 
   initial begin : gen_PRESETn
-    ;
     PRESETn = 1'b1;
     //ensure falling edge of PRESETn
     #10;
@@ -86,7 +85,6 @@ module peripheral_bfm_testbench;
     #32;
     PRESETn = 1'b1;
   end : gen_PRESETn
-  ;
 
   //////////////////////////////////////////////////////////////////////////////
   //

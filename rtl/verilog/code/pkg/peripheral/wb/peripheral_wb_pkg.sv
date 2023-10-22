@@ -101,18 +101,26 @@ package peripheral_wb_pkg;
     integer        shift;
 
     begin
-      if (dw == 64) shift = 3;
-      else if (dw == 32) shift = 2;
-      else if (dw == 16) shift = 1;
-      else shift = 0;
+      if (dw == 64) begin
+        shift = 3;
+      end else if (dw == 32) begin
+        shift = 2;
+      end else if (dw == 16) begin
+        shift = 1;
+      end else begin
+        shift = 0;
+      end
+
       adr = adr_i >> shift;
-      if (cti_i == CTI_INC_BURST)
+
+      if (cti_i == CTI_INC_BURST) begin
         case (bte_i)
           BTE_LINEAR:  adr = adr + 1;
           BTE_WRAP_4:  adr = {adr[31:2], adr[1:0] + 2'd1};
           BTE_WRAP_8:  adr = {adr[31:3], adr[2:0] + 3'd1};
           BTE_WRAP_16: adr = {adr[31:4], adr[3:0] + 4'd1};
         endcase
+      end
       wb_next_adr = adr << shift;
     end
   endfunction

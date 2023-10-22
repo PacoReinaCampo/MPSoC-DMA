@@ -166,16 +166,17 @@ module peripheral_dma_initiator_req_ahb3 #(
     for (i = 0; i < 3; i = i + 1) begin
       if (data_fifo_pop) begin
         // when popping data..
-        if (data_fifo_push & data_fifo_pos[i+1])
+        if (data_fifo_push & data_fifo_pos[i+1]) begin
           // .. and we also push this cycle, we need to check
           // whether the pointer was on the next one
           data_fifo[i] <= data_fifo_in;
-        else if (i < 2)
+        end else if (i < 2) begin
           // .. otherwise shift if not last
           data_fifo[i] <= data_fifo[i+1];
-        else
+        end else begin
           // the last stays static
           data_fifo[i] <= data_fifo[i];
+        end
       end else if (data_fifo_push & data_fifo_pos[i]) begin
         // when pushing only and this is the current write
         // position
@@ -220,14 +221,15 @@ module peripheral_dma_initiator_req_ahb3 #(
         // Always reset counter
         nxt_ahb3_req_count = 0;
 
-        if (req_start & req_is_l2r)
+        if (req_start & req_is_l2r) begin
           // start when new request is handled and it is a L2R
           // request. Direct transition to data fetching from bus,
           // as the FIFO is always empty at this point.
           nxt_ahb3_req_state = WB_REQ_DATA;
-        else
+        end else begin
           // otherwise keep idle'ing
           nxt_ahb3_req_state = WB_REQ_IDLE;
+        end
       end
       WB_REQ_DATA: begin
         // We get data from the bus
@@ -258,15 +260,16 @@ module peripheral_dma_initiator_req_ahb3 #(
           // signal push to data fifo
           data_fifo_push     = 1'b1;
 
-          if (wb_req_count == req_size - 1)
+          if (wb_req_count == req_size - 1) begin
             // This was the last word
             nxt_ahb3_req_state = WB_REQ_IDLE;
-          else if (data_fifo_ready)
+          end else if (data_fifo_ready) begin
             // when FIFO can still get data, we stay here
             nxt_ahb3_req_state = WB_REQ_DATA;
-          else
+          end else begin
             // .. otherwise we wait for FIFO to become ready
             nxt_ahb3_req_state = WB_REQ_WAIT;
+          end
         end else begin
           // ..otherwise we still wait for the acknowledgement
           nxt_ahb3_req_state = WB_REQ_DATA;
@@ -274,12 +277,13 @@ module peripheral_dma_initiator_req_ahb3 #(
       end
       WB_REQ_WAIT: begin
         // Waiting for FIFO to accept new data
-        if (data_fifo_ready)
+        if (data_fifo_ready) begin
           // FIFO ready, restart burst
           nxt_ahb3_req_state = WB_REQ_DATA;
-        else
+        end else begin
           // wait
           nxt_ahb3_req_state = WB_REQ_WAIT;
+        end
       end
       default: begin
         nxt_ahb3_req_state = WB_REQ_IDLE;

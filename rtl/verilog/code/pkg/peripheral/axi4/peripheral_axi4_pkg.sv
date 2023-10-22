@@ -63,7 +63,7 @@ package peripheral_axi4_pkg;
   localparam AXI_BURST_LENGTH_15 = 4'he;
   localparam AXI_BURST_LENGTH_16 = 4'hF;
 
-  //Burst Size specifies the maximum number of data bytes to transfer in each beat, or data transfer, within a burst
+  // Burst Size specifies the maximum number of data bytes to transfer in each beat, or data transfer, within a burst
   localparam AXI_BURST_SIZE_BYTE = 3'b000;
   localparam AXI_BURST_SIZE_HALF = 3'b001;
   localparam AXI_BURST_SIZE_WORD = 3'b010;

@@ -55,7 +55,7 @@ module peripheral_dma_packet_buffer #(
   parameter READY = 1'b0,
             BUSY  = 1'b1
 ) (
-  //inputs
+  // inputs
   input clk,
   input rst,
 
@@ -76,7 +76,7 @@ module peripheral_dma_packet_buffer #(
   //
 
   // Signals for fifo
-  reg     [FLIT_WIDTH-1:0] fifo_data      [0:FIFO_DEPTH];  //actual fifo
+  reg     [FLIT_WIDTH-1:0] fifo_data      [0:FIFO_DEPTH];  // actual fifo
   reg     [FIFO_DEPTH : 0] fifo_write_ptr;
 
   reg     [FIFO_DEPTH : 0] last_flits;

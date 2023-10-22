@@ -357,10 +357,12 @@ module peripheral_timer_ahb3 #(
           IPENDING: HRDATA <= ipending_rd;
           TIME:     HRDATA <= time_reg[31:0];
           TIME_MSB: HRDATA <= time_reg[63:32];
-          default:  case (HADDR[2])
-            1'b0: HRDATA <= timecmp_reg[timer_idx(HADDR, TIMECMP)][31:0];
-            1'b1: HRDATA <= timecmp_reg[timer_idx(HADDR, TIMECMP)][63:32];
-          endcase
+          default: begin
+            case (HADDR[2])
+              1'b0: HRDATA <= timecmp_reg[timer_idx(HADDR, TIMECMP)][31:0];
+              1'b1: HRDATA <= timecmp_reg[timer_idx(HADDR, TIMECMP)][63:32];
+            endcase
+          end
         endcase
       end
     end else if (HDATA_SIZE == 64) begin

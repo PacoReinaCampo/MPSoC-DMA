@@ -108,7 +108,7 @@ module peripheral_dma_target_wb #(
   reg     [             STATE_WIDTH-1:0] state;
   reg     [             STATE_WIDTH-1:0] nxt_state;
 
-  //FSM hidden state
+  // FSM hidden state
   reg                                    wb_waiting;
   reg                                    nxt_wb_waiting;
 
@@ -136,13 +136,13 @@ module peripheral_dma_target_wb #(
   reg     [                         4:0] noc_resp_packet_wsize;
   reg     [                         4:0] nxt_noc_resp_packet_wsize;
 
-  // TODO: correct define!
+  // TO-DO: correct define!
   reg     [DMA_REQFIELD_SIZE_WIDTH -3:0] resp_wsize;
   reg     [DMA_REQFIELD_SIZE_WIDTH -3:0] nxt_resp_wsize;
   reg     [DMA_RESPFIELD_SIZE_WIDTH-3:0] wb_resp_count;
   reg     [DMA_RESPFIELD_SIZE_WIDTH-3:0] nxt_wb_resp_count;
 
-  //FIFO-Stuff
+  // FIFO-Stuff
 
   wire                                   data_fifo_valid;
   reg     [              DATA_WIDTH-1:0] data_fifo                                     [0:2];  // data storage
@@ -200,7 +200,7 @@ module peripheral_dma_target_wb #(
   // assign data_fifo_pop = resp_data_ready;
   assign data_fifo_valid = ~data_fifo_empty;
   assign data_fifo_empty = data_fifo_pos[0];  // Empty when pushing to first one
-  assign data_fifo_ready = ~|data_fifo_pos[3:2];  //equal to not full
+  assign data_fifo_ready = ~|data_fifo_pos[3:2];  // equal to not full
   assign data_fifo_in    = wb_dat_i;
   assign data_fifo_out   = data_fifo[0];  // First element is out
 
@@ -261,7 +261,7 @@ module peripheral_dma_target_wb #(
   // Assign stored (and incremented) address to wishbone interface
   assign wb_adr_o = address;
 
-  //FSM
+  // FSM
 
   // Next state, counting, control signals
   always @(*) begin
@@ -312,7 +312,7 @@ module peripheral_dma_target_wb #(
           nxt_state = STATE_IDLE;
         end
       end
-      //L2R-handling
+      // L2R-handling
       STATE_L2R_GETADDR: begin
         buf_ready   = 1'b1;
         nxt_address = buf_flit[FLIT_CONTENT_MSB:FLIT_CONTENT_LSB];
@@ -323,8 +323,11 @@ module peripheral_dma_target_wb #(
         end
       end
       STATE_L2R_DATA: begin
-        if (buf_last_flit) wb_cti_o = 3'b111;
-        else wb_cti_o = 3'b010;
+        if (buf_last_flit) begin
+          wb_cti_o = 3'b111;
+        end else begin
+          wb_cti_o = 3'b010;
+        end
         wb_cyc_o = 1'b1;
         wb_stb_o = 1'b1;
         wb_we_o  = 1'b1;
@@ -358,7 +361,7 @@ module peripheral_dma_target_wb #(
           nxt_state = STATE_L2R_SENDRESP;
         end
       end
-      //R2L handling
+      // R2L handling
       STATE_R2L_GETLADDR: begin
         buf_ready   = 1'b1;
         nxt_address = buf_flit[FLIT_CONTENT_MSB:FLIT_CONTENT_LSB];
@@ -404,8 +407,11 @@ module peripheral_dma_target_wb #(
           nxt_noc_resp_packet_wcount      = 5'd1;
         end
         // change to next state if successful
-        if (noc_out_ready) nxt_state = STATE_R2L_GENADDR;
-        else nxt_state = STATE_R2L_GENHDR;
+        if (noc_out_ready) begin
+          nxt_state = STATE_R2L_GENADDR;
+        end else begin
+          nxt_state = STATE_R2L_GENHDR;
+        end
       end
       STATE_R2L_GENADDR: begin
         noc_out_valid                                   = 1'b1;
@@ -422,7 +428,7 @@ module peripheral_dma_target_wb #(
         // transfer data to noc if available
         noc_out_valid                                   = data_fifo_valid;
         noc_out_flit[FLIT_CONTENT_MSB:FLIT_CONTENT_LSB] = data_fifo_out;
-        //TODO: Rearange ifs
+        // TO-DO: Rearange ifs
         if (noc_resp_packet_wcount == noc_resp_packet_wsize) begin
           noc_out_flit[FLIT_TYPE_MSB:FLIT_TYPE_LSB] = FLIT_TYPE_LAST;
           if (noc_out_valid & noc_out_ready) begin
@@ -431,11 +437,11 @@ module peripheral_dma_target_wb #(
               // Only (NOC_PACKET_SIZE -2) flits are availabel for the payload,
               // because we need a header-flit and an address-flit, too.
 
-              //this was not the last packet of the response
+              // this was not the last packet of the response
               nxt_state             = STATE_R2L_GENHDR;
               nxt_noc_resp_wcounter = noc_resp_wcounter + noc_resp_packet_wcount;
             end else begin
-              //this is the last packet of the response
+              // this is the last packet of the response
               nxt_state = STATE_IDLE;
             end
           end else begin
@@ -449,9 +455,9 @@ module peripheral_dma_target_wb #(
           end
           nxt_state = STATE_R2L_DATA;
         end
-        //FIFO-handling
+        // FIFO-handling
         if (wb_waiting) begin
-          //don't get data from the bus
+          // don't get data from the bus
           wb_stb_o       = 1'b0;
           wb_cyc_o       = 1'b0;
           data_fifo_push = 1'b0;
@@ -470,7 +476,7 @@ module peripheral_dma_target_wb #(
             wb_stb_o = 1'b1;
             wb_cyc_o = 1'b1;
           end
-          // TODO: why not generate address from the base address + counter<<2?
+          // TO-DO: why not generate address from the base address + counter<<2?
           if (~data_fifo_ready | (wb_resp_count == resp_wsize)) begin
             wb_cti_o = 3'b111;
           end else begin

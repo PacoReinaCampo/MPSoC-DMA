@@ -134,7 +134,7 @@ module peripheral_dma_initiator_nocres_wb #(
   // Is this the last flit of a packet?
   assign buf_last_flit = (buf_flit[FLIT_TYPE_MSB:FLIT_TYPE_LSB] == FLIT_TYPE_LAST) | (buf_flit[FLIT_TYPE_MSB:FLIT_TYPE_LSB] == FLIT_TYPE_SINGLE);
 
-  assign wb_adr_o      = resp_address;  //alias
+  assign wb_adr_o      = resp_address;  // alias
 
   assign wb_dat_o      = buf_flit[FLIT_CONTENT_MSB:FLIT_CONTENT_LSB];
 

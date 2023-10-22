@@ -103,7 +103,7 @@ module peripheral_dma_target_bb #(
   reg     [             STATE_WIDTH-1:0] state;
   reg     [             STATE_WIDTH-1:0] nxt_state;
 
-  //FSM hidden state
+  // FSM hidden state
   reg                                    bb_waiting;
   reg                                    nxt_bb_waiting;
 
@@ -131,13 +131,13 @@ module peripheral_dma_target_bb #(
   reg     [                         4:0] noc_resp_packet_wsize;
   reg     [                         4:0] nxt_noc_resp_packet_wsize;
 
-  // TODO: correct define!
+  // TO-DO: correct define!
   reg     [DMA_REQFIELD_SIZE_WIDTH -3:0] resp_wsize;
   reg     [DMA_REQFIELD_SIZE_WIDTH -3:0] nxt_resp_wsize;
   reg     [DMA_RESPFIELD_SIZE_WIDTH-3:0] bb_resp_count;
   reg     [DMA_RESPFIELD_SIZE_WIDTH-3:0] nxt_bb_resp_count;
 
-  //FIFO-Stuff
+  // FIFO-Stuff
 
   wire                                   data_fifo_valid;
   reg     [              DATA_WIDTH-1:0] data_fifo                                     [0:2];  // data storage
@@ -195,7 +195,7 @@ module peripheral_dma_target_bb #(
   // assign data_fifo_pop = resp_data_ready;
   assign data_fifo_valid = ~data_fifo_empty;
   assign data_fifo_empty = data_fifo_pos[0];  // Empty when pushing to first one
-  assign data_fifo_ready = ~|data_fifo_pos[3:2];  //equal to not full
+  assign data_fifo_ready = ~|data_fifo_pos[3:2];  // equal to not full
   assign data_fifo_in    = bb_dout_i;
   assign data_fifo_out   = data_fifo[0];  // First element is out
 
@@ -224,16 +224,17 @@ module peripheral_dma_target_bb #(
     for (i = 0; i < 3; i = i + 1) begin
       if (data_fifo_pop) begin
         // when popping data..
-        if (data_fifo_push & data_fifo_pos[i+1])
+        if (data_fifo_push & data_fifo_pos[i+1]) begin
           // .. and we also push this cycle, we need to check
           // whether the pointer was on the next one
           data_fifo[i] <= data_fifo_in;
-        else if (i < 2)
+        end else if (i < 2) begin
           // .. otherwise shift if not last
           data_fifo[i] <= data_fifo[i+1];
-        else
+        end else begin
           // the last stays static
           data_fifo[i] <= data_fifo[i];
+        end
       end else if (data_fifo_push & data_fifo_pos[i]) begin
         // when pushing only and this is the current write
         // position
@@ -253,7 +254,7 @@ module peripheral_dma_target_bb #(
   // Assign stored (and incremented) address to wishbone interface
   assign bb_addr_o = address;
 
-  //FSM
+  // FSM
 
   // Next state, counting, control signals
   always @(*) begin
@@ -301,7 +302,7 @@ module peripheral_dma_target_bb #(
           nxt_state = STATE_IDLE;
         end
       end  // case: STATE_IDLE
-      //L2R-handling
+      // L2R-handling
       STATE_L2R_GETADDR: begin
         buf_ready   = 1'b1;
         nxt_address = buf_flit[FLIT_CONTENT_MSB:FLIT_CONTENT_LSB];
@@ -331,7 +332,7 @@ module peripheral_dma_target_bb #(
           nxt_state = STATE_L2R_SENDRESP;
         end
       end  // case: STATE_L2R_SENDRESP
-      //R2L handling
+      // R2L handling
       STATE_R2L_GETLADDR: begin
         buf_ready   = 1'b1;
         nxt_address = buf_flit[FLIT_CONTENT_MSB:FLIT_CONTENT_LSB];
@@ -377,8 +378,11 @@ module peripheral_dma_target_bb #(
           nxt_noc_resp_packet_wcount      = 5'd1;
         end  // else: !if((noc_resp_wcounter + (NOC_PACKET_SIZE -2)) < resp_wsize)
         // change to next state if successful
-        if (noc_out_ready) nxt_state = STATE_R2L_GENADDR;
-        else nxt_state = STATE_R2L_GENHDR;
+        if (noc_out_ready) begin
+          nxt_state = STATE_R2L_GENADDR;
+        end else begin
+          nxt_state = STATE_R2L_GENHDR;
+        end
       end  // case: STATE_R2L_GENHDR
       STATE_R2L_GENADDR: begin
         noc_out_valid                                   = 1'b1;
@@ -395,7 +399,7 @@ module peripheral_dma_target_bb #(
         // transfer data to noc if available
         noc_out_valid                                   = data_fifo_valid;
         noc_out_flit[FLIT_CONTENT_MSB:FLIT_CONTENT_LSB] = data_fifo_out;
-        //TODO: Rearange ifs
+        // TO-DO: Rearange ifs
         if (noc_resp_packet_wcount == noc_resp_packet_wsize) begin
           noc_out_flit[FLIT_TYPE_MSB:FLIT_TYPE_LSB] = FLIT_TYPE_LAST;
           if (noc_out_valid & noc_out_ready) begin
@@ -404,17 +408,17 @@ module peripheral_dma_target_bb #(
               // Only (NOC_PACKET_SIZE -2) flits are availabel for the payload,
               // because we need a header-flit and an address-flit, too.
 
-              //this was not the last packet of the response
+              // this was not the last packet of the response
               nxt_state             = STATE_R2L_GENHDR;
               nxt_noc_resp_wcounter = noc_resp_wcounter + noc_resp_packet_wcount;
             end else begin
-              //this is the last packet of the response
+              // this is the last packet of the response
               nxt_state = STATE_IDLE;
             end
           end else begin
             nxt_state = STATE_R2L_DATA;
           end
-        end else begin  //not LAST
+        end else begin  // not LAST
           noc_out_flit[FLIT_TYPE_MSB:FLIT_TYPE_LSB] = FLIT_TYPE_PAYLOAD;
           if (noc_out_valid & noc_out_ready) begin
             data_fifo_pop              = 1'b1;
@@ -422,9 +426,9 @@ module peripheral_dma_target_bb #(
           end
           nxt_state = STATE_R2L_DATA;
         end
-        //FIFO-handling
-        if (bb_waiting) begin  //hidden state
-          //don't get data from the bus
+        // FIFO-handling
+        if (bb_waiting) begin  // hidden state
+          // don't get data from the bus
           bb_en_o        = 1'b0;
 
           data_fifo_push = 1'b0;
@@ -433,7 +437,7 @@ module peripheral_dma_target_bb #(
           end else begin
             nxt_bb_waiting = 1'b1;
           end
-        end else begin  //not bb_waiting
+        end else begin  // not bb_waiting
           // Signal cycle and strobe. We do bursts, but don't insert
           // wait states, so both of them are always equal.
           if ((noc_resp_packet_wcount == noc_resp_packet_wsize) & noc_out_valid & noc_out_ready) begin
@@ -441,7 +445,7 @@ module peripheral_dma_target_bb #(
           end else begin
             bb_en_o = 1'b1;
           end
-          // TODO: why not generate address from the base address + counter<<2?
+          // TO-DO: why not generate address from the base address + counter<<2?
           // ..otherwise we still wait for the acknowledgement
           nxt_bb_resp_count = bb_resp_count;
           nxt_address       = address;

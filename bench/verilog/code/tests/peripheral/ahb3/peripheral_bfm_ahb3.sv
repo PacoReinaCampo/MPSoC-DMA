@@ -82,7 +82,7 @@ module peripheral_bfm_ahb3 #(
 
   // Number of timers
   localparam TIMERS = 2;
-  
+
   //////////////////////////////////////////////////////////////////////////////
   //
   // Variables
@@ -210,7 +210,7 @@ module peripheral_bfm_ahb3 #(
     //discard buffers
     rbuffer.delete();
     wbuffer.delete();
-  endtask : test_ienable_timers;
+  endtask : test_ienable_timers
 
   task test_registers_rw32;
     int error;

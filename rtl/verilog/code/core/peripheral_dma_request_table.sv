@@ -110,10 +110,10 @@ module peripheral_dma_request_table #(
   // Write to the request table
   always @(posedge clk) begin : proc_request_table
     if (rst) begin : reset
-      //reset
+      // reset
       for (i = 0; i < TABLE_ENTRIES; i = i + 1) begin
         {transfer_valid[i], transfer_done[i]} <= 2'b00;
-      end  //for
+      end  // for
     end else begin
       if (if_write_en) begin
         transfer_request_table[if_write_pos] <= (~if_write_mask & transfer_request_table[if_write_pos]) | (if_write_mask & if_write_req);

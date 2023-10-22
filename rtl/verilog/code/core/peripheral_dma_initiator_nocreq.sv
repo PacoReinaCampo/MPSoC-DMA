@@ -185,7 +185,11 @@ module peripheral_dma_initiator_nocreq #(
   // Convert (one hot) select bit vector to binary
   always @(*) begin : readpos_onehottobinary
     ctrl_read_pos = 0;
-    for (d = 0; d < TABLE_ENTRIES; d = d + 1) if (select[d]) ctrl_read_pos = ctrl_read_pos | d;
+    for (d = 0; d < TABLE_ENTRIES; d = d + 1) begin
+      if (select[d]) begin
+        ctrl_read_pos = ctrl_read_pos | d;
+      end
+    end
   end
 
   // Request generation
@@ -224,18 +228,19 @@ module peripheral_dma_initiator_nocreq #(
     case (noc_req_state)
       NOC_REQ_IDLE: begin
         // Idle'ing
-        if (req_start)
+        if (req_start) begin
           // A valid request exists, that is not open
-          if (req_is_l2r)
+          if (req_is_l2r) begin
             // L2R
             nxt_noc_req_state = NOC_REQ_L2R_GENHDR;
-          else
+          end else begin
             // R2L
             nxt_noc_req_state = NOC_REQ_R2L_GENHDR;
-        else
+          end
+        end else begin
           // wait for request
           nxt_noc_req_state = NOC_REQ_IDLE;
-
+        end
         // Reset counter
         nxt_noc_req_counter = 0;
       end
@@ -263,8 +268,11 @@ module peripheral_dma_initiator_nocreq #(
           nxt_noc_req_packet_count        = 5'd1;
         end
         // change to next state if successful
-        if (noc_out_ready) nxt_noc_req_state = NOC_REQ_L2R_GENADDR;
-        else nxt_noc_req_state = NOC_REQ_L2R_GENHDR;
+        if (noc_out_ready) begin
+          nxt_noc_req_state = NOC_REQ_L2R_GENADDR;
+        end else begin
+          nxt_noc_req_state = NOC_REQ_L2R_GENHDR;
+        end
       end
       NOC_REQ_L2R_GENADDR: begin
         noc_out_valid                                   = 1'b1;
@@ -337,18 +345,23 @@ module peripheral_dma_initiator_nocreq #(
         noc_out_flit[PACKET_REQ_LAST]                   = 1'b1;
 
         // change to next state if successful
-        if (noc_out_ready) nxt_noc_req_state = NOC_REQ_R2L_GENSIZE;
-        else nxt_noc_req_state = NOC_REQ_R2L_GENHDR;
+        if (noc_out_ready) begin
+          nxt_noc_req_state = NOC_REQ_R2L_GENSIZE;
+        end else begin
+          nxt_noc_req_state = NOC_REQ_R2L_GENHDR;
+        end
       end
       NOC_REQ_R2L_GENSIZE: begin
         noc_out_valid                   = 1'b1;
         noc_out_flit[SIZE_MSB:SIZE_LSB] = req_size;
 
         // change to next state if successful
-        if (noc_out_ready) nxt_noc_req_state = NOC_REQ_R2L_GENRADDR;
-        else nxt_noc_req_state = NOC_REQ_R2L_GENSIZE;
+        if (noc_out_ready) begin
+          nxt_noc_req_state = NOC_REQ_R2L_GENRADDR;
+        end else begin
+          nxt_noc_req_state = NOC_REQ_R2L_GENSIZE;
+        end
       end
-
       NOC_REQ_R2L_GENRADDR: begin
         noc_out_valid                                   = 1'b1;
         noc_out_flit[FLIT_TYPE_MSB:FLIT_TYPE_LSB]       = FLIT_TYPE_PAYLOAD;

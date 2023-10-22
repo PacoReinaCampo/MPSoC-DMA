@@ -44,7 +44,7 @@
 import peripheral_dma_pkg::*;
 
 module peripheral_dma_initiator_ahb3 #(
-  //parameters
+  // parameters
   parameter ADDR_WIDTH             = 32,
   parameter DATA_WIDTH             = 32,
   parameter TABLE_ENTRIES          = 4,
