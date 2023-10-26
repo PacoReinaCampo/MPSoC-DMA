@@ -61,43 +61,54 @@ module peripheral_bfm_testbench;
     aresetn <= 1;
   end
 
-  reg         test_passed;
-
-  wire [31:0] araddr;
-  wire [ 3:0] arcache;
-  wire [ 3:0] arid;
-  wire [ 3:0] arlen;
-  wire [ 1:0] arlock;
-  wire [ 2:0] arprot;
-  wire        arready;
-  wire [ 2:0] arsize;
-  wire        arvalid;
-  wire [31:0] awadr;
-  wire [ 1:0] awburst;
-  wire [ 3:0] awcache;
+  // Write Address Channel
   wire [ 3:0] awid;
+  wire [31:0] awadr;
   wire [ 3:0] awlen;
-  wire [ 1:0] awlock;
-  wire [ 2:0] awprot;
-  wire        awready;
   wire [ 2:0] awsize;
+  wire [ 1:0] awburst;
+  wire [ 1:0] awlock;
+  wire [ 3:0] awcache;
+  wire [ 2:0] awprot;
   wire        awvalid;
+  wire        awready;
+
+  // Write Data Channel
+  wire [ 3:0] wid;
+  wire [31:0] wrdata;
+  wire [ 3:0] wstrb;
+  wire        wlast;
+  wire        wvalid;
+  wire        wready;
+
+  // Write Response Channel
   wire [ 3:0] bid;
   wire [ 1:0] bresp;
   wire        bvalid;
-  wire [31:0] rdata;
+  wire        bready;
+
+  // Read Address Channel
+  wire [ 3:0] arid;
+  wire [31:0] araddr;
+  wire [ 3:0] arlen;
+  wire [ 2:0] arsize;
+  wire [ 1:0] arlock;
+  wire [ 3:0] arcache;
+  wire [ 2:0] arprot;
+  wire        arvalid;
+  wire        arready;
+
+  // Read Data Channel
   wire [ 3:0] rid;
-  wire        rlast;
-  wire        rready;
+  wire [31:0] rdata;
   wire [ 1:0] rresp;
+  wire        rlast;
   wire        rvalid;
+  wire        rready;
+
+  // Test Signals
+  reg         test_passed;
   wire        test_fail;
-  wire [ 3:0] wid;
-  wire        wlast;
-  wire [31:0] wrdata;
-  wire        wready;
-  wire [ 3:0] wstrb;
-  wire        wvalid;
 
   peripheral_bfm_master_generic_axi4 master (
     // Global Signals

@@ -9,8 +9,8 @@
 //                  |_|                                                       //
 //                                                                            //
 //                                                                            //
-//              Peripheral-GPIO for MPSoC                                     //
-//              General Purpose Input Output for MPSoC                        //
+//              Peripheral-BFM for MPSoC                                      //
+//              Bus Functional Model for MPSoC                                //
 //              AMBA3 AHB-Lite Bus Interface                                  //
 //                                                                            //
 ////////////////////////////////////////////////////////////////////////////////
@@ -217,7 +217,9 @@ module peripheral_bfm_ahb3 #(
       errors++;
       $display("FAILED");
       $error("Wrong number of timers. Expected %0d, got %0d", TIMERS, $clog2(rbuffer[0]));
-    end else $display("OK");
+    end else begin
+      $display("OK");
+    end
 
     //discard buffers
     rbuffer.delete();
@@ -235,7 +237,7 @@ module peripheral_bfm_ahb3 #(
     logic [HDATA_SIZE-1:0] wbuffer[][], rbuffer[][];
 
     //create list of registers
-    for (n = 0; n < reg_cnt; n++)
+    for (n = 0; n < reg_cnt; n++) begin
       case (n)
         0:       registers[n] = PRESCALE;
         1:       registers[n] = IENABLE;
@@ -243,6 +245,7 @@ module peripheral_bfm_ahb3 #(
         3:       registers[n] = TIME_MSB;
         default: registers[n] = (n - 4) * 'h08 + (n[0] ? TIMECMP_MSB : TIMECMP);
       endcase
+    end
 
     //create buffers
     wbuffer = new[reg_cnt];
@@ -271,7 +274,9 @@ module peripheral_bfm_ahb3 #(
         end
       end
 
-      for (n = 0; n < reg_cnt; n++) bfm_master_ahb3.write(registers[n], wbuffer[n], hsize, hburst);  // write register
+      for (n = 0; n < reg_cnt; n++) begin
+        bfm_master_ahb3.write(registers[n], wbuffer[n], hsize, hburst);  // write register
+      end
 
       bfm_master_ahb3.idle();  // wait for HWDATA
 
@@ -285,7 +290,9 @@ module peripheral_bfm_ahb3 #(
       for (n = 0; n < reg_cnt; n++) begin
         for (int beat = 0; beat < rbuffer[n].size(); beat++) begin
           //mask byte ...
-          if (HSIZE == HSIZE_BYTE) rbuffer[n][beat] &= 'hff;
+          if (HSIZE == HSIZE_BYTE) begin
+            rbuffer[n][beat] &= 'hff;
+          end
 
           if (n == 1) begin  //IENABLE
             wbuffer[n][beat] &= {{32 - TIMERS{1'b0}}, {TIMERS{1'b1}}};
@@ -306,7 +313,9 @@ module peripheral_bfm_ahb3 #(
 
     //reset registers to all '0'
     wbuffer[0][0] = 0;
-    for (n = 0; n < reg_cnt; n++) bfm_master_ahb3.write(registers[n], wbuffer[0], HSIZE_WORD, HBURST_SINGLE);  //write register
+    for (n = 0; n < reg_cnt; n++) begin
+      bfm_master_ahb3.write(registers[n], wbuffer[0], HSIZE_WORD, HBURST_SINGLE);  //write register
+    end
 
     //discard buffers
     rbuffer.delete();
@@ -369,7 +378,6 @@ module peripheral_bfm_ahb3 #(
       cnt++;  //cnt should start increasing as soon as enable[0]='1'
 
       if (cnt > 1000) begin  //some watchdog value
-
         $display("FAILED");
         $error("Timer interrupt failed");
         break;
@@ -385,7 +393,9 @@ module peripheral_bfm_ahb3 #(
         errors++;
         $display("FAILED");
         $error("Wrong time delay. Expected %0d, got %0d", PRESCALE_VALUE * timecmp_value - 1, cnt);
-      end else $display("OK");
+      end else begin
+        $display("OK");
+      end
     end
 
     //A write to TIMECMP should clear the interrupt
@@ -401,7 +411,6 @@ module peripheral_bfm_ahb3 #(
       cnt++;  //cnt should start increasing as soon as enable[0]='1'
 
       if (cnt > 1000) begin  //some watchdog value
-
         $display("FAILED");
         $error("Clearing interrupt failed");
         break;

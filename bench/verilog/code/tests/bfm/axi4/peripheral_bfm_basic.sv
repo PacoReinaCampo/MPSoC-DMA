@@ -76,7 +76,7 @@ module peripheral_bfm_basic;
     peripheral_bfm_testbench.master.read_single_and_check(32'h0000_000C, 32'hABCD_EF00, AXI_BURST_SIZE_WORD, 4'hF);
     peripheral_bfm_testbench.master.read_single_and_check(32'h0000_0010, 32'hAA55_66BB, AXI_BURST_SIZE_WORD, 4'hF);
 
-    for (i = 0; i < 32; i = i + 1) begin
+    for (i = 0; i < 5; i = i + 1) begin
       $display("MEMORY[%d] = 0x%04x", i, peripheral_bfm_testbench.slave.memory[i]);
     end
 

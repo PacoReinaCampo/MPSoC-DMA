@@ -79,8 +79,8 @@ module peripheral_bfm_testbench;
   //
   // Module Body
   //
-  peripheral_utils_testbench testbench_utils ();
-  peripheral_tap_generator #("wb_bfm.tap", 1) tap_generator ();
+  peripheral_testbench_utils utils_testbench ();
+  peripheral_tap_generator #("wb_bfm.tap", 1) vtg ();
 
   always #5 wb_clk <= ~wb_clk;
   initial #100 wb_rst <= 0;
@@ -89,7 +89,7 @@ module peripheral_bfm_testbench;
     .MEM_HIGH(32'h00007fff),
     .AUTORUN (0),
     .VERBOSE (0)
-  ) bfm_transactor_wb (
+  ) master (
     .wb_clk_i(wb_clk),
     .wb_rst_i(wb_rst),
     .wb_adr_o(wb_m2s_adr),
@@ -128,17 +128,25 @@ module peripheral_bfm_testbench;
 
   initial begin
     //Grab CLI parameters
-    if ($value$plusargs("transactions=%d", TRANSACTIONS)) bfm_transactor_wb.set_transactions(TRANSACTIONS);
-    if ($value$plusargs("subtransactions=%d", SUBTRANSACTIONS)) bfm_transactor_wb.set_subtransactions(SUBTRANSACTIONS);
-    if ($value$plusargs("seed=%d", SEED)) bfm_transactor_wb.SEED = SEED;
+    if ($value$plusargs("transactions=%d", TRANSACTIONS)) begin
+      master.set_transactions(TRANSACTIONS);
+    end
 
-    bfm_transactor_wb.display_settings;
-    bfm_transactor_wb.run;
-    bfm_transactor_wb.display_stats;
+    if ($value$plusargs("subtransactions=%d", SUBTRANSACTIONS)) begin
+      master.set_subtransactions(SUBTRANSACTIONS);
+    end
+
+    if ($value$plusargs("seed=%d", SEED)) begin
+      master.SEED = SEED;
+    end
+
+    master.display_settings;
+    master.run;
+    master.display_stats;
   end
 
   always @(posedge done) begin
-    tap_generator.ok("All tests complete");
+    vtg.ok("All tests complete");
     $display("All tests complete");
     $finish;
   end

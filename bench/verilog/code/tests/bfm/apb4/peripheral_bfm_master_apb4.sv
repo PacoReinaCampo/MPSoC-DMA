@@ -9,8 +9,8 @@
 //                  |_|                                                       //
 //                                                                            //
 //                                                                            //
-//              Peripheral-GPIO for MPSoC                                     //
-//              General Purpose Input Output for MPSoC                        //
+//              Peripheral-BFM for MPSoC                                      //
+//              Bus Functional Model for MPSoC                                //
 //              AMBA4 APB-Lite Bus Interface                                  //
 //                                                                            //
 ////////////////////////////////////////////////////////////////////////////////
@@ -59,7 +59,9 @@ module peripheral_bfm_master_apb4 #(
   input                         PSLVERR
 );
 
-  always @(negedge PRESETn) reset();
+  always @(negedge PRESETn) begin
+    reset();
+  end
 
   //////////////////////////////////////////////////////////////////////////////
   //
@@ -78,7 +80,11 @@ module peripheral_bfm_master_apb4 #(
     @(posedge PRESETn);
   endtask
 
-  task automatic write(input [PADDR_SIZE  -1:0] address, input [PDATA_SIZE/8-1:0] strb, input [PDATA_SIZE  -1:0] data);
+  task automatic write(
+    input [PADDR_SIZE  -1:0] address,
+    input [PDATA_SIZE/8-1:0] strb,
+    input [PDATA_SIZE  -1:0] data
+  );
     PSEL   = 1'b1;
     PADDR  = address;
     PSTRB  = strb;
@@ -99,7 +105,10 @@ module peripheral_bfm_master_apb4 #(
     PENABLE = 1'b0;
   endtask
 
-  task automatic read(input [PADDR_SIZE -1:0] address, output [PDATA_SIZE -1:0] data);
+  task automatic read(
+    input [PADDR_SIZE -1:0] address,
+    output [PDATA_SIZE -1:0] data
+  );
     PSEL   = 1'b1;
     PADDR  = address;
     PSTRB  = {PDATA_SIZE / 8{1'bx}};

@@ -196,13 +196,27 @@ module peripheral_bfm_slave_generic_axi4 (
   always @(posedge aclk) begin
     if (wready) begin
       case (write_strobe)
-        4'b0001: memory[write_address] <= {memory[write_address][31:8], write_data[7:0]};
-        4'b0010: memory[write_address] <= {memory[write_address][31:16], write_data[15:8], memory[write_address][7:0]};
-        4'b0100: memory[write_address] <= {memory[write_address][31:24], write_data[23:16], memory[write_address][15:0]};
-        4'b1000: memory[write_address] <= {write_data[31:24], memory[write_address][23:0]};
-        4'b0011: memory[write_address] <= {write_data[31:16], memory[write_address][15:0]};
-        4'b1100: memory[write_address] <= {memory[write_address][31:16], write_data[15:0]};
-        4'b1111: memory[write_address] <= write_data[31:0];
+        4'b0001: begin
+          memory[write_address] <= {memory[write_address][31:8], write_data[7:0]};
+        end
+        4'b0010: begin
+          memory[write_address] <= {memory[write_address][31:16], write_data[15:8], memory[write_address][7:0]};
+        end
+        4'b0100: begin
+          memory[write_address] <= {memory[write_address][31:24], write_data[23:16], memory[write_address][15:0]};
+        end
+        4'b1000: begin
+          memory[write_address] <= {write_data[31:24], memory[write_address][23:0]};
+        end
+        4'b0011: begin
+          memory[write_address] <= {write_data[31:16], memory[write_address][15:0]};
+        end
+        4'b1100: begin
+          memory[write_address] <= {memory[write_address][31:16], write_data[15:0]};
+        end
+        4'b1111: begin
+          memory[write_address] <= write_data[31:0];
+        end
       endcase
     end
   end

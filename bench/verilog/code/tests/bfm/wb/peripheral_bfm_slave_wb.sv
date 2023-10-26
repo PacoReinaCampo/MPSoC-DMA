@@ -11,7 +11,7 @@
 //                                                                            //
 //              Peripheral-BFM for MPSoC                                      //
 //              Bus Functional Model for MPSoC                                //
-//              WishBone Bus Interface                                        //
+//              Wishbone Bus Interface                                        //
 //                                                                            //
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -75,7 +75,6 @@ module peripheral_bfm_slave_wb #(
   //
   // Variables
   //
-
   reg            has_next = 1'b0;
 
   reg            op = READ;
@@ -99,19 +98,33 @@ module peripheral_bfm_slave_wb #(
       wb_rty_o <= #TP 1'b0;
 
       if (wb_rst !== 1'b0) begin
-        if (DEBUG) $display("%0d : waiting for reset release", $time);
+        if (DEBUG) begin
+          $display("%0d : waiting for reset release", $time);
+        end
+
         @(negedge wb_rst);
         @(posedge wb_clk);
-        if (DEBUG) $display("%0d : Reset was released", $time);
+
+        if (DEBUG) begin
+          $display("%0d : Reset was released", $time);
+        end
       end
 
       //Catch start of next cycle
-      if (!wb_cyc_i) @(posedge wb_cyc_i);
+      if (!wb_cyc_i) begin
+        @(posedge wb_cyc_i);
+      end
+
       @(posedge wb_clk);
 
       //Make sure that wb_cyc_i is still asserted at next clock edge to avoid glitches
-      while (wb_cyc_i !== 1'b1) @(posedge wb_clk);
-      if (DEBUG) $display("%0d : Got wb_cyc_i", $time);
+      while (wb_cyc_i !== 1'b1) begin
+        @(posedge wb_clk);
+      end
+
+      if (DEBUG) begin
+        $display("%0d : Got wb_cyc_i", $time);
+      end
 
       cycle_type = get_cycle_type(wb_cti_i);
 
@@ -134,7 +147,6 @@ module peripheral_bfm_slave_wb #(
   task read_ack;
     input [DW-1:0] data_i;
     begin
-
       data = data_i;
       next();
     end
@@ -143,7 +155,10 @@ module peripheral_bfm_slave_wb #(
   task write_ack;
     output [DW-1:0] data_o;
     begin
-      if (DEBUG) $display("%0d : Write ack", $time);
+      if (DEBUG) begin
+        $display("%0d : Write ack", $time);
+      end
+
       next();
       data_o = data;
     end
@@ -151,7 +166,9 @@ module peripheral_bfm_slave_wb #(
 
   task next;
     begin
-      if (DEBUG) $display("%0d : next address=0x%h, data=0x%h, op=%b", $time, address, data, op);
+      if (DEBUG) begin
+        $display("%0d : next address=0x%h, data=0x%h, op=%b", $time, address, data, op);
+      end
 
       wb_dat_o <= #TP{DW{1'b0}};
       wb_ack_o <= #TP 1'b0;
@@ -159,11 +176,17 @@ module peripheral_bfm_slave_wb #(
       wb_rty_o <= #TP 1'b0;  //TODO : rty not supported
 
       if (err) begin
-        if (DEBUG) $display("%0d, Error", $time);
+        if (DEBUG) begin
+          $display("%0d, Error", $time);
+        end
+
         wb_err_o <= #TP 1'b1;
         has_next = 1'b0;
       end else begin
-        if (op === READ) wb_dat_o <= #TP data;
+        if (op === READ) begin
+          wb_dat_o <= #TP data;
+        end
+
         wb_ack_o <= #TP 1'b1;
       end
 

@@ -137,7 +137,7 @@ module peripheral_bfm_master_wb #(
       err_o = wb_err_i;
       insert_wait_states;
     end
-  endtask  //
+  endtask
 
   task write_burst;
     input [AW  -1:0] base_addr;
@@ -294,19 +294,27 @@ module peripheral_bfm_master_wb #(
       wb_cyc_o <= #TP 1'b1;
 
       if (cycle_type == CTI_CLASSIC) begin
-        if (VERBOSE > 1) $display("INIT: Classic Cycle");
+        if (VERBOSE > 1) begin
+          $display("INIT: Classic Cycle");
+        end
         wb_cti_o <= #TP 3'b000;
         wb_bte_o <= #TP 2'b00;
       end else if (index == burst_length - 1) begin
-        if (VERBOSE > 1) $display("INIT: Burst - last cycle");
+        if (VERBOSE > 1) begin
+          $display("INIT: Burst - last cycle");
+        end
         wb_cti_o <= #TP 3'b111;
         wb_bte_o <= #TP 2'b00;
       end else if (cycle_type == CTI_CONST_BURST) begin
-        if (VERBOSE > 1) $display("INIT: Const Burst cycle");
+        if (VERBOSE > 1) begin
+          $display("INIT: Const Burst cycle");
+        end
         wb_cti_o <= #TP 3'b001;
         wb_bte_o <= #TP 2'b00;
       end else begin
-        if (VERBOSE > 1) $display("INIT: Incr Burst cycle");
+        if (VERBOSE > 1) begin
+          $display("INIT: Incr Burst cycle");
+        end
         wb_cti_o <= #TP 3'b010;
         wb_bte_o <= #TP burst_type[1:0];
       end
@@ -319,7 +327,9 @@ module peripheral_bfm_master_wb #(
       wb_dat_o <= #TP(op === WRITE) ? data : {DW{1'b0}};
       wb_stb_o <= #TP 1'b1;  //FIXME: Add wait states
 
-      if ((index == burst_length - 1) && (cycle_type !== CTI_CLASSIC)) wb_cti_o <= #TP 3'b111;
+      if ((index == burst_length - 1) && (cycle_type !== CTI_CLASSIC)) begin
+        wb_cti_o <= #TP 3'b111;
+      end
 
       @(posedge wb_clk_i);
       while (wb_ack_i !== 1'b1) @(posedge wb_clk_i);

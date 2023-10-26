@@ -9,8 +9,8 @@
 //                  |_|                                                       //
 //                                                                            //
 //                                                                            //
-//              Peripheral-GPIO for MPSoC                                     //
-//              General Purpose Input Output for MPSoC                        //
+//              Peripheral-BFM for MPSoC                                      //
+//              Bus Functional Model for MPSoC                                //
 //              AMBA4 APB-Lite Bus Interface                                  //
 //                                                                            //
 ////////////////////////////////////////////////////////////////////////////////
@@ -159,53 +159,78 @@ module peripheral_gpio_apb4 #(
 
   //APB write to Mode register
   always @(posedge PCLK, negedge PRESETn) begin
-    if (!PRESETn) mode_reg <= {PDATA_SIZE{1'b0}};
-    else if (is_write_to_adr(MODE)) mode_reg <= get_write_value(mode_reg);
+    if (!PRESETn) begin
+      mode_reg <= {PDATA_SIZE{1'b0}};
+    end else if (is_write_to_adr(MODE)) begin
+      mode_reg <= get_write_value(mode_reg);
+    end
   end
 
   //APB write to Direction register
   always @(posedge PCLK, negedge PRESETn) begin
-    if (!PRESETn) dir_reg <= {PDATA_SIZE{1'b0}};
-    else if (is_write_to_adr(DIRECTION)) dir_reg <= get_write_value(dir_reg);
+    if (!PRESETn) begin
+      dir_reg <= {PDATA_SIZE{1'b0}};
+    end else if (is_write_to_adr(DIRECTION)) begin
+      dir_reg <= get_write_value(dir_reg);
+    end
   end
 
   //APB write to Output register
   //treat writes to Input register same
   always @(posedge PCLK, negedge PRESETn) begin
-    if (!PRESETn) out_reg <= {PDATA_SIZE{1'b0}};
-    else if (is_write_to_adr(OUTPUT) || is_write_to_adr(INPUT)) out_reg <= get_write_value(out_reg);
+    if (!PRESETn) begin
+      out_reg <= {PDATA_SIZE{1'b0}};
+    end else if (is_write_to_adr(OUTPUT) || is_write_to_adr(INPUT)) begin
+      out_reg <= get_write_value(out_reg);
+    end
   end
 
   //APB write to Trigger Type register
   always @(posedge PCLK, negedge PRESETn) begin
-    if (!PRESETn) tr_type_reg <= {PDATA_SIZE{1'b0}};
-    else if (is_write_to_adr(TR_TYPE)) tr_type_reg <= get_write_value(tr_type_reg);
+    if (!PRESETn) begin
+      tr_type_reg <= {PDATA_SIZE{1'b0}};
+    end else if (is_write_to_adr(TR_TYPE)) begin
+      tr_type_reg <= get_write_value(tr_type_reg);
+    end
   end
 
   //APB write to Trigger Level/Edge0 register
   always @(posedge PCLK, negedge PRESETn) begin
-    if (!PRESETn) tr_lvl0_reg <= {PDATA_SIZE{1'b0}};
-    else if (is_write_to_adr(TR_LVL0)) tr_lvl0_reg <= get_write_value(tr_lvl0_reg);
+    if (!PRESETn) begin
+      tr_lvl0_reg <= {PDATA_SIZE{1'b0}};
+    end else if (is_write_to_adr(TR_LVL0)) begin
+      tr_lvl0_reg <= get_write_value(tr_lvl0_reg);
+    end
   end
 
   //APB write to Trigger Level/Edge1 register
   always @(posedge PCLK, negedge PRESETn) begin
-    if (!PRESETn) tr_lvl1_reg <= {PDATA_SIZE{1'b0}};
-    else if (is_write_to_adr(TR_LVL1)) tr_lvl1_reg <= get_write_value(tr_lvl1_reg);
+    if (!PRESETn) begin
+      tr_lvl1_reg <= {PDATA_SIZE{1'b0}};
+    end else if (is_write_to_adr(TR_LVL1)) begin
+      tr_lvl1_reg <= get_write_value(tr_lvl1_reg);
+    end
   end
 
   //APB write to Trigger Status register
   //Writing a '1' clears the status register
   always @(posedge PCLK, negedge PRESETn) begin
-    if (!PRESETn) tr_stat_reg <= {PDATA_SIZE{1'b0}};
-    else if (is_write_to_adr(TR_STAT)) tr_stat_reg <= get_clearonwrite_value(tr_stat_reg) | tr_status;
-    else tr_stat_reg <= tr_stat_reg | tr_status;
+    if (!PRESETn) begin
+      tr_stat_reg <= {PDATA_SIZE{1'b0}};
+    end else if (is_write_to_adr(TR_STAT)) begin
+      tr_stat_reg <= get_clearonwrite_value(tr_stat_reg) | tr_status;
+    end else begin
+      tr_stat_reg <= tr_stat_reg | tr_status;
+    end
   end
 
   //APB write to Interrupt Enable register
   always @(posedge PCLK, negedge PRESETn) begin
-    if (!PRESETn) irq_ena_reg <= {PDATA_SIZE{1'b0}};
-    else if (is_write_to_adr(IRQ_ENA)) irq_ena_reg <= get_write_value(irq_ena_reg);
+    if (!PRESETn) begin
+      irq_ena_reg <= {PDATA_SIZE{1'b0}};
+    end else if (is_write_to_adr(IRQ_ENA)) begin
+      irq_ena_reg <= get_write_value(irq_ena_reg);
+    end
   end
 
   // APB Reads
@@ -227,8 +252,11 @@ module peripheral_gpio_apb4 #(
   // Internals
   always @(posedge PCLK) begin
     for (int n = 0; n < INPUT_STAGES; n++) begin
-      if (n == 0) input_regs[n] <= gpio_i;
-      else input_regs[n] <= input_regs[n-1];
+      if (n == 0) begin
+        input_regs[n] <= gpio_i;
+      end else begin
+        input_regs[n] <= input_regs[n-1];
+      end
     end
   end
 
@@ -265,14 +293,20 @@ module peripheral_gpio_apb4 #(
 
   //detect rising edge
   always @(posedge PCLK, negedge PRESETn) begin
-    if (!PRESETn) tr_rising_edge_reg <= {PDATA_SIZE{1'b0}};
-    else tr_rising_edge_reg <= in_reg & ~tr_in_dly_reg;
+    if (!PRESETn) begin
+      tr_rising_edge_reg <= {PDATA_SIZE{1'b0}};
+    end else begin
+      tr_rising_edge_reg <= in_reg & ~tr_in_dly_reg;
+    end
   end
 
   //detect falling edge
   always @(posedge PCLK, negedge PRESETn) begin
-    if (!PRESETn) tr_falling_edge_reg <= {PDATA_SIZE{1'b0}};
-    else tr_falling_edge_reg <= tr_in_dly_reg & ~in_reg;
+    if (!PRESETn) begin
+      tr_falling_edge_reg <= {PDATA_SIZE{1'b0}};
+    end else begin
+      tr_falling_edge_reg <= tr_in_dly_reg & ~in_reg;
+    end
   end
 
   //trigger status
@@ -287,7 +321,10 @@ module peripheral_gpio_apb4 #(
 
   // Interrupt
   always @(posedge PCLK, negedge PRESETn) begin
-    if (!PRESETn) irq_o <= 1'b0;
-    else irq_o <= |(irq_ena_reg & tr_stat_reg);
+    if (!PRESETn) begin
+      irq_o <= 1'b0;
+    end else begin
+      irq_o <= |(irq_ena_reg & tr_stat_reg);
+    end
   end
 endmodule

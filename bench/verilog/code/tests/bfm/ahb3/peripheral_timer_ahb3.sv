@@ -9,8 +9,8 @@
 //                  |_|                                                       //
 //                                                                            //
 //                                                                            //
-//              Peripheral-GPIO for MPSoC                                     //
-//              General Purpose Input Output for MPSoC                        //
+//              Peripheral-BFM for MPSoC                                      //
+//              Bus Functional Model for MPSoC                                //
 //              AMBA3 AHB-Lite Bus Interface                                  //
 //                                                                            //
 ////////////////////////////////////////////////////////////////////////////////
@@ -192,12 +192,20 @@ module peripheral_timer_ahb3 #(
 
   function logic [HDATA_SIZE-1:0] gen_wval;
     //Returns the new value for a register
-    // if be[n] == '1' then gen_val[byte_n] = new_val[byte_n]
-    // else                 gen_val[byte_n] = old_val[byte_n]
-    input [HDATA_SIZE-1:0] old_val, new_val;
+
+    // if (be[n] == '1') begin 
+    //   gen_val[byte_n] = new_val[byte_n];
+    // end else begin
+    //   gen_val[byte_n] = old_val[byte_n];
+    // end
+
+    input [HDATA_SIZE-1:0] old_val;
+    input [HDATA_SIZE-1:0] new_val;
     input [BE_SIZE   -1:0] be;
 
-    for (int n = 0; n < BE_SIZE; n++) gen_wval[n*8+:8] = be[n] ? new_val[n*8+:8] : old_val[n*8+:8];
+    for (int n = 0; n < BE_SIZE; n++) begin
+      gen_wval[n*8+:8] = be[n] ? new_val[n*8+:8] : old_val[n*8+:8];
+    end
   endfunction : gen_wval
 
 
@@ -226,18 +234,25 @@ module peripheral_timer_ahb3 #(
 
   //generate internal write signal
   always @(posedge HCLK) begin
-    if (HREADY) ahb_we <= HSEL & HWRITE & (HTRANS != HTRANS_BUSY) & (HTRANS != HTRANS_IDLE);
-    else ahb_we <= 1'b0;
+    if (HREADY) begin
+      ahb_we <= HSEL & HWRITE & (HTRANS != HTRANS_BUSY) & (HTRANS != HTRANS_IDLE);
+    end else begin
+      ahb_we <= 1'b0;
+    end
   end
 
   //decode Byte-Enables
   always @(posedge HCLK) begin
-    if (HREADY) ahb_be <= gen_be(HSIZE, HADDR);
+    if (HREADY) begin
+      ahb_be <= gen_be(HSIZE, HADDR);
+    end
   end
 
   //store write address
   always @(posedge HCLK) begin
-    if (HREADY) ahb_waddr <= HADDR;
+    if (HREADY) begin
+      ahb_waddr <= HADDR;
+    end
   end
 
   //generate control registers 'read' version
@@ -263,7 +278,9 @@ module peripheral_timer_ahb3 #(
           prescale_wr <= 1'b0;
 
           //increment TIME register
-          if (count_enable) time_reg <= time_reg + 1;
+          if (count_enable) begin
+            time_reg <= time_reg + 1;
+          end
 
           //check timecmp and set ipending bits
           for (idx = 0; idx < TIMERS; idx++) begin
@@ -278,16 +295,28 @@ module peripheral_timer_ahb3 #(
                 enabled      <= 1'b1;
                 prescale_wr  <= 1'b1;
               end
-              RESERVED: ;
-              IENABLE:  ienable_wr <= gen_wval(ienable_rd, HWDATA, ahb_be);
-              IPENDING: ;
-              TIME:     time_reg[31:0] <= gen_wval(time_reg[31:0], HWDATA, ahb_be);
-              TIME_MSB: time_reg[63:32] <= gen_wval(time_reg[63:32], HWDATA, ahb_be);
+              RESERVED: begin
+              end
+              IENABLE:  begin
+                ienable_wr <= gen_wval(ienable_rd, HWDATA, ahb_be);
+              end
+              IPENDING: begin
+              end
+              TIME: begin
+                time_reg[31:0] <= gen_wval(time_reg[31:0], HWDATA, ahb_be);
+              end
+              TIME_MSB: begin
+                time_reg[63:32] <= gen_wval(time_reg[63:32], HWDATA, ahb_be);
+              end
               default: begin  //all other addresses are considered 'timecmp'
                 //write timecmp register
                 case (ahb_waddr[2])
-                  1'b0: timecmp_reg[timer_idx(ahb_waddr, TIMECMP)][31:0] <= gen_wval(timecmp_reg[timer_idx(ahb_waddr, TIMECMP)][31:0], HWDATA, ahb_be);
-                  1'b1: timecmp_reg[timer_idx(ahb_waddr, TIMECMP)][63:32] <= gen_wval(timecmp_reg[timer_idx(ahb_waddr, TIMECMP)][63:32], HWDATA, ahb_be);
+                  1'b0: begin
+                    timecmp_reg[timer_idx(ahb_waddr, TIMECMP)][31:0] <= gen_wval(timecmp_reg[timer_idx(ahb_waddr, TIMECMP)][31:0], HWDATA, ahb_be);
+                  end
+                  1'b1: begin
+                    timecmp_reg[timer_idx(ahb_waddr, TIMECMP)][63:32] <= gen_wval(timecmp_reg[timer_idx(ahb_waddr, TIMECMP)][63:32], HWDATA, ahb_be);
+                  end
                 endcase
 
                 //a write to timecmp also clears the interrupt-pending bit
@@ -313,7 +342,9 @@ module peripheral_timer_ahb3 #(
           prescale_wr <= 1'b0;
 
           //increment TIME registers
-          if (count_enable) time_reg <= time_reg + 1;
+          if (count_enable) begin
+            time_reg <= time_reg + 1;
+          end
 
           //check timecmp and set ipending bits
           for (idx = 0; idx < TIMERS; idx++) begin
@@ -329,8 +360,12 @@ module peripheral_timer_ahb3 #(
                 enabled      <= 1'b1;
                 prescale_wr  <= 1'b1;
               end
-              IPENDING_IENABLE: ienable_wr <= gen_wval({32'h0, ienable_rd}, HWDATA, ahb_be);
-              TIME:             time_reg <= gen_wval(time_reg, HWDATA, ahb_be);
+              IPENDING_IENABLE: begin
+                ienable_wr <= gen_wval({32'h0, ienable_rd}, HWDATA, ahb_be);
+              end
+              TIME: begin
+                time_reg <= gen_wval(time_reg, HWDATA, ahb_be);
+              end
               default: begin  //all other addresses are considered 'timecmp'
                 timecmp_reg[timer_idx(ahb_waddr, TIMECMP)] <= gen_wval(timecmp_reg[timer_idx(ahb_waddr, TIMECMP)], HWDATA, ahb_be);
 
@@ -382,21 +417,33 @@ module peripheral_timer_ahb3 #(
 
   //Generate count-enable
   always @(posedge HCLK, negedge HRESETn) begin
-    if (!HRESETn) prescale_cnt <= 'h0;
-    else if (prescale_wr || ~|prescale_cnt) prescale_cnt <= prescale_reg;
-    else prescale_cnt <= prescale_cnt - 'h1;
+    if (!HRESETn) begin
+      prescale_cnt <= 'h0;
+    end else if (prescale_wr || ~|prescale_cnt) begin
+      prescale_cnt <= prescale_reg;
+    end else begin
+      prescale_cnt <= prescale_cnt - 'h1;
+    end
   end
 
   always @(posedge HCLK, negedge HRESETn) begin
-    if (!HRESETn) count_enable <= 1'b0;
-    else if (!enabled) count_enable <= 1'b0;
-    else count_enable <= ~|prescale_cnt;
+    if (!HRESETn) begin
+      count_enable <= 1'b0;
+    end else if (!enabled) begin
+      count_enable <= 1'b0;
+    end else begin
+      count_enable <= ~|prescale_cnt;
+    end
   end
 
   //Generate interrupt
   always @(posedge HCLK, negedge HRESETn) begin
-    if (!HRESETn) tint <= 1'b0;
-    else if (|(ipending_rd & ienable_rd)) tint <= 1'b1;
-    else tint <= 1'b0;
+    if (!HRESETn) begin
+      tint <= 1'b0;
+    end else if (|(ipending_rd & ienable_rd)) begin
+      tint <= 1'b1;
+    end else begin
+      tint <= 1'b0;
+    end
   end
 endmodule : peripheral_timer_ahb3

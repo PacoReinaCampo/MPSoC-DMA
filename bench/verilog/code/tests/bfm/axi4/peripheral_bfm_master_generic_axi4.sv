@@ -227,4 +227,4 @@ module peripheral_bfm_master_generic_axi4 (
       end
     end
   endtask
-endmodule  // peripheral_bfm_master_axi4
+endmodule  // peripheral_bfm_master_generic_axi4
