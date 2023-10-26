@@ -322,7 +322,9 @@ module peripheral_bfm_ahb3 #(
     wbuffer.delete();
   endtask : test_registers_rw32
 
-  task program_prescaler(input [31:0] value);
+  task program_prescaler(
+    input [31:0] value
+  );
     //create buffer
     logic [HDATA_SIZE-1:0] buffer[];
     buffer    = new[1];

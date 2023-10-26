@@ -9,8 +9,8 @@
 //                  |_|                                                       //
 //                                                                            //
 //                                                                            //
-//              Peripheral-GPIO for MPSoC                                     //
-//              General Purpose Input Output for MPSoC                        //
+//              Peripheral-BFM for MPSoC                                      //
+//              Bus Functional Model for MPSoC                                //
 //              AMBA3 AHB-Lite Bus Interface                                  //
 //                                                                            //
 ////////////////////////////////////////////////////////////////////////////////
@@ -43,6 +43,8 @@
 import peripheral_ahb3_pkg::*;
 
 module peripheral_bfm_ahb3 #(
+  parameter TIMERS = 2,  //Number of timers
+
   parameter HADDR_SIZE = 16,
   parameter HDATA_SIZE = 32
 ) (
@@ -60,7 +62,9 @@ module peripheral_bfm_ahb3 #(
   output [           1:0] HTRANS,
   output                  HMASTLOCK,
   input                   HREADY,
-  input                   HRESP
+  input                   HRESP,
+
+  input tint
 );
 
   //////////////////////////////////////////////////////////////////////////////
@@ -79,9 +83,6 @@ module peripheral_bfm_ahb3 #(
   localparam [HADDR_SIZE-1:0] TIMECMP_MSB = 'h1c;  //address = n*'h08 + 'h1c;
 
   localparam PRESCALE_VALUE = 5;
-
-  // Number of timers
-  localparam TIMERS = 2;
 
   //////////////////////////////////////////////////////////////////////////////
   //
@@ -128,6 +129,9 @@ module peripheral_bfm_ahb3 #(
 
     //Test registers
     test_registers_rw32();
+
+    //Program prescale register
+    //program_prescaler(PRESCALE_VALUE -1); //counts N+1
 
     //Finish simulation
     repeat (100) @(posedge HCLK);
@@ -182,36 +186,6 @@ module peripheral_bfm_ahb3 #(
     //all zeros ... why bother
   endtask : test_reset_register_values
 
-  task test_ienable_timers;
-    //enable interrupts for all 32 possible timers
-    //only the LSBs for the available timers should be '1'
-
-    //create buffer
-    logic [HDATA_SIZE-1:0] wbuffer[], rbuffer[];
-    wbuffer = new[1];
-    rbuffer = new[1];
-
-    $write("Testing amount of timers ... ");
-    wbuffer[0] = {HDATA_SIZE{1'b1}};
-    bfm_master_ahb3.write(IENABLE, wbuffer, HSIZE_WORD, HBURST_SINGLE);  // write all '1's
-    bfm_master_ahb3.idle();  // wait for HWDATA
-    bfm_master_ahb3.read(IENABLE, rbuffer, HSIZE_WORD, HBURST_SINGLE);  // read actual value
-    wbuffer[0] = {HDATA_SIZE{1'b0}};
-    bfm_master_ahb3.write(IENABLE, wbuffer, HSIZE_WORD, HBURST_SINGLE);  // restore all '0's
-    bfm_master_ahb3.idle();  // Idle bus
-    wait fork;  // wait for all threads to complete
-
-    if (rbuffer[0] !== {TIMERS{1'b1}}) begin
-      errors++;
-      $display("FAILED");
-      $error("Wrong number of timers. Expected %0d, got %0d", TIMERS, $clog2(rbuffer[0]));
-    end else $display("OK");
-
-    //discard buffers
-    rbuffer.delete();
-    wbuffer.delete();
-  endtask : test_ienable_timers
-
   task test_registers_rw32;
     int error;
     int hsize;
@@ -223,7 +197,7 @@ module peripheral_bfm_ahb3 #(
     logic [HDATA_SIZE-1:0] wbuffer[][], rbuffer[][];
 
     //create list of registers
-    for (n = 0; n < reg_cnt; n++)
+    for (n = 0; n < reg_cnt; n++) begin
       case (n)
         0:       registers[n] = PRESCALE;
         1:       registers[n] = IENABLE;
@@ -231,6 +205,7 @@ module peripheral_bfm_ahb3 #(
         3:       registers[n] = TIME_MSB;
         default: registers[n] = (n - 4) * 'h08 + (n[0] ? TIMECMP_MSB : TIMECMP);
       endcase
+    end
 
     //create buffers
     wbuffer = new[reg_cnt];
@@ -259,7 +234,9 @@ module peripheral_bfm_ahb3 #(
         end
       end
 
-      for (n = 0; n < reg_cnt; n++) bfm_master_ahb3.write(registers[n], wbuffer[n], hsize, hburst);  // write register
+      for (n = 0; n < reg_cnt; n++) begin
+        bfm_master_ahb3.write(registers[n], wbuffer[n], hsize, hburst);  // write register
+      end
 
       bfm_master_ahb3.idle();  // wait for HWDATA
 
@@ -273,7 +250,9 @@ module peripheral_bfm_ahb3 #(
       for (n = 0; n < reg_cnt; n++) begin
         for (int beat = 0; beat < rbuffer[n].size(); beat++) begin
           //mask byte ...
-          if (HSIZE == HSIZE_BYTE) rbuffer[n][beat] &= 'hff;
+          if (HSIZE == HSIZE_BYTE) begin
+            rbuffer[n][beat] &= 'hff;
+          end
 
           if (n == 1) begin  //IENABLE
             wbuffer[n][beat] &= {{32 - TIMERS{1'b0}}, {TIMERS{1'b1}}};
@@ -294,14 +273,18 @@ module peripheral_bfm_ahb3 #(
 
     //reset registers to all '0'
     wbuffer[0][0] = 0;
-    for (n = 0; n < reg_cnt; n++) bfm_master_ahb3.write(registers[n], wbuffer[0], HSIZE_WORD, HBURST_SINGLE);  //write register
+    for (n = 0; n < reg_cnt; n++) begin
+      bfm_master_ahb3.write(registers[n], wbuffer[0], HSIZE_WORD, HBURST_SINGLE);  //write register
+    end
 
     //discard buffers
     rbuffer.delete();
     wbuffer.delete();
   endtask : test_registers_rw32
 
-  task program_prescaler(input [31:0] value);
+  task program_prescaler(
+    input [31:0] value
+  );
     //create buffer
     logic [HDATA_SIZE-1:0] buffer[];
     buffer    = new[1];
