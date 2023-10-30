@@ -303,7 +303,9 @@ module peripheral_bfm_ahb3 #(
       errors++;
       $display("FAILED");
       $error("Wrong register value. Expected %0d, got %0d", value, buffer[0]);
-    end else $display("OK");
+    end else begin
+      $display("OK");
+    end
 
     //discard buffer
     buffer.delete();

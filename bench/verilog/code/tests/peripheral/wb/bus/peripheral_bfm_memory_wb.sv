@@ -130,8 +130,11 @@ module peripheral_bfm_memory_wb #(
     bfm0.init();
     address = bfm0.address;  //Fetch start address
 
-    if (bfm0.op === WRITE) writes = writes + 1;
-    else reads = reads + 1;
+    if (bfm0.op === WRITE) begin
+      writes = writes + 1;
+    end else begin
+      reads = reads + 1;
+    end
     while (bfm0.has_next) begin
       //Set error on out of range accesses
       if (address[31:ADR_LSB] > mem_words) begin
@@ -140,18 +143,28 @@ module peripheral_bfm_memory_wb #(
       end else begin
         if (bfm0.op === WRITE) begin
           bfm0.write_ack(data);
-          if (DEBUG) $display("%d : ram Write 0x%h = 0x%h %b", $time, address, data, bfm0.mask);
-          for (i = 0; i < DW / 8; i = i + 1) if (bfm0.mask[i]) mem[address[31:ADR_LSB]][i*8+:8] = data[i*8+:8];
+          if (DEBUG) begin
+            $display("%d : ram Write 0x%h = 0x%h %b", $time, address, data, bfm0.mask);
+          end
+          for (i = 0; i < DW / 8; i = i + 1) begin
+            if (bfm0.mask[i]) begin
+              mem[address[31:ADR_LSB]][i*8+:8] = data[i*8+:8];
+            end
+          end
         end else begin
           data = {AW{1'b0}};
           for (i = 0; i < DW / 8; i = i + 1) if (bfm0.mask[i]) data[i*8+:8] = mem[address[31:ADR_LSB]][i*8+:8];
-          if (DEBUG) $display("%d : ram Read  0x%h = 0x%h %b", $time, address, data, bfm0.mask);
+          if (DEBUG) begin
+            $display("%d : ram Read  0x%h = 0x%h %b", $time, address, data, bfm0.mask);
+          end
           delay = $dist_uniform(seed, RD_MIN_DELAY, RD_MAX_DELAY);
           repeat (delay) @(posedge wb_clk_i);
           bfm0.read_ack(data);
         end
       end
-      if (bfm0.cycle_type === BURST_CYCLE) address = wb_next_adr(address, wb_cti_i, wb_bte_i, DW);
+      if (bfm0.cycle_type === BURST_CYCLE) begin
+        address = wb_next_adr(address, wb_cti_i, wb_bte_i, DW);
+      end
     end
   end
 endmodule  // wb_bfm_memory

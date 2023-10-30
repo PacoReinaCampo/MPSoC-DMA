@@ -64,7 +64,9 @@ module peripheral_bfm_master_ahb3 #(
   input                       HRESP
 );
 
-  always @(negedge HRESETn) reset();
+  always @(negedge HRESETn) begin
+    reset();
+  end
 
   //////////////////////////////////////////////////////////////////////////////
   //
@@ -99,7 +101,12 @@ module peripheral_bfm_master_ahb3 #(
     HTRANS <= HTRANS_IDLE;
   endtask
 
-  task automatic write(input [HADDR_SIZE-1:0] address, ref [HDATA_SIZE-1:0] data[], input [2:0] size, input [2:0] burst);
+  task automatic write(
+    input [HADDR_SIZE-1:0] address,
+    ref [HDATA_SIZE-1:0] data[],
+    input [2:0] size,
+    input [2:0] burst
+  );
     int beats;
 
     beats = get_beats_per_burst(burst);

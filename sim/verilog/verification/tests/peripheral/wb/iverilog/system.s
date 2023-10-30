@@ -42,7 +42,9 @@
 ##                                                                               ##
 ###################################################################################
 
-+incdir+../../../../../../../rtl/verilog/code/pkg/peripheral/wb
+../../../../../../../rtl/verilog/code/pkg/core/peripheral_dma_pkg.sv
+
+../../../../../../../rtl/verilog/code/pkg/peripheral/bb/peripheral_bb_pkg.sv
 
 ../../../../../../../rtl/verilog/code/peripheral/wb/peripheral_dma_initiator_wb.sv
 ../../../../../../../rtl/verilog/code/peripheral/wb/peripheral_dma_initiator_nocres_wb.sv
