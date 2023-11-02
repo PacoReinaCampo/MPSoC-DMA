@@ -117,7 +117,7 @@ module peripheral_dma_testbench;
   // Module Body
   //
 
-  //DUT AHB3
+  // DUT AHB3
   peripheral_dma_top_ahb3 #(
     .ADDR_WIDTH(ADDR_WIDTH),
     .DATA_WIDTH(DATA_WIDTH),

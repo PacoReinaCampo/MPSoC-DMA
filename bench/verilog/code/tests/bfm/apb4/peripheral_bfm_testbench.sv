@@ -48,7 +48,7 @@ module peripheral_bfm_testbench;
   // Variables
   //
 
-  //APB signals
+  // APB signals
   logic                    PSEL;
   logic                    PENABLE;
   logic [             3:0] PADDR;
@@ -59,10 +59,10 @@ module peripheral_bfm_testbench;
   logic                    PREADY;
   logic                    PSLVERR;
 
-  //GPIOs
+  // GPIOs
   logic [PDATA_SIZE -1:0] gpio_o, gpio_i, gpio_oe;
 
-  //IRQ
+  // IRQ
   logic irq_o;
 
   //////////////////////////////////////////////////////////////////////////////
@@ -79,7 +79,7 @@ module peripheral_bfm_testbench;
 
   initial begin : gen_PRESETn
     PRESETn = 1'b1;
-    //ensure falling edge of PRESETn
+    // ensure falling edge of PRESETn
     #10;
     PRESETn = 1'b0;
     #32;

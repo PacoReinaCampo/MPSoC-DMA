@@ -52,11 +52,11 @@ module peripheral_tap_generator #(
   //
   // Variables
   //
-  integer                          f;  //File handle
-  integer                          cur_tc = 0;  //Current testcase index
-  integer                          numtests = NUM_TESTS;  //Total number of testcases
+  integer                          f;  // File handle
+  integer                          cur_tc = 0;  // Current testcase index
+  integer                          numtests = NUM_TESTS;  // Total number of testcases
 
-  reg     [MAX_FILENAME_LEN*8-1:0] tapfile;  //TAP file to write
+  reg     [MAX_FILENAME_LEN*8-1:0] tapfile;  // TAP file to write
 
   //////////////////////////////////////////////////////////////////////////////
   //
@@ -130,7 +130,7 @@ module peripheral_tap_generator #(
   // Module Body
   //
   initial begin
-    //Grab CLI parameters and use parameters for default values
+    // Grab CLI parameters and use parameters for default values
     if (!$value$plusargs("tapfile=%s", tapfile)) begin
       tapfile = TAPFILE;
     end

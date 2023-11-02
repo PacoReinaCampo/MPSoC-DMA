@@ -41,7 +41,7 @@
  */
 
 module peripheral_gpio_apb4 #(
-  PDATA_SIZE = 8,  //must be a multiple of 8
+  PDATA_SIZE = 8,  // must be a multiple of 8
   PADDR_SIZE = 4
 ) (
   input                         PRESETn,
@@ -77,7 +77,7 @@ module peripheral_gpio_apb4 #(
   localparam TR_STAT = 7;
   localparam IRQ_ENA = 8;
 
-  //Number of synchronisation flipflop stages on GPIO inputs
+  // Number of synchronisation flipflop stages on GPIO inputs
   localparam INPUT_STAGES = 2;
 
   //////////////////////////////////////////////////////////////////////////////
@@ -85,7 +85,7 @@ module peripheral_gpio_apb4 #(
   // Variables
   //
 
-  //Control registers
+  // Control registers
   logic [PDATA_SIZE-1:0] mode_reg;
   logic [PDATA_SIZE-1:0] dir_reg;
   logic [PDATA_SIZE-1:0] out_reg;
@@ -96,13 +96,13 @@ module peripheral_gpio_apb4 #(
   logic [PDATA_SIZE-1:0] tr_stat_reg;
   logic [PDATA_SIZE-1:0] irq_ena_reg;
 
-  //Trigger registers
+  // Trigger registers
   logic [PDATA_SIZE-1:0] tr_in_dly_reg;
   logic [PDATA_SIZE-1:0] tr_rising_edge_reg;
   logic [PDATA_SIZE-1:0] tr_falling_edge_reg;
   logic [PDATA_SIZE-1:0] tr_status;
 
-  //Input register, to prevent metastability
+  // Input register, to prevent metastability
   logic [PDATA_SIZE-1:0] input_regs          [INPUT_STAGES];
 
 
@@ -121,13 +121,13 @@ module peripheral_gpio_apb4 #(
     return PSEL & PENABLE & PWRITE;
   endfunction : is_write
 
-  //Is this a valid write to address 0x...?
-  //Take 'address' as an argument
+  // Is this a valid write to address 0x...?
+  // Take 'address' as an argument
   function automatic is_write_to_adr(input [PADDR_SIZE-1:0] address);
     return is_write() & (PADDR == address);
   endfunction : is_write_to_adr
 
-  //What data is written?
+  // What data is written?
   //- Handles PSTRB, takes previous register/data value as an argument
   function automatic [PDATA_SIZE-1:0] get_write_value(input [PDATA_SIZE-1:0] orig_val);
     for (int n = 0; n < PDATA_SIZE / 8; n++) begin
@@ -135,7 +135,7 @@ module peripheral_gpio_apb4 #(
     end
   endfunction : get_write_value
 
-  //Clear bits on write
+  // Clear bits on write
   //- Handles PSTRB
   function automatic [PDATA_SIZE-1:0] get_clearonwrite_value(input [PDATA_SIZE-1:0] orig_val);
     for (int n = 0; n < PDATA_SIZE / 8; n++) begin
@@ -150,14 +150,14 @@ module peripheral_gpio_apb4 #(
 
   // APB accesses
 
-  //The core supports zero-wait state accesses on all transfers.
-  //It is allowed to drive PREADY with a hard wired signal
-  assign PREADY  = 1'b1;  //always ready
-  assign PSLVERR = 1'b0;  //Never an error
+  // The core supports zero-wait state accesses on all transfers.
+  // It is allowed to drive PREADY with a hard wired signal
+  assign PREADY  = 1'b1;  // always ready
+  assign PSLVERR = 1'b0;  // Never an error
 
   // APB Writes
 
-  //APB write to Mode register
+  // APB write to Mode register
   always @(posedge PCLK, negedge PRESETn) begin
     if (!PRESETn) begin
       mode_reg <= {PDATA_SIZE{1'b0}};
@@ -166,7 +166,7 @@ module peripheral_gpio_apb4 #(
     end
   end
 
-  //APB write to Direction register
+  // APB write to Direction register
   always @(posedge PCLK, negedge PRESETn) begin
     if (!PRESETn) begin
       dir_reg <= {PDATA_SIZE{1'b0}};
@@ -175,8 +175,8 @@ module peripheral_gpio_apb4 #(
     end
   end
 
-  //APB write to Output register
-  //treat writes to Input register same
+  // APB write to Output register
+  // treat writes to Input register same
   always @(posedge PCLK, negedge PRESETn) begin
     if (!PRESETn) begin
       out_reg <= {PDATA_SIZE{1'b0}};
@@ -185,7 +185,7 @@ module peripheral_gpio_apb4 #(
     end
   end
 
-  //APB write to Trigger Type register
+  // APB write to Trigger Type register
   always @(posedge PCLK, negedge PRESETn) begin
     if (!PRESETn) begin
       tr_type_reg <= {PDATA_SIZE{1'b0}};
@@ -194,7 +194,7 @@ module peripheral_gpio_apb4 #(
     end
   end
 
-  //APB write to Trigger Level/Edge0 register
+  // APB write to Trigger Level/Edge0 register
   always @(posedge PCLK, negedge PRESETn) begin
     if (!PRESETn) begin
       tr_lvl0_reg <= {PDATA_SIZE{1'b0}};
@@ -203,7 +203,7 @@ module peripheral_gpio_apb4 #(
     end
   end
 
-  //APB write to Trigger Level/Edge1 register
+  // APB write to Trigger Level/Edge1 register
   always @(posedge PCLK, negedge PRESETn) begin
     if (!PRESETn) begin
       tr_lvl1_reg <= {PDATA_SIZE{1'b0}};
@@ -212,8 +212,8 @@ module peripheral_gpio_apb4 #(
     end
   end
 
-  //APB write to Trigger Status register
-  //Writing a '1' clears the status register
+  // APB write to Trigger Status register
+  // Writing a '1' clears the status register
   always @(posedge PCLK, negedge PRESETn) begin
     if (!PRESETn) begin
       tr_stat_reg <= {PDATA_SIZE{1'b0}};
@@ -224,7 +224,7 @@ module peripheral_gpio_apb4 #(
     end
   end
 
-  //APB write to Interrupt Enable register
+  // APB write to Interrupt Enable register
   always @(posedge PCLK, negedge PRESETn) begin
     if (!PRESETn) begin
       irq_ena_reg <= {PDATA_SIZE{1'b0}};
@@ -286,12 +286,12 @@ module peripheral_gpio_apb4 #(
 
   // Triggers
 
-  //delay input register
+  // delay input register
   always @(posedge PCLK) begin
     tr_in_dly_reg <= in_reg;
   end
 
-  //detect rising edge
+  // detect rising edge
   always @(posedge PCLK, negedge PRESETn) begin
     if (!PRESETn) begin
       tr_rising_edge_reg <= {PDATA_SIZE{1'b0}};
@@ -300,7 +300,7 @@ module peripheral_gpio_apb4 #(
     end
   end
 
-  //detect falling edge
+  // detect falling edge
   always @(posedge PCLK, negedge PRESETn) begin
     if (!PRESETn) begin
       tr_falling_edge_reg <= {PDATA_SIZE{1'b0}};
@@ -309,7 +309,7 @@ module peripheral_gpio_apb4 #(
     end
   end
 
-  //trigger status
+  // trigger status
   always_comb begin
     for (int n = 0; n < PDATA_SIZE; n++) begin
       case (tr_type_reg[n])

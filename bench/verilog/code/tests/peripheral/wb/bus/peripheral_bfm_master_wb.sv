@@ -283,7 +283,7 @@ module peripheral_bfm_master_wb #(
     end
   endtask
 
-  //Low level tasks
+  // Low level tasks
   task init;
     begin
       if (wb_rst_i !== 1'b0) begin
@@ -327,7 +327,7 @@ module peripheral_bfm_master_wb #(
     begin
       wb_adr_o <= #TP addr;
       wb_dat_o <= #TP(op === WRITE) ? data : {DW{1'b0}};
-      wb_stb_o <= #TP 1'b1;  //FIXME: Add wait states
+      wb_stb_o <= #TP 1'b1;  // FIXME: Add wait states
 
       if ((index == burst_length - 1) && (cycle_type !== CTI_CLASSIC)) begin
         wb_cti_o <= #TP 3'b111;

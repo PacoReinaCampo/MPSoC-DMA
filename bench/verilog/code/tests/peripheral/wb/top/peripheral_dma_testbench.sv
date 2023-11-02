@@ -111,7 +111,7 @@ module peripheral_dma_testbench;
   // Module Body
   //
 
-  //DUT WB
+  // DUT WB
   peripheral_dma_top_wb #(
     .ADDR_WIDTH(ADDR_WIDTH),
     .DATA_WIDTH(DATA_WIDTH),

@@ -110,14 +110,14 @@ module peripheral_bfm_slave_wb #(
         end
       end
 
-      //Catch start of next cycle
+      // Catch start of next cycle
       if (!wb_cyc_i) begin
         @(posedge wb_cyc_i);
       end
 
       @(posedge wb_clk);
 
-      //Make sure that wb_cyc_i is still asserted at next clock edge to avoid glitches
+      // Make sure that wb_cyc_i is still asserted at next clock edge to avoid glitches
       while (wb_cyc_i !== 1'b1) begin
         @(posedge wb_clk);
       end
@@ -173,7 +173,7 @@ module peripheral_bfm_slave_wb #(
       wb_dat_o <= #TP{DW{1'b0}};
       wb_ack_o <= #TP 1'b0;
       wb_err_o <= #TP 1'b0;
-      wb_rty_o <= #TP 1'b0;  //TODO : rty not supported
+      wb_rty_o <= #TP 1'b0;  // TODO : rty not supported
 
       if (err) begin
         if (DEBUG) begin

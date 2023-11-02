@@ -77,7 +77,7 @@ module peripheral_dma_synthesis #(
   // Module Body
   //
 
-  //DUT WB
+  // DUT WB
   peripheral_wb_dma #(
     .SIM  (SIM),
     .DEBUG(DEBUG)

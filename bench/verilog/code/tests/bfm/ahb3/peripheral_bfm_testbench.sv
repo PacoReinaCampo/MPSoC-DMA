@@ -41,7 +41,7 @@
  */
 
 module peripheral_bfm_testbench;
-  parameter TIMERS = 3;  //Number of timers
+  parameter TIMERS = 3;  // Number of timers
 
   parameter HADDR_SIZE = 16;
   parameter HDATA_SIZE = 32;
@@ -51,7 +51,7 @@ module peripheral_bfm_testbench;
   // Variables
   //
 
-  //AHB signals
+  // AHB signals
   logic                   HSEL;
   logic [HADDR_SIZE -1:0] HADDR;
   logic [HDATA_SIZE -1:0] HWDATA;
@@ -66,7 +66,7 @@ module peripheral_bfm_testbench;
   logic                   HREADYOUT;
   logic                   HRESP;
 
-  //Timer Interrupt
+  // Timer Interrupt
   logic                   tint;
 
   //////////////////////////////////////////////////////////////////////////////
@@ -82,7 +82,7 @@ module peripheral_bfm_testbench;
 
   initial begin : gen_HRESETn
     HRESETn = 1'b1;
-    //ensure falling edge of HRESETn
+    // ensure falling edge of HRESETn
     #10;
     HRESETn = 1'b0;
     #32;

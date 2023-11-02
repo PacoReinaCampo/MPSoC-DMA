@@ -49,7 +49,7 @@ module peripheral_bfm_master_ahb3 #(
   input HRESETn,
   input HCLK,
 
-  //AHB Master Interface
+  // AHB Master Interface
   output reg                  HSEL,
   output reg [HADDR_SIZE-1:0] HADDR,
   output reg [HDATA_SIZE-1:0] HWDATA,
@@ -77,7 +77,7 @@ module peripheral_bfm_master_ahb3 #(
   //
 
   task reset();
-    //Reset AHB Bus
+    // Reset AHB Bus
     HSEL      = 1'b0;
     HADDR     = 'hx;
     HWDATA    = 'hx;
@@ -92,8 +92,8 @@ module peripheral_bfm_master_ahb3 #(
   endtask
 
   task idle();
-    //Put AHB Bus in IDLE state
-    //Call after write or read sequence
+    // Put AHB Bus in IDLE state
+    // Call after write or read sequence
     wait4hready();
     HSEL   <= 1'b0;
     HTRANS <= HTRANS_IDLE;
@@ -180,25 +180,25 @@ module peripheral_bfm_master_ahb3 #(
     if (!rw) begin
       HWDATA <= 'hx;
 
-      //extra cycle for reading
-      //read at the end of the cycle
+      // extra cycle for reading
+      // read at the end of the cycle
       wait4hready();
     end else begin
-      //copy data, prevent it being overwritten by caller
+      // copy data, prevent it being overwritten by caller
       data_copy = data;
     end
 
     wait4hready();
 
-    //get the address offset. No checks if the offset is legal
+    // get the address offset. No checks if the offset is legal
     byte_offset = address % (HDATA_SIZE / 8);
 
-    //transfer beats
+    // transfer beats
     for (int nbeat = 0; nbeat < beats; nbeat++) begin
       wait4hready();
 
       if (rw) begin
-        //writing ... transfer from data-buffer to AHB-HWDATA
+        // writing ... transfer from data-buffer to AHB-HWDATA
         HWDATA <= 'hx;
 
         //'byte' is reserved, so use nbyte
@@ -206,16 +206,16 @@ module peripheral_bfm_master_ahb3 #(
           HWDATA[(nbyte+byte_offset)*8+:8] <= data_copy[nbeat][nbyte*8+:8];
         end
       end else begin
-        //reading ... transfer from AHB-HRDATA to data-buffer
+        // reading ... transfer from AHB-HRDATA to data-buffer
 
         //'byte' is reserved, so use nbyte
-        //Store in temporary variable.
+        // Store in temporary variable.
         //  Using data[nbeat] directly fails when calling with a multi-dimensional dynamic array. Why????
         for (int nbyte = 0; nbyte < get_bytes_per_beat(size); nbyte++) begin
           tmp_var[nbyte*8+:8] = HRDATA[(nbyte+byte_offset)*8+:8];
         end
 
-        //copy read-data
+        // copy read-data
         data[nbeat] = tmp_var;
       end
 
@@ -255,7 +255,7 @@ module peripheral_bfm_master_ahb3 #(
   endfunction : get_beats_per_burst
 
   function [HADDR_SIZE-1:0] next_address(input [2:0] hsize, hburst);
-    //generate address mask
+    // generate address mask
     int          beats_per_burst;
     logic [10:0] addr_mask;
 

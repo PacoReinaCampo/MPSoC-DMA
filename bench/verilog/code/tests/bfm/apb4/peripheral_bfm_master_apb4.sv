@@ -47,7 +47,7 @@ module peripheral_bfm_master_apb4 #(
   input PRESETn,
   input PCLK,
 
-  //APB Master Interface
+  // APB Master Interface
   output reg                    PSEL,
   output reg                    PENABLE,
   output reg [PADDR_SIZE  -1:0] PADDR,
@@ -69,7 +69,7 @@ module peripheral_bfm_master_apb4 #(
   //
 
   task automatic reset();
-    //Reset AHB Bus
+    // Reset AHB Bus
     PSEL    = 1'b0;
     PENABLE = 1'b0;
     PADDR   = 'hx;

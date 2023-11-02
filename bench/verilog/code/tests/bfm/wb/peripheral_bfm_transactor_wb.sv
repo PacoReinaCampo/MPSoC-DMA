@@ -212,14 +212,14 @@ module peripheral_bfm_transactor_wb #(
     input [$clog2(MAX_BURST_LEN+1):0] len_i;
     input [2:0] cti_i;
     input [1:0] bte_i;
-    parameter bpw = DW / 8;  //Bytes per word
+    parameter bpw = DW / 8;  // Bytes per word
     reg     [AW-1:0] adr;
     reg     [AW-1:0] adr_high;
     reg     [AW-1:0] adr_low;
     integer          shift;
 
     begin
-      //if (bpw == 4) begin
+      // if (bpw == 4) begin
 `ifdef BROKEN_CLOG2
       shift = clog2(bpw);
 `else
@@ -257,7 +257,7 @@ module peripheral_bfm_transactor_wb #(
       adr_high  = (adr_high << shift) - 1;
       adr_low   = adr_low << shift;
       adr_range = {adr_high, adr_low};
-      //end
+      // end
     end
   endfunction
 
@@ -266,8 +266,8 @@ module peripheral_bfm_transactor_wb #(
   // Tasks
   //
 
-  //Gather transaction statistics
-  //TODO: Record shortest/longest bursts.
+  // Gather transaction statistics
+  // TODO: Record shortest/longest bursts.
   task update_stats;
     input [2:0] cti;
     input [1:0] bte;
@@ -414,7 +414,7 @@ module peripheral_bfm_transactor_wb #(
           $display("  Number of Wait States for Transaction %0d is %0d", transaction, bfm.wait_states);
         end
 
-        //If running in segment mode, cap mem_high/mem_low to a segment
+        // If running in segment mode, cap mem_high/mem_low to a segment
         if (NUM_SEGMENTS > 0) begin
           segment = {$random(SEED)} % NUM_SEGMENTS;
           mem_lo  = MEM_LOW + segment * SEGMENT_SIZE;

@@ -43,7 +43,7 @@
 import peripheral_ahb3_pkg::*;
 
 module peripheral_bfm_ahb3 #(
-  parameter TIMERS = 2,  //Number of timers
+  parameter TIMERS = 2,  // Number of timers
 
   parameter HADDR_SIZE = 16,
   parameter HDATA_SIZE = 32
@@ -76,11 +76,11 @@ module peripheral_bfm_ahb3 #(
   localparam [HADDR_SIZE-1:0] RESERVED = 'h4;
   localparam [HADDR_SIZE-1:0] IPENDING = 'h8;
   localparam [HADDR_SIZE-1:0] IENABLE = 'hc;
-  localparam [HADDR_SIZE-1:0] IPENDING_IENABLE = IPENDING;  //for 64bit access
+  localparam [HADDR_SIZE-1:0] IPENDING_IENABLE = IPENDING;  // for 64bit access
   localparam [HADDR_SIZE-1:0] TIME = 'h10;
-  localparam [HADDR_SIZE-1:0] TIME_MSB = 'h14;  //for 32bit access
-  localparam [HADDR_SIZE-1:0] TIMECMP = 'h18;  //address = n*'h08 + 'h18;
-  localparam [HADDR_SIZE-1:0] TIMECMP_MSB = 'h1c;  //address = n*'h08 + 'h1c;
+  localparam [HADDR_SIZE-1:0] TIME_MSB = 'h14;  // for 32bit access
+  localparam [HADDR_SIZE-1:0] TIMECMP = 'h18;  // address = n*'h08 + 'h18;
+  localparam [HADDR_SIZE-1:0] TIMECMP_MSB = 'h1c;  // address = n*'h08 + 'h1c;
 
   localparam PRESCALE_VALUE = 5;
 
@@ -118,22 +118,22 @@ module peripheral_bfm_ahb3 #(
   end
 
   always @(negedge HRESETn) begin
-    //wait for reset to negate
+    // wait for reset to negate
     @(posedge HRESETn);
     got_reset = 1;
 
     welcome_text();
 
-    //check initial values
+    // check initial values
     test_reset_register_values();
 
-    //Test registers
+    // Test registers
     test_registers_rw32();
 
-    //Program prescale register
-    //program_prescaler(PRESCALE_VALUE -1); //counts N+1
+    // Program prescale register
+    // program_prescaler(PRESCALE_VALUE -1); // counts N+1
 
-    //Finish simulation
+    // Finish simulation
     repeat (100) @(posedge HCLK);
     finish_text();
     $finish();
@@ -183,7 +183,7 @@ module peripheral_bfm_ahb3 #(
   endtask : finish_text
 
   task test_reset_register_values;
-    //all zeros ... why bother
+    // all zeros ... why bother
   endtask : test_reset_register_values
 
   task test_registers_rw32;
@@ -196,7 +196,7 @@ module peripheral_bfm_ahb3 #(
     logic [HADDR_SIZE-1:0] registers[reg_cnt];
     logic [HDATA_SIZE-1:0] wbuffer[][], rbuffer[][];
 
-    //create list of registers
+    // create list of registers
     for (n = 0; n < reg_cnt; n++) begin
       case (n)
         0:       registers[n] = PRESCALE;
@@ -207,7 +207,7 @@ module peripheral_bfm_ahb3 #(
       endcase
     end
 
-    //create buffers
+    // create buffers
     wbuffer = new[reg_cnt];
     rbuffer = new[reg_cnt];
 
@@ -241,7 +241,7 @@ module peripheral_bfm_ahb3 #(
       bfm_master_ahb3.idle();  // wait for HWDATA
 
       for (n = 0; n < reg_cnt; n++) begin
-        bfm_master_ahb3.read(registers[n], rbuffer[n], hsize, hburst);  //read register
+        bfm_master_ahb3.read(registers[n], rbuffer[n], hsize, hburst);  // read register
       end
 
       bfm_master_ahb3.idle();  // Idle bus
@@ -249,12 +249,12 @@ module peripheral_bfm_ahb3 #(
 
       for (n = 0; n < reg_cnt; n++) begin
         for (int beat = 0; beat < rbuffer[n].size(); beat++) begin
-          //mask byte ...
+          // mask byte ...
           if (HSIZE == HSIZE_BYTE) begin
             rbuffer[n][beat] &= 'hff;
           end
 
-          if (n == 1) begin  //IENABLE
+          if (n == 1) begin  // IENABLE
             wbuffer[n][beat] &= {{32 - TIMERS{1'b0}}, {TIMERS{1'b1}}};
             wbuffer[n][beat] >>= 8 * beat;
           end
@@ -271,13 +271,13 @@ module peripheral_bfm_ahb3 #(
       else $display("OK");
     end
 
-    //reset registers to all '0'
+    // reset registers to all '0'
     wbuffer[0][0] = 0;
     for (n = 0; n < reg_cnt; n++) begin
-      bfm_master_ahb3.write(registers[n], wbuffer[0], HSIZE_WORD, HBURST_SINGLE);  //write register
+      bfm_master_ahb3.write(registers[n], wbuffer[0], HSIZE_WORD, HBURST_SINGLE);  // write register
     end
 
-    //discard buffers
+    // discard buffers
     rbuffer.delete();
     wbuffer.delete();
   endtask : test_registers_rw32
@@ -285,18 +285,18 @@ module peripheral_bfm_ahb3 #(
   task program_prescaler(
     input [31:0] value
   );
-    //create buffer
+    // create buffer
     logic [HDATA_SIZE-1:0] buffer[];
     buffer    = new[1];
 
-    //assign buffer
+    // assign buffer
     buffer[0] = value;
 
     $write("Programming prescaler ... ");
-    bfm_master_ahb3.write(PRESCALE, buffer, HSIZE_WORD, HBURST_SINGLE);  //write value
-    bfm_master_ahb3.idle();  //wait for HWDATA
-    bfm_master_ahb3.read(PRESCALE, buffer, HSIZE_WORD, HBURST_SINGLE);  //read back value
-    bfm_master_ahb3.idle();  //IDLE bus
+    bfm_master_ahb3.write(PRESCALE, buffer, HSIZE_WORD, HBURST_SINGLE);  // write value
+    bfm_master_ahb3.idle();  // wait for HWDATA
+    bfm_master_ahb3.read(PRESCALE, buffer, HSIZE_WORD, HBURST_SINGLE);  // read back value
+    bfm_master_ahb3.idle();  // IDLE bus
     wait fork;
 
     if (buffer[0] !== value) begin
@@ -307,7 +307,7 @@ module peripheral_bfm_ahb3 #(
       $display("OK");
     end
 
-    //discard buffer
+    // discard buffer
     buffer.delete();
   endtask : program_prescaler
 endmodule : peripheral_bfm_ahb3

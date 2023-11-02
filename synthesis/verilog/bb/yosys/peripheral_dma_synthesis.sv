@@ -63,7 +63,7 @@ module peripheral_dma_synthesis (
   // Module Body
   //
 
-  //DUT BB
+  // DUT BB
   bb_dma dma (
     .mclk   (mclk),    // Main system clock
     .puc_rst(puc_rst), // Main system reset

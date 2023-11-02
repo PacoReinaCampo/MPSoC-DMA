@@ -127,7 +127,7 @@ module peripheral_bfm_testbench;
   );
 
   initial begin
-    //Grab CLI parameters
+    // Grab CLI parameters
     if ($value$plusargs("transactions=%d", TRANSACTIONS)) begin
       master.set_transactions(TRANSACTIONS);
     end
