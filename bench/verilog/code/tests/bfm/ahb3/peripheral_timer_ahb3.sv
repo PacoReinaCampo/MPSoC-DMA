@@ -126,9 +126,8 @@ module peripheral_timer_ahb3 #(
   int                          idx;
 
   //////////////////////////////////////////////////////////////////////////////
-  //
   // Functions
-  //
+  //////////////////////////////////////////////////////////////////////////////
   function logic [6:0] address_offset;
     // returns a mask for the lesser bits of the address
     // meaning bits [  0] for 16bit data

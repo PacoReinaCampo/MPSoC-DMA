@@ -227,16 +227,17 @@ module peripheral_dma_target_wb #(
     for (i = 0; i < 3; i = i + 1) begin
       if (data_fifo_pop) begin
         // when popping data..
-        if (data_fifo_push & data_fifo_pos[i+1])
+        if (data_fifo_push & data_fifo_pos[i+1]) begin
           // .. and we also push this cycle, we need to check
           // whether the pointer was on the next one
           data_fifo[i] <= data_fifo_in;
-        else if (i < 2)
+        end else if (i < 2) begin
           // .. otherwise shift if not last
           data_fifo[i] <= data_fifo[i+1];
-        else
+        end else begin
           // the last stays static
           data_fifo[i] <= data_fifo[i];
+        end
       end else if (data_fifo_push & data_fifo_pos[i]) begin
         // when pushing only and this is the current write
         // position
