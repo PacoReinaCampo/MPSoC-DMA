@@ -49,9 +49,8 @@ module peripheral_tap_generator #(
 );
 
   //////////////////////////////////////////////////////////////////////////////
-  //
   // Variables
-  //
+  //////////////////////////////////////////////////////////////////////////////
   integer                          f;  // File handle
   integer                          cur_tc = 0;  // Current testcase index
   integer                          numtests = NUM_TESTS;  // Total number of testcases
@@ -126,9 +125,8 @@ module peripheral_tap_generator #(
   endtask
 
   //////////////////////////////////////////////////////////////////////////////
-  //
   // Module Body
-  //
+  //////////////////////////////////////////////////////////////////////////////
   initial begin
     // Grab CLI parameters and use parameters for default values
     if (!$value$plusargs("tapfile=%s", tapfile)) begin

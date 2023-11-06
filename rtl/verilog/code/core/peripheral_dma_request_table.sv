@@ -81,9 +81,8 @@ module peripheral_dma_request_table #(
 );
 
   //////////////////////////////////////////////////////////////////////////////
-  //
   // Variables
-  //
+  //////////////////////////////////////////////////////////////////////////////
 
   // The storage of the requests ..
   reg     [DMA_REQUEST_WIDTH-1:0] transfer_request_table[0:TABLE_ENTRIES-1];
@@ -97,9 +96,8 @@ module peripheral_dma_request_table #(
   genvar j;
 
   //////////////////////////////////////////////////////////////////////////////
-  //
-  // Module body
-  //
+  // Module Nody
+  //////////////////////////////////////////////////////////////////////////////
 
   assign if_write_mask[DMA_REQFIELD_LADDR_MSB:DMA_REQFIELD_LADDR_LSB] = {DMA_REQFIELD_LADDR_WIDTH{if_write_select[DMA_REQMASK_LADDR]}};
   assign if_write_mask[DMA_REQFIELD_SIZE_MSB:DMA_REQFIELD_SIZE_LSB]   = {DMA_REQFIELD_SIZE_WIDTH{if_write_select[DMA_REQMASK_SIZE]}};
