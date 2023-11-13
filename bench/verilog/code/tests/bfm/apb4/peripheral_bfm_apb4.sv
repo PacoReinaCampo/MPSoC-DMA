@@ -14,31 +14,29 @@
 //              AMBA4 APB-Lite Bus Interface                                  //
 //                                                                            //
 ////////////////////////////////////////////////////////////////////////////////
-
-/* Copyright (c) 2018-2019 by the author(s)
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- *
- * =============================================================================
- * Author(s):
- *   Paco Reina Campo <pacoreinacampo@queenfield.tech>
- */
+// Copyright (c) 2018-2019 by the author(s)
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+//
+////////////////////////////////////////////////////////////////////////////////
+// Author(s):
+//   Paco Reina Campo <pacoreinacampo@queenfield.tech>
 
 module peripheral_bfm_apb4 #(
   parameter PDATA_SIZE = 32
@@ -202,11 +200,7 @@ module peripheral_bfm_apb4 #(
     end
   endtask : finish_text
 
-  task check(
-    input string name,
-    input [PDATA_SIZE-1:0] actual,
-    input [PDATA_SIZE-1:0] expected
-  );
+  task check(input string name, input [PDATA_SIZE-1:0] actual, input [PDATA_SIZE-1:0] expected);
     if (VERBOSE > 2) begin
       $display("Checking %s for %b==%b", name, actual, expected);
     end
@@ -216,11 +210,7 @@ module peripheral_bfm_apb4 #(
     end
   endtask : check
 
-  task error_msg(
-    input string name,
-    input [PDATA_SIZE-1:0] actual,
-    input [PDATA_SIZE-1:0] expected
-  );
+  task error_msg(input string name, input [PDATA_SIZE-1:0] actual, input [PDATA_SIZE-1:0] expected);
     errors++;
     $display("ERROR  : Incorrect %s value. Expected: %b, received: %b @%0t", name, expected, actual, $time);
   endtask : error_msg
@@ -293,9 +283,7 @@ module peripheral_bfm_apb4 #(
   endtask : test_io_basic
 
   // Random IO tests
-  task test_io_random(
-    input int runs = 10000
-  );
+  task test_io_random(input int runs = 10000);
     logic [PDATA_SIZE-1:0] mode;
     logic [PDATA_SIZE-1:0] dir;
     logic [PDATA_SIZE-1:0] d;
@@ -378,9 +366,7 @@ module peripheral_bfm_apb4 #(
   endtask : test_clear_status
 
   // Trigger Level Low test
-  task test_trigger_level_low(
-    input int runs = 1 << PDATA_SIZE
-  );
+  task test_trigger_level_low(input int runs = 1 << PDATA_SIZE);
     logic [PDATA_SIZE-1:0] gpio_data, readdata;
 
     $display("Trigger Level-Low test ...");
@@ -423,9 +409,7 @@ module peripheral_bfm_apb4 #(
   endtask : test_trigger_level_low
 
   // Trigger Level High test
-  task test_trigger_level_high(
-    input int runs = 1 << PDATA_SIZE
-  );
+  task test_trigger_level_high(input int runs = 1 << PDATA_SIZE);
     logic [PDATA_SIZE-1:0] gpio_data;
     logic [PDATA_SIZE-1:0] readdata;
 
@@ -469,9 +453,7 @@ module peripheral_bfm_apb4 #(
   endtask : test_trigger_level_high
 
   // Trigger Level Random test
-  task test_trigger_level_random(
-    input int runs = 10000
-  );
+  task test_trigger_level_random(input int runs = 10000);
     logic [PDATA_SIZE-1:0] lvl0;
     logic [PDATA_SIZE-1:0] lvl1;
     logic [PDATA_SIZE-1:0] gpio_data;
@@ -528,9 +510,7 @@ module peripheral_bfm_apb4 #(
   endtask : test_trigger_level_random
 
   // Trigger Falling Edge test
-  task test_trigger_edge_fall(
-    input int runs = 4 * 1 << PDATA_SIZE
-  );
+  task test_trigger_edge_fall(input int runs = 4 * 1 << PDATA_SIZE);
     logic [PDATA_SIZE-1:0] gpio_data0, gpio_data1, readdata, expected;
 
     $display("Trigger Falling-Edge test ...");
@@ -580,9 +560,7 @@ module peripheral_bfm_apb4 #(
   endtask : test_trigger_edge_fall
 
   // Trigger Rising Edge test
-  task test_trigger_edge_rise(
-    input int runs = 4 * 1 << PDATA_SIZE
-  );
+  task test_trigger_edge_rise(input int runs = 4 * 1 << PDATA_SIZE);
     logic [PDATA_SIZE-1:0] gpio_data0, gpio_data1, readdata, expected;
 
     $display("Trigger Rising-Edge test ...");
@@ -632,9 +610,7 @@ module peripheral_bfm_apb4 #(
   endtask : test_trigger_edge_rise
 
   // Trigger Rising Random test
-  task test_trigger_edge_random(
-    input int runs = 40000
-  );
+  task test_trigger_edge_random(input int runs = 40000);
     logic [PDATA_SIZE-1:0] gpio_data0;
     logic [PDATA_SIZE-1:0] gpio_data1;
     logic [PDATA_SIZE-1:0] lvl0;
