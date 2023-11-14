@@ -1,6 +1,3 @@
--- Converted from rtl/verilog/ahb3/peripheral_dma_initiator_ahb3_nocres.sv
--- by verilog2vhdl - QueenField
-
 --------------------------------------------------------------------------------
 --                                            __ _      _     _               --
 --                                           / _(_)    | |   | |              --
@@ -108,7 +105,7 @@ architecture rtl of peripheral_dma_initiator_ahb3_nocres is
       BUSY  : std_logic := '1'
       );
     port (
-      --inputs
+      -- inputs
       clk : in std_logic;
       rst : in std_logic;
 
@@ -175,7 +172,7 @@ begin
   buf_last_flit <= to_stdlogic(buf_flit(FLIT_TYPE_MSB downto FLIT_TYPE_LSB) = FLIT_TYPE_LAST) or
                    to_stdlogic(buf_flit(FLIT_TYPE_MSB downto FLIT_TYPE_LSB) = FLIT_TYPE_SINGLE);
 
-  ahb3_haddr <= resp_address;           --alias
+  ahb3_haddr <= resp_address;           -- alias
 
   ahb3_hwdata <= buf_flit(FLIT_CONTENT_MSB downto FLIT_CONTENT_LSB);
 

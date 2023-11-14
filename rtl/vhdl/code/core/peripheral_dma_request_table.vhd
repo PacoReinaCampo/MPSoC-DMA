@@ -1,6 +1,3 @@
--- Converted from rtl/verilog/core/peripheral_dma_request_table.sv
--- by verilog2vhdl - QueenField
-
 --------------------------------------------------------------------------------
 --                                            __ _      _     _               --
 --                                           / _(_)    | |   | |              --
@@ -121,12 +118,12 @@ begin
   begin
     if (rising_edge(clk)) then
       if (rst = '1') then
-        --reset
+        -- reset
         for i in 0 to TABLE_ENTRIES - 1 loop
           transfer_valid(i) <= '0';
           transfer_done(i)  <= '0';
         end loop;
-      --for
+      -- for
       elsif (if_write_en = '1') then
         transfer_request_table(to_integer(unsigned(if_write_pos))) <= (not if_write_mask and transfer_request_table(to_integer(unsigned(if_write_pos)))) or (if_write_mask and if_write_req);
         for i in 0 to TABLE_ENTRIES - 1 loop

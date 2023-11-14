@@ -1,6 +1,3 @@
--- Converted from bench/verilog/regression/peripheral_dma_testbench.sv
--- by verilog2vhdl - QueenField
-
 --------------------------------------------------------------------------------
 --                                            __ _      _     _               --
 --                                           / _(_)    | |   | |              --
@@ -178,7 +175,7 @@ begin
   -- Module Body
   ------------------------------------------------------------------------------
 
-  --DUT AHB3
+  -- DUT AHB3
   ahb3_top : peripheral_dma_top_ahb3
     generic map (
       ADDR_WIDTH => ADDR_WIDTH,

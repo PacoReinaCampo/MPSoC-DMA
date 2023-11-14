@@ -1,6 +1,3 @@
--- Converted from rtl/verilog/wb/peripheral_dma_initiator_req_bb.sv
--- by verilog2vhdl - QueenField
-
 --------------------------------------------------------------------------------
 --                                            __ _      _     _               --
 --                                           / _(_)    | |   | |              --

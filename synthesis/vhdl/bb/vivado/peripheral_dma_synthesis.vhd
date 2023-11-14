@@ -1,6 +1,3 @@
--- Converted from peripheral_dma_synthesis.sv
--- by verilog2vhdl - QueenField
-
 --------------------------------------------------------------------------------
 --                                            __ _      _     _               --
 --                                           / _(_)    | |   | |              --
@@ -47,7 +44,6 @@
 -- Author(s):
 --   Olivier Girard <olgirard@gmail.com>
 --   Paco Reina Campo <pacoreinacampo@queenfield.tech>
---
 
 library ieee;
 use ieee.std_logic_1164.all;
@@ -107,7 +103,7 @@ begin
   -- Module Body
   ------------------------------------------------------------------------------
 
-  --DUT BB
+  -- DUT BB
   dma : bb_dma
     port map (
       mclk     => mclk,

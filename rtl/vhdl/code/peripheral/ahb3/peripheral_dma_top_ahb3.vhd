@@ -1,6 +1,3 @@
--- Converted from rtl/verilog/ahb3/peripheral_dma_top_ahb3.sv
--- by verilog2vhdl - QueenField
-
 --------------------------------------------------------------------------------
 --                                            __ _      _     _               --
 --                                           / _(_)    | |   | |              --
@@ -195,7 +192,7 @@ architecture rtl of peripheral_dma_top_ahb3 is
       NOC_PACKET_SIZE        : integer := 16
       );
     port (
-      --parameters
+      -- parameters
       clk           : in  std_logic;
       rst           : in  std_logic;
       -- Control read (request) interface

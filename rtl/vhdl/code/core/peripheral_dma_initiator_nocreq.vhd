@@ -1,6 +1,3 @@
--- Converted from rtl/verilog/core/peripheral_dma_initiator_nocreq.sv
--- by verilog2vhdl - QueenField
-
 --------------------------------------------------------------------------------
 --                                            __ _      _     _               --
 --                                           / _(_)    | |   | |              --
@@ -147,17 +144,17 @@ architecture rtl of peripheral_dma_initiator_nocreq is
   signal noc_req_packet_size     : std_logic_vector(4 downto 0);
   signal nxt_noc_req_packet_size : std_logic_vector(4 downto 0);
 
-  --Table entry selection logic
+  -- Table entry selection logic
 
-  --The request table signals all open requests on the 'valid' bit vector.
-  --The selection logic arbitrates among those entries to determine the
-  --request to be handled next.
+  -- The request table signals all open requests on the 'valid' bit vector.
+  -- The selection logic arbitrates among those entries to determine the
+  -- request to be handled next.
 
-  --The arbitration is not done for all entries marked as valid but only
-  --for those, that are additionally not marked in the open_responses
-  --bit vector.
+  -- The arbitration is not done for all entries marked as valid but only
+  -- for those, that are additionally not marked in the open_responses
+  -- bit vector.
 
-  --The selection signals only change after a transfer is started.
+  -- The selection signals only change after a transfer is started.
 
   -- Selects the next entry from the table
   signal ini_select : std_logic_vector(TABLE_ENTRIES-1 downto 0);  -- current grant of arbiter
@@ -258,8 +255,8 @@ begin
   req_rtile    <= ctrl_read_req(DMA_REQFIELD_RTILE_MSB downto DMA_REQFIELD_RTILE_LSB);
   req_raddr    <= ctrl_read_req(DMA_REQFIELD_RADDR_MSB downto DMA_REQFIELD_RADDR_LSB);
 
-  ----req_laddr    <= ctrl_read_req(DMA_REQFIELD_LADDR_MSB downto DMA_REQFIELD_LADDR_LSB);
-  ----req_size_sgn <= ctrl_read_req(DMA_REQFIELD_SIZE_MSB-2 downto DMA_REQFIELD_SIZE_LSB);
+  ---- req_laddr    <= ctrl_read_req(DMA_REQFIELD_LADDR_MSB downto DMA_REQFIELD_LADDR_LSB);
+  ---- req_size_sgn <= ctrl_read_req(DMA_REQFIELD_SIZE_MSB-2 downto DMA_REQFIELD_SIZE_LSB);
 
   req_size <= req_size_sgn;
 

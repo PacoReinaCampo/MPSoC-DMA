@@ -1,6 +1,3 @@
--- Converted from rtl/verilog/core/peripheral_arbiter_rr.sv
--- by verilog2vhdl - QueenField
-
 --------------------------------------------------------------------------------
 --                                            __ _      _     _               --
 --                                           / _(_)    | |   | |              --

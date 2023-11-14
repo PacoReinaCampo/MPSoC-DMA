@@ -1,6 +1,3 @@
--- Converted from rtl/verilog/wb/peripheral_dma_initiator_nocres_wb.sv
--- by verilog2vhdl - QueenField
-
 --------------------------------------------------------------------------------
 --                                            __ _      _     _               --
 --                                           / _(_)    | |   | |              --
@@ -109,7 +106,7 @@ architecture rtl of peripheral_dma_initiator_nocres_wb is
       BUSY  : std_logic := '1'
       );
     port (
-      --inputs
+      -- inputs
       clk : in std_logic;
       rst : in std_logic;
 
@@ -176,7 +173,7 @@ begin
   buf_last_flit <= to_stdlogic(buf_flit(FLIT_TYPE_MSB downto FLIT_TYPE_LSB) = FLIT_TYPE_LAST) or
                    to_stdlogic(buf_flit(FLIT_TYPE_MSB downto FLIT_TYPE_LSB) = FLIT_TYPE_SINGLE);
 
-  wb_adr_o <= resp_address;             --alias
+  wb_adr_o <= resp_address;             -- alias
 
   wb_dat_o <= buf_flit(FLIT_CONTENT_MSB downto FLIT_CONTENT_LSB);
 

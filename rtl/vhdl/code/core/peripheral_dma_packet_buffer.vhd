@@ -1,6 +1,3 @@
--- Converted from rtl/verilog/core/peripheral_dma_packet_buffer.sv
--- by verilog2vhdl - QueenField
-
 --------------------------------------------------------------------------------
 --                                            __ _      _     _               --
 --                                           / _(_)    | |   | |              --
@@ -62,7 +59,7 @@ entity peripheral_dma_packet_buffer is
     BUSY       : std_logic := '1'
     );
   port (
-    --inputs
+    -- inputs
     clk : in std_logic;
     rst : in std_logic;
 
@@ -89,7 +86,7 @@ architecture rtl of peripheral_dma_packet_buffer is
   ------------------------------------------------------------------------------
 
   -- Signals for fifo
-  signal fifo_data      : M_FIFO_DEPTH_FLIT_WIDTH;  --actual fifo
+  signal fifo_data      : M_FIFO_DEPTH_FLIT_WIDTH;  -- actual fifo
   signal fifo_write_ptr : std_logic_vector(FIFO_DEPTH downto 0);
 
   signal last_flits : std_logic_vector(FIFO_DEPTH downto 0);
@@ -166,7 +163,7 @@ begin
   begin
     if (rising_edge(clk)) then
       if (rst = '1') then
-      --fifo_write_ptr <= std_logic_vector(to_unsigned(1, FIFO_DEPTH));
+      -- fifo_write_ptr <= std_logic_vector(to_unsigned(1, FIFO_DEPTH));
       elsif (push = '1' and pop = '0') then
         fifo_write_ptr <= std_logic_vector(unsigned(fifo_write_ptr) sll 1);
       elsif (push = '0' and pop = '1') then

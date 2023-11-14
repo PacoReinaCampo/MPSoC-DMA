@@ -1,6 +1,3 @@
--- Converted from rtl/verilog/ahb3/peripheral_dma_target_ahb3.sv
--- by verilog2vhdl - QueenField
-
 --------------------------------------------------------------------------------
 --                                            __ _      _     _               --
 --                                           / _(_)    | |   | |              --
@@ -116,7 +113,7 @@ architecture rtl of peripheral_dma_target_ahb3 is
       BUSY       : std_logic := '1'
       );
     port (
-      --inputs
+      -- inputs
       clk : in std_logic;
       rst : in std_logic;
 
@@ -169,7 +166,7 @@ architecture rtl of peripheral_dma_target_ahb3 is
   signal state     : std_logic_vector(3 downto 0);
   signal nxt_state : std_logic_vector(3 downto 0);
 
-  --FSM hidden state
+  -- FSM hidden state
   signal ahb3_waiting     : std_logic;
   signal nxt_ahb3_waiting : std_logic;
 
@@ -203,7 +200,7 @@ architecture rtl of peripheral_dma_target_ahb3 is
   signal ahb3_resp_count     : std_logic_vector(DMA_RESPFIELD_SIZE_WIDTH-3 downto 0);
   signal nxt_ahb3_resp_count : std_logic_vector(DMA_RESPFIELD_SIZE_WIDTH-3 downto 0);
 
-  --FIFO-Stuff
+  -- FIFO-Stuff
   signal data_fifo_valid : std_logic;
   signal data_fifo       : M_2_DATA_WIDTH;  -- data storage
   signal data_fifo_pop   : std_logic;       -- NOC pushes
@@ -263,7 +260,7 @@ begin
   -- assign data_fifo_pop = resp_data_ready;
   data_fifo_valid <= not data_fifo_empty;
   data_fifo_empty <= data_fifo_pos(0);  -- Empty when pushing to first one
-  data_fifo_ready <= reduce_nor(data_fifo_pos(3 downto 2));  --equal to not full
+  data_fifo_ready <= reduce_nor(data_fifo_pos(3 downto 2));  -- equal to not full
   data_fifo_in    <= ahb3_hrdata;
   data_fifo_out   <= data_fifo(0);      -- First element is out
 
@@ -326,7 +323,7 @@ begin
   -- Assign stored (and incremented) address to wishbone interface
   ahb3_haddr <= address;
 
-  --FSM
+  -- FSM
 
   -- Next state, counting, control signals
   processing_2 : process (state)
@@ -377,7 +374,7 @@ begin
           nxt_state <= STATE_IDLE;
         end if;
       -- case: STATE_IDLE
-      --L2R-handling
+      -- L2R-handling
       when "0001" =>
         buf_ready   <= '1';
         nxt_address <= buf_flit(FLIT_CONTENT_MSB downto FLIT_CONTENT_LSB);
@@ -425,7 +422,7 @@ begin
           nxt_state <= STATE_L2R_SENDRESP;
         end if;
       -- case: STATE_L2R_SENDRESP
-      --R2L handling
+      -- R2L handling
       when "0100" =>
         buf_ready   <= '1';
         nxt_address <= buf_flit(FLIT_CONTENT_MSB downto FLIT_CONTENT_LSB);
@@ -490,7 +487,7 @@ begin
         -- transfer data to noc if available
         noc_sgn_valid                                          <= data_fifo_valid;
         noc_out_flit(FLIT_CONTENT_MSB downto FLIT_CONTENT_LSB) <= data_fifo_out;
-        --TODO: Rearange ifs
+        -- TODO: Rearange ifs
         if (noc_resp_packet_wcount = noc_resp_packet_wsize) then
           noc_out_flit(FLIT_TYPE_MSB downto FLIT_TYPE_LSB) <= FLIT_TYPE_LAST;
           if (noc_sgn_valid = '1' and noc_out_ready = '1') then
@@ -499,16 +496,16 @@ begin
               -- Only (NOC_PACKET_SIZE -2) flits are availabel for the payload,
               -- because we need a header-flit and an address-flit, too.
 
-              --this was not the last packet of the response
+              -- this was not the last packet of the response
               nxt_state             <= STATE_R2L_GENHDR;
               nxt_noc_resp_wcounter <= std_logic_vector(unsigned(noc_resp_wcounter)+unsigned(noc_resp_packet_wcount));
-            else                      --this is the last packet of the response
+            else                      -- this is the last packet of the response
               nxt_state <= STATE_IDLE;
             end if;
           else
             nxt_state <= STATE_R2L_DATA;
           end if;
-        else                            --not LAST
+        else                            -- not LAST
           noc_out_flit(FLIT_TYPE_MSB downto FLIT_TYPE_LSB) <= FLIT_TYPE_PAYLOAD;
           if (noc_sgn_valid = '1' and noc_out_ready = '1') then
             data_fifo_pop              <= '1';
@@ -516,9 +513,9 @@ begin
           end if;
           nxt_state <= STATE_R2L_DATA;
         end if;
-        --FIFO-handling
-        if (ahb3_waiting = '1') then    --hidden state
-          --don't get data from the bus
+        -- FIFO-handling
+        if (ahb3_waiting = '1') then    -- hidden state
+          -- don't get data from the bus
           ahb3_hsel      <= '0';
           ahb3_hmastlock <= '0';
           data_fifo_push <= '0';
@@ -527,7 +524,7 @@ begin
           else
             nxt_ahb3_waiting <= '1';
           end if;
-        --not ahb3_waiting
+        -- not ahb3_waiting
         -- Signal cycle and strobe. We do bursts, but don't insert
         -- wait states, so both of them are always equal.
         elsif ((noc_resp_packet_wcount = noc_resp_packet_wsize) and noc_sgn_valid = '1' and noc_out_ready = '1') then

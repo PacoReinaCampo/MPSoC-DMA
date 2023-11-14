@@ -1,6 +1,3 @@
--- Converted from rtl/verilog/wb/peripheral_dma_initiator_wb.sv
--- by verilog2vhdl - QueenField
-
 --------------------------------------------------------------------------------
 --                                            __ _      _     _               --
 --                                           / _(_)    | |   | |              --
@@ -59,7 +56,7 @@ entity peripheral_dma_initiator_wb is
     NOC_PACKET_SIZE        : integer := 16
     );
   port (
-    --parameters
+    -- parameters
     clk           : in  std_logic;
     rst           : in  std_logic;
     -- Control read (request) interface
