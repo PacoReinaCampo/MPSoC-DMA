@@ -77,7 +77,11 @@ module peripheral_bfm_master_apb4 #(
     @(posedge PRESETn);
   endtask
 
-  task automatic write(input [PADDR_SIZE  -1:0] address, input [PDATA_SIZE/8-1:0] strb, input [PDATA_SIZE  -1:0] data);
+  task automatic write(
+    input [PADDR_SIZE  -1:0] address,
+    input [PDATA_SIZE/8-1:0] strb,
+    input [PDATA_SIZE  -1:0] data
+  );
     PSEL   = 1'b1;
     PADDR  = address;
     PSTRB  = strb;
@@ -88,7 +92,9 @@ module peripheral_bfm_master_apb4 #(
     PENABLE = 1'b1;
     @(posedge PCLK);
 
-    while (!PREADY) @(posedge PCLK);
+    while (!PREADY) begin
+      @(posedge PCLK);
+    end
 
     PSEL    = 1'b0;
     PADDR   = {PADDR_SIZE{1'bx}};
@@ -98,7 +104,10 @@ module peripheral_bfm_master_apb4 #(
     PENABLE = 1'b0;
   endtask
 
-  task automatic read(input [PADDR_SIZE -1:0] address, output [PDATA_SIZE -1:0] data);
+  task automatic read(
+    input [PADDR_SIZE -1:0] address,
+    output [PDATA_SIZE -1:0] data
+  );
     PSEL   = 1'b1;
     PADDR  = address;
     PSTRB  = {PDATA_SIZE / 8{1'bx}};
@@ -109,7 +118,9 @@ module peripheral_bfm_master_apb4 #(
     PENABLE = 1'b1;
     @(posedge PCLK);
 
-    while (!PREADY) @(posedge PCLK);
+    while (!PREADY) begin
+      @(posedge PCLK);
+    end
 
     data    = PRDATA;
 

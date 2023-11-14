@@ -237,7 +237,9 @@ module peripheral_bfm_master_wb #(
         $display("Got      %h", read_data);
         #3 $finish;
       end else begin
-        if (VERBOSE > 1) $display("    Data Matched");
+        if (VERBOSE > 1) begin
+          $display("    Data Matched");
+        end
       end
     end
   endtask

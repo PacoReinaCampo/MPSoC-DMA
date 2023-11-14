@@ -100,7 +100,7 @@ module peripheral_bfm_slave_generic_axi4 (
   reg     [31:0] write_address;
   reg     [ 2:0] write_size;
 
-  always @(posedge aclk)
+  always @(posedge aclk) begin
     if (~aresetn) begin
       write_address <= 0;
       awready       <= 1;
@@ -113,9 +113,10 @@ module peripheral_bfm_slave_generic_axi4 (
         awready <= 0;
       end
     end
+  end
 
   // Write Burst Counting
-  always @(posedge aclk)
+  always @(posedge aclk) begin
     if (~aresetn) begin
       write_size <= 0;
     end else begin
@@ -123,11 +124,12 @@ module peripheral_bfm_slave_generic_axi4 (
         write_size <= awsize;
       end
     end
+  end
 
   // Write Data Channel
   reg [31:0] write_data;
   reg [ 3:0] write_strobe;
-  always @(posedge aclk)
+  always @(posedge aclk) begin
     if (~aresetn) begin
       write_data   <= 0;
       wready       <= 1;
@@ -141,9 +143,10 @@ module peripheral_bfm_slave_generic_axi4 (
         wready <= 0;
       end
     end
+  end
 
   // Write Response Channel
-  always @(posedge aclk)
+  always @(posedge aclk) begin
     if (~aresetn) begin
       bid    <= 0;
       bresp  <= AXI_RESPONSE_OKAY;
@@ -155,10 +158,11 @@ module peripheral_bfm_slave_generic_axi4 (
         bvalid <= 0;
       end
     end
+  end
 
   // Read Address Channel
   reg [31:0] read_address;
-  always @(posedge aclk)
+  always @(posedge aclk) begin
     if (~aresetn) begin
       read_address <= 0;
       arready      <= 0;
@@ -170,9 +174,10 @@ module peripheral_bfm_slave_generic_axi4 (
         arready <= 0;
       end
     end
+  end
 
   // Read Data Channel
-  always @(posedge aclk)
+  always @(posedge aclk) begin
     if (~aresetn) begin
       rdata  <= 0;
       rvalid <= 0;
@@ -187,6 +192,7 @@ module peripheral_bfm_slave_generic_axi4 (
         rvalid <= 0;
       end
     end
+  end
 
   // Memory Operations
 

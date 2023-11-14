@@ -302,8 +302,11 @@ module peripheral_bfm_ahb3 #(
         end
       end
 
-      if (error) $display("FAILED");
-      else $display("OK");
+      if (error) begin
+        $display("FAILED");
+      end else begin
+        $display("OK");
+      end
     end
 
     // reset registers to all '0'
