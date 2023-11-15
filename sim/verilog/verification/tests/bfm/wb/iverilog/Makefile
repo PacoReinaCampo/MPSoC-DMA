@@ -51,4 +51,4 @@ simulate:
 	vvp system.vvp
 
 clean:
-	rm -rf system.vvp wb_bfm.tap
+	rm -rf *.vvp wb_bfm.tap

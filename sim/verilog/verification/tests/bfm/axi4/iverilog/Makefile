@@ -51,4 +51,4 @@ simulate:
 	vvp system.vvp
 
 clean:
-	rm -rf system.vvp *.sd
+	rm -rf *.vvp *.sd
