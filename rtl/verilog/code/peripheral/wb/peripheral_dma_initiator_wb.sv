@@ -109,7 +109,6 @@ module peripheral_dma_initiator_wb #(
   wire [ DMA_REQFIELD_SIZE_WIDTH-3:0] req_size;
   wire                                req_start;
 
-
   //////////////////////////////////////////////////////////////////////////////
   // Module Body
   //////////////////////////////////////////////////////////////////////////////
@@ -176,7 +175,6 @@ module peripheral_dma_initiator_wb #(
     .noc_in_flit (noc_in_flit[FLIT_WIDTH-1:0]),
     .noc_in_valid(noc_in_valid),
     .noc_in_ready(noc_in_ready),
-
 
     .wb_adr_o(wb_res_adr_o[ADDR_WIDTH-1:0]),
     .wb_dat_o(wb_res_dat_o[DATA_WIDTH-1:0]),

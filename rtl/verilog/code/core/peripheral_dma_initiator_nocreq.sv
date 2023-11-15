@@ -70,7 +70,6 @@ module peripheral_dma_initiator_nocreq #(
   input [TABLE_ENTRIES_PTRWIDTH-1:0] ctrl_done_pos,
   input                              ctrl_done_en,
 
-
   // Interface to wishbone request
   output reg                               req_start,
   output     [ADDR_WIDTH             -1:0] req_laddr,

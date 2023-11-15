@@ -88,7 +88,6 @@ module peripheral_bfm_transactor_wb #(
   parameter [2:0] CTI_INC_BURST = 3'b010;
   parameter [2:0] CTI_END_OF_BURST = 3'b111;
 
-
   parameter [1:0] BTE_LINEAR = 2'd0;
   parameter [1:0] BTE_WRAP_4 = 2'd1;
   parameter [1:0] BTE_WRAP_8 = 2'd2;

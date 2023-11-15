@@ -156,7 +156,6 @@ module peripheral_timer_ahb3 #(
     address_mask = ~address_offset();
   endfunction : address_mask
 
-
   function logic [BE_SIZE-1:0] gen_be;
     input [2:0] hsize;
     input [HADDR_SIZE-1:0] haddr;
@@ -200,7 +199,6 @@ module peripheral_timer_ahb3 #(
       gen_wval[n*8+:8] = be[n] ? new_val[n*8+:8] : old_val[n*8+:8];
     end
   endfunction : gen_wval
-
 
   function integer timer_idx;
     // Returns the timer index

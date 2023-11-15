@@ -55,7 +55,6 @@ package peripheral_wb_pkg;
   localparam [2:0] CTI_INC_BURST = 3'b010;
   localparam [2:0] CTI_END_OF_BURST = 3'b111;
 
-
   localparam [1:0] BTE_LINEAR = 2'd0;
   localparam [1:0] BTE_WRAP_4 = 2'd1;
   localparam [1:0] BTE_WRAP_8 = 2'd2;
