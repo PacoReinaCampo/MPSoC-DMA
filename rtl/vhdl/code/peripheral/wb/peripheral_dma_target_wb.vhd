@@ -180,7 +180,7 @@ architecture rtl of peripheral_dma_target_wb is
   signal noc_resp_packet_wsize     : std_logic_vector(4 downto 0);
   signal nxt_noc_resp_packet_wsize : std_logic_vector(4 downto 0);
 
-  -- TODO: correct define!
+  -- TO-DO: correct define!
   signal resp_wsize        : std_logic_vector(DMA_RESPFIELD_SIZE_WIDTH-3 downto 0);
   signal nxt_resp_wsize    : std_logic_vector(DMA_RESPFIELD_SIZE_WIDTH-3 downto 0);
   signal wb_resp_count     : std_logic_vector(DMA_RESPFIELD_SIZE_WIDTH-3 downto 0);
@@ -488,7 +488,7 @@ begin
         -- transfer data to noc if available
         noc_sgn_valid                                          <= data_fifo_valid;
         noc_out_flit(FLIT_CONTENT_MSB downto FLIT_CONTENT_LSB) <= data_fifo_out;
-        -- TODO: Rearange ifs
+        -- TO-DO: Rearange ifs
         if (noc_resp_packet_wcount = noc_resp_packet_wsize) then
           noc_out_flit(FLIT_TYPE_MSB downto FLIT_TYPE_LSB) <= FLIT_TYPE_LAST;
           if (noc_sgn_valid = '1' and noc_out_ready = '1') then
@@ -534,7 +534,7 @@ begin
         else
           wb_stb_o <= '1';
           wb_cyc_o <= '1';
-          -- TODO: why not generate address from the base address + counter<<2?
+          -- TO-DO: why not generate address from the base address + counter<<2?
           if ((data_fifo_ready = '0') or (wb_resp_count = resp_wsize)) then
             wb_cti_o <= "111";
           else

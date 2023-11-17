@@ -200,7 +200,7 @@ module peripheral_bfm_transactor_wb #(
 
   // Return a 2*AW array with the highest and lowest accessed addresses
   // based on starting address and burst type
-  // TODO: Account for short wrap bursts. Fix for 8-bit mode
+  // TO-DO: Account for short wrap bursts. Fix for 8-bit mode
   function [2*AW-1:0] adr_range;
     input [AW-1:0] adr_i;
     input [$clog2(MAX_BURST_LEN+1):0] len_i;
@@ -260,7 +260,7 @@ module peripheral_bfm_transactor_wb #(
   //////////////////////////////////////////////////////////////////////////////
 
   // Gather transaction statistics
-  // TODO: Record shortest/longest bursts.
+  // TO-DO: Record shortest/longest bursts.
   task update_stats;
     input [2:0] cti;
     input [1:0] bte;

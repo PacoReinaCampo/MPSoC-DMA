@@ -168,7 +168,7 @@ module peripheral_bfm_slave_wb #(
       wb_dat_o <= #TP{DW{1'b0}};
       wb_ack_o <= #TP 1'b0;
       wb_err_o <= #TP 1'b0;
-      wb_rty_o <= #TP 1'b0;  // TODO : rty not supported
+      wb_rty_o <= #TP 1'b0;  // TO-DO: rty not supported
 
       if (err) begin
         if (DEBUG) begin

@@ -194,7 +194,7 @@ architecture rtl of peripheral_dma_target_ahb3 is
   signal noc_resp_packet_wsize     : std_logic_vector(4 downto 0);
   signal nxt_noc_resp_packet_wsize : std_logic_vector(4 downto 0);
 
-  -- TODO: correct define!
+  -- TO-DO: correct define!
   signal resp_wsize          : std_logic_vector(DMA_RESPFIELD_SIZE_WIDTH-3 downto 0);
   signal nxt_resp_wsize      : std_logic_vector(DMA_RESPFIELD_SIZE_WIDTH-3 downto 0);
   signal ahb3_resp_count     : std_logic_vector(DMA_RESPFIELD_SIZE_WIDTH-3 downto 0);
@@ -487,7 +487,7 @@ begin
         -- transfer data to noc if available
         noc_sgn_valid                                          <= data_fifo_valid;
         noc_out_flit(FLIT_CONTENT_MSB downto FLIT_CONTENT_LSB) <= data_fifo_out;
-        -- TODO: Rearange ifs
+        -- TO-DO: Rearange ifs
         if (noc_resp_packet_wcount = noc_resp_packet_wsize) then
           noc_out_flit(FLIT_TYPE_MSB downto FLIT_TYPE_LSB) <= FLIT_TYPE_LAST;
           if (noc_sgn_valid = '1' and noc_out_ready = '1') then
@@ -533,7 +533,7 @@ begin
         else
           ahb3_hsel      <= '1';
           ahb3_hmastlock <= '1';
-          -- TODO: why not generate address from the base address + counter<<2?
+          -- TO-DO: why not generate address from the base address + counter<<2?
           if ((data_fifo_ready = '0') or (ahb3_resp_count = resp_wsize)) then
             ahb3_hburst <= "111";
           else

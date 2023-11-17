@@ -62,7 +62,9 @@ module peripheral_bfm_master_ahb3 #(
   input                       HRESP
 );
 
-  always @(negedge HRESETn) reset();
+  always @(negedge HRESETn) begin
+    reset();
+  end
 
   //////////////////////////////////////////////////////////////////////////////
   // Constants
@@ -95,7 +97,12 @@ module peripheral_bfm_master_ahb3 #(
     HTRANS <= HTRANS_IDLE;
   endtask
 
-  task automatic write(input [HADDR_SIZE-1:0] address, ref [HDATA_SIZE-1:0] data[], input [2:0] size, input [2:0] burst);
+  task automatic write(
+    input [HADDR_SIZE-1:0] address,
+    ref [HDATA_SIZE-1:0] data[],
+    input [2:0] size,
+    input [2:0] burst
+  );
     int beats;
 
     beats = get_beats_per_burst(burst);
@@ -109,7 +116,12 @@ module peripheral_bfm_master_ahb3 #(
     join_any
   endtask
 
-  task automatic read(input [HADDR_SIZE-1:0] address, ref [HDATA_SIZE-1:0] data[], input [2:0] size, input [2:0] burst);
+  task automatic read(
+    input [HADDR_SIZE-1:0] address,
+    ref [HDATA_SIZE-1:0] data[],
+    input [2:0] size,
+    input [2:0] burst
+  );
     int beats;
 
     beats = get_beats_per_burst(burst);
@@ -131,7 +143,13 @@ module peripheral_bfm_master_ahb3 #(
     do @(posedge HCLK); while (!HREADY);
   endtask : wait4hready
 
-  task automatic ahb_cmd(input [HADDR_SIZE-1:0] addr, input [2:0] size, input [2:0] burst, input rw, input int beats);
+  task automatic ahb_cmd(
+    input [HADDR_SIZE-1:0] addr,
+    input [2:0] size,
+    input [2:0] burst,
+    input rw,
+    input int beats
+  );
     wait4hready();
     HSEL      <= 1'b1;
     HADDR     <= addr;
@@ -149,7 +167,14 @@ module peripheral_bfm_master_ahb3 #(
     end
   endtask : ahb_cmd
 
-  task automatic ahb_data(input [HADDR_SIZE-1:0] address, input [2:0] size, input [2:0] burst, input rw, input int beats, ref [HDATA_SIZE-1:0] data[]);
+  task automatic ahb_data(
+    input [HADDR_SIZE-1:0] address,
+    input [2:0] size,
+    input [2:0] burst,
+    input rw,
+    input int beats,
+    ref [HDATA_SIZE-1:0] data[]
+  );
 
     logic [(HDATA_SIZE+7)/8 -1:0] byte_offset;
     logic [HDATA_SIZE       -1:0] data_copy[], tmp_var;
@@ -185,9 +210,9 @@ module peripheral_bfm_master_ahb3 #(
       end else begin
         // reading ... transfer from AHB-HRDATA to data-buffer
 
-        //'byte' is reserved, so use nbyte
+        // 'byte' is reserved, so use nbyte
         // Store in temporary variable.
-        //  Using data[nbeat] directly fails when calling with a multi-dimensional dynamic array. Why????
+        // Using data[nbeat] directly fails when calling with a multi-dimensional dynamic array. Why????
         for (int nbyte = 0; nbyte < get_bytes_per_beat(size); nbyte++) begin
           tmp_var[nbyte*8+:8] = HRDATA[(nbyte+byte_offset)*8+:8];
         end
@@ -204,7 +229,9 @@ module peripheral_bfm_master_ahb3 #(
   // Functions
   //////////////////////////////////////////////////////////////////////////////
 
-  function int get_bytes_per_beat(input [2:0] hsize);
+  function int get_bytes_per_beat(
+    input [2:0] hsize
+  );
     case (hsize)
       HSIZE_B8:    get_bytes_per_beat = 1;
       HSIZE_B16:   get_bytes_per_beat = 2;
@@ -217,7 +244,9 @@ module peripheral_bfm_master_ahb3 #(
     endcase
   endfunction : get_bytes_per_beat
 
-  function int get_beats_per_burst(input [2:0] hburst);
+  function int get_beats_per_burst(
+    input [2:0] hburst
+  );
     case (hburst)
       HBURST_SINGLE: get_beats_per_burst = 1;
       HBURST_INCR:   get_beats_per_burst = -1;
@@ -230,7 +259,10 @@ module peripheral_bfm_master_ahb3 #(
     endcase
   endfunction : get_beats_per_burst
 
-  function [HADDR_SIZE-1:0] next_address(input [2:0] hsize, hburst);
+  function [HADDR_SIZE-1:0] next_address(
+    input [2:0] hsize, 
+    input [2:0] hburst
+  );
     // generate address mask
     int          beats_per_burst;
     logic [10:0] addr_mask;
