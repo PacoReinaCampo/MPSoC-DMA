@@ -132,7 +132,7 @@ module peripheral_bfm_master_wb #(
       err_o = wb_err_i;
       insert_wait_states;
     end
-  endtask  //
+  endtask
 
   task write_burst;
     input [AW  -1:0] base_addr;
@@ -322,7 +322,7 @@ module peripheral_bfm_master_wb #(
     begin
       wb_adr_o <= #TP addr;
       wb_dat_o <= #TP(op === WRITE) ? data : {DW{1'b0}};
-      wb_stb_o <= #TP 1'b1;  // FIXME: Add wait states
+      wb_stb_o <= #TP 1'b1;  // FIX-ME: Add wait states
 
       if ((index == burst_length - 1) && (cycle_type !== CTI_CLASSIC)) begin
         wb_cti_o <= #TP 3'b111;
