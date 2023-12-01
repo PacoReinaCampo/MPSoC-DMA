@@ -83,7 +83,7 @@ module peripheral_dma_interface_ahb3 #(
   genvar i;
 
   //////////////////////////////////////////////////////////////////////////////
-  // Module Body
+  // Body
   //////////////////////////////////////////////////////////////////////////////
 
   assign if_write_req   = {ahb3_if_hwdata[DMA_REQFIELD_LADDR_WIDTH-1:0], ahb3_if_hwdata[DMA_REQFIELD_SIZE_WIDTH-1:0], ahb3_if_hwdata[DMA_REQFIELD_RTILE_WIDTH-1:0], ahb3_if_hwdata[DMA_REQFIELD_RADDR_WIDTH-1:0], ahb3_if_hwdata[0]};

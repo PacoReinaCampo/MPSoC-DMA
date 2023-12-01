@@ -80,7 +80,7 @@ module peripheral_dma_interface_bb #(
   genvar i;
 
   //////////////////////////////////////////////////////////////////////////////
-  // Module Body
+  // Body
   //////////////////////////////////////////////////////////////////////////////
 
   assign if_write_req  = {bb_if_din_i[DMA_REQFIELD_LADDR_WIDTH-1:0], bb_if_din_i[DMA_REQFIELD_SIZE_WIDTH-1:0], bb_if_din_i[DMA_REQFIELD_RTILE_WIDTH-1:0], bb_if_din_i[DMA_REQFIELD_RADDR_WIDTH-1:0], bb_if_din_i[0]};
