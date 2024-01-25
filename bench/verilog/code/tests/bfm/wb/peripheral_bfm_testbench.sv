@@ -77,7 +77,7 @@ module peripheral_bfm_testbench;
   // Body
   //////////////////////////////////////////////////////////////////////////////
 
-  peripheral_testbench_utils utils_testbench ();
+  peripheral_utils_testbench testbench_utils ();
   peripheral_tap_generator #("wb_bfm.tap", 1) vtg ();
 
   always #5 wb_clk <= ~wb_clk;
