@@ -43,7 +43,7 @@
 ///////////////////////////////////////////////////////////////////////////////////
 
 sv work ../../../../../../../bench/verilog/code/tests/core/wb/main/peripheral_tap_generator.sv
-sv work ../../../../../../../bench/verilog/code/tests/core/wb/main/peripheral_testbench_utils.sv
+sv work ../../../../../../../bench/verilog/code/tests/core/wb/main/peripheral_utils_testbench.sv
 
 sv work ../../../../../../../bench/verilog/code/tests/bfm/wb/peripheral_bfm_master_wb.sv
 sv work ../../../../../../../bench/verilog/code/tests/bfm/wb/peripheral_bfm_memory_wb.sv
