@@ -43,72 +43,34 @@ import uvm_pkg::*;
 `include "peripheral_uvm_interface.sv"
 `include "peripheral_uvm_test.sv"
 
-import peripheral_axi4_pkg::*;
-
 module peripheral_uvm_testbench;
   // Clock and Reset declaration
-  bit aclk;
+  bit PCLK;
 
   // Clock Generation
-  always #1 aclk = ~aclk;
+  always #1 PCLK = ~PCLK;
 
   initial begin
-    aclk = 0;
+    PCLK = 0;
   end
 
   // Virtual interface
-  peripheral_design_if vif (aclk);
+  peripheral_design_if vif (PCLK);
 
   // DUT instantiation
   peripheral_design dut (
     // Global Signals
-    .aclk   (vif.aclk),
-    .aresetn(vif.aresetn),
+    .PCLK   (vif.PCLK),
+    .PRESETn(vif.PRESETn),
 
-    // Write Address Channel
-    .awid   (vif.awid),
-    .awadr  (vif.awadr),
-    .awlen  (vif.awlen),
-    .awsize (vif.awsize),
-    .awburst(vif.awburst),
-    .awlock (vif.awlock),
-    .awcache(vif.awcache),
-    .awprot (vif.awprot),
-    .awvalid(vif.awvalid),
-    .awready(vif.awready),
-
-    // Write Data Channel
-    .wid   (vif.wid),
-    .wrdata(vif.wrdata),
-    .wstrb (vif.wstrb),
-    .wlast (vif.wlast),
-    .wvalid(vif.wvalid),
-    .wready(vif.wready),
-
-    // Write Response Channel
-    .bid   (vif.bid),
-    .bresp (vif.bresp),
-    .bvalid(vif.bvalid),
-    .bready(vif.bready),
-
-    // Read Address Channel
-    .arid   (vif.arid),
-    .araddr (vif.araddr),
-    .arlen  (vif.arlen),
-    .arsize (vif.arsize),
-    .arlock (vif.arlock),
-    .arcache(vif.arcache),
-    .arprot (vif.arprot),
-    .arvalid(vif.arvalid),
-    .arready(vif.arready),
-
-    // Read Data Channel
-    .rid   (vif.rid),
-    .rdata (vif.rdata),
-    .rresp (vif.rresp),
-    .rlast (vif.rlast),
-    .rvalid(vif.rvalid),
-    .rready(vif.rready)
+    .PADDR   (vif.PADDR),
+    .PWRITE  (vif.PWRITE),
+    .PSEL    (vif.PSEL),
+    .PENABLE (vif.PENABLE),
+    .PWDATA  (vif.PWDATA),
+    .PRDATA  (vif.PRDATA),
+    .PREADY  (vif.PREADY),
+    .PSLVERR (vif.PSLVERR)
   );
 
   initial begin

@@ -81,65 +81,33 @@ class peripheral_uvm_monitor extends uvm_monitor;
   // Task: Single Write Transaction
   task write_phase_single;
     begin
-      // Operate in a synchronous manner
-      @(posedge vif.aclk);
+      vif.PADDR   <= vif.PADDR;
+      vif.PWRITE  <= vif.PWRITE;
+      vif.PSEL    <= vif.PSEL;
+      vif.PENABLE <= vif.PENABLE;
+      vif.PWDATA  <= vif.PWDATA;
+      vif.PRDATA  <= vif.PRDATA;
 
-      // Address Phase
-      monitor_item.awid    <= vif.awid;
-      monitor_item.awadr   <= vif.awadr;
-      monitor_item.awvalid <= vif.awvalid;
-      monitor_item.awlen   <= vif.awlen;
-      monitor_item.awsize  <= vif.awsize;
-      monitor_item.awburst <= vif.awburst;
-      monitor_item.awlock  <= vif.awlock;
-      monitor_item.awcache <= vif.awcache;
-      monitor_item.awprot  <= vif.awprot;
-      @(posedge vif.awready);
-
-      // Data Phase
-      monitor_item.awvalid <= vif.awvalid;
-      monitor_item.awadr   <= vif.awadr;
-      monitor_item.wid     <= vif.wid;
-      monitor_item.wvalid  <= vif.wvalid;
-      monitor_item.wrdata  <= vif.wrdata;
-      monitor_item.wstrb   <= vif.wstrb;
-      monitor_item.wlast   <= vif.wlast;
-      @(posedge vif.wready);
-
-      // Response Phase
-      monitor_item.wid    <= vif.wid;
-      monitor_item.wvalid <= vif.wvalid;
-      monitor_item.wrdata <= vif.wrdata;
-      monitor_item.wstrb  <= vif.wstrb;
-      monitor_item.wlast  <= vif.wlast;
+      @(posedge vif.PCLK);
+      vif.PWRITE  <= vif.PWRITE;
+      vif.PSEL    <= vif.PSEL;
+      vif.PENABLE <= vif.PENABLE;
     end
   endtask
 
   // Task: Single Read Transaction
   task read_phase_single;
     begin
-      // Address Phase
-      monitor_item.arid    <= vif.arid;
-      monitor_item.araddr  <= vif.awadr;
-      monitor_item.arvalid <= vif.arvalid;
-      monitor_item.arlen   <= vif.arlen;
-      monitor_item.arsize  <= vif.arsize;
-      monitor_item.arlock  <= vif.arlock;
-      monitor_item.arcache <= vif.arcache;
-      monitor_item.arprot  <= vif.arprot;
-      monitor_item.rready  <= vif.rready;
-      @(posedge vif.arready);
+      vif.PADDR   <= vif.PADDR;
+      vif.PWRITE  <= vif.PWRITE;
+      vif.PSEL    <= vif.PSEL;
+      vif.PENABLE <= vif.PENABLE;
+      vif.PWDATA  <= vif.PWDATA;
+      vif.PRDATA  <= vif.PRDATA;
 
-      // Data Phase
-      monitor_item.arvalid <= vif.arvalid;
-      monitor_item.rready  <= vif.rready;
-      @(posedge vif.rvalid);
-
-      monitor_item.rready <= vif.rready;
-      monitor_item.rdata <= vif.rdata;
-      @(negedge vif.rvalid);
-
-      monitor_item.araddr <= vif.araddr;
+      @(posedge vif.PCLK);
+      vif.PSEL    <= vif.PSEL;
+      vif.PENABLE <= vif.PENABLE;
     end
   endtask
 endclass
