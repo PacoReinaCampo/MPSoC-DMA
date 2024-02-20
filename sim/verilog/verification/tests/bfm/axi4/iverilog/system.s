@@ -47,7 +47,7 @@
 ../../../../../../../rtl/verilog/code/bfm/axi4/peripheral_bfm_master_axi4.sv
 ../../../../../../../rtl/verilog/code/bfm/axi4/peripheral_bfm_slave_axi4.sv
 
-../../../../../../../bench/verilog/code/tests/bfm/axi4/peripheral_bfm_basic.sv
-../../../../../../../bench/verilog/code/tests/bfm/axi4/peripheral_bfm_master_generic_axi4.sv
-../../../../../../../bench/verilog/code/tests/bfm/axi4/peripheral_bfm_slave_generic_axi4.sv
-../../../../../../../bench/verilog/code/tests/bfm/axi4/peripheral_bfm_testbench.sv
+../../../../../../../verification/tasks/library/bfm/axi4/peripheral_bfm_basic.sv
+../../../../../../../verification/tasks/library/bfm/axi4/peripheral_bfm_master_generic_axi4.sv
+../../../../../../../verification/tasks/library/bfm/axi4/peripheral_bfm_slave_generic_axi4.sv
+../../../../../../../verification/tasks/library/bfm/axi4/peripheral_bfm_testbench.sv

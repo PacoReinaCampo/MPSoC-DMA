@@ -58,6 +58,6 @@
 ../../../../../../../rtl/verilog/code/core/peripheral_dma_packet_buffer.sv
 ../../../../../../../rtl/verilog/code/core/peripheral_dma_request_table.sv
 
-../../../../../../../bench/verilog/code/tests/peripheral/ahb3/peripheral_bfm_ahb3.sv
-../../../../../../../bench/verilog/code/tests/peripheral/ahb3/peripheral_bfm_master_ahb3.sv
-../../../../../../../bench/verilog/code/tests/peripheral/ahb3/peripheral_dma_testbench.sv
+../../../../../../../verification/tasks/library/peripheral/ahb3/peripheral_bfm_ahb3.sv
+../../../../../../../verification/tasks/library/peripheral/ahb3/peripheral_bfm_master_ahb3.sv
+../../../../../../../verification/tasks/library/peripheral/ahb3/peripheral_dma_testbench.sv

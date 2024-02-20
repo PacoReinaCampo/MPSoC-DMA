@@ -58,11 +58,11 @@
 ../../../../../../../rtl/verilog/code/core/peripheral_dma_packet_buffer.sv
 ../../../../../../../rtl/verilog/code/core/peripheral_dma_request_table.sv
 
-../../../../../../../bench/verilog/code/tests/peripheral/wb/bus/peripheral_bfm_master_wb.sv
-../../../../../../../bench/verilog/code/tests/peripheral/wb/bus/peripheral_bfm_memory_wb.sv
-../../../../../../../bench/verilog/code/tests/peripheral/wb/bus/peripheral_bfm_slave_wb.sv
-../../../../../../../bench/verilog/code/tests/peripheral/wb/bus/peripheral_bfm_transactor_wb.sv
-../../../../../../../bench/verilog/code/tests/peripheral/wb/main/peripheral_tap_generator.sv
-../../../../../../../bench/verilog/code/tests/peripheral/wb/main/peripheral_utils_testbench.sv
-../../../../../../../bench/verilog/code/tests/peripheral/wb/main/peripheral_dma_testbench.sv
-../../../../../../../bench/verilog/code/tests/peripheral/wb/main/peripheral_top_testbench.sv
+../../../../../../../verification/tasks/library/peripheral/wb/bus/peripheral_bfm_master_wb.sv
+../../../../../../../verification/tasks/library/peripheral/wb/bus/peripheral_bfm_memory_wb.sv
+../../../../../../../verification/tasks/library/peripheral/wb/bus/peripheral_bfm_slave_wb.sv
+../../../../../../../verification/tasks/library/peripheral/wb/bus/peripheral_bfm_transactor_wb.sv
+../../../../../../../verification/tasks/library/peripheral/wb/main/peripheral_tap_generator.sv
+../../../../../../../verification/tasks/library/peripheral/wb/main/peripheral_utils_testbench.sv
+../../../../../../../verification/tasks/library/peripheral/wb/main/peripheral_dma_testbench.sv
+../../../../../../../verification/tasks/library/peripheral/wb/main/peripheral_top_testbench.sv

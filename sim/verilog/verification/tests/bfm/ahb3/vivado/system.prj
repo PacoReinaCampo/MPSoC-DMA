@@ -44,7 +44,7 @@
 
 sv work ../../../../../../../rtl/verilog/code/ahb3/pkg/peripheral_ahb3_pkg.sv
 
-sv work ../../../../../../../bench/verilog/code/tests/bfm/ahb3/peripheral_bfm_ahb3.sv
-sv work ../../../../../../../bench/verilog/code/tests/bfm/ahb3/peripheral_bfm_master_ahb3.sv
-sv work ../../../../../../../bench/verilog/code/tests/bfm/ahb3/peripheral_bfm_testbench.sv
-sv work ../../../../../../../bench/verilog/code/tests/bfm/ahb3/peripheral_timer_ahb3.sv
+sv work ../../../../../../../verification/tasks/library/bfm/ahb3/peripheral_bfm_ahb3.sv
+sv work ../../../../../../../verification/tasks/library/bfm/ahb3/peripheral_bfm_master_ahb3.sv
+sv work ../../../../../../../verification/tasks/library/bfm/ahb3/peripheral_bfm_testbench.sv
+sv work ../../../../../../../verification/tasks/library/bfm/ahb3/peripheral_timer_ahb3.sv
