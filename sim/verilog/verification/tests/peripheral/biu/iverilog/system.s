@@ -44,25 +44,25 @@
 
 ../../../../../../../rtl/verilog/code/pkg/core/peripheral_dma_pkg.sv
 
-../../../../../../../rtl/verilog/code/pkg/peripheral/bb/peripheral_bb_pkg.sv
+../../../../../../../rtl/verilog/code/pkg/peripheral/biu/peripheral_bb_pkg.sv
 
-../../../../../../../rtl/verilog/code/peripheral/bb/peripheral_dma_initiator_bb.sv
-../../../../../../../rtl/verilog/code/peripheral/bb/peripheral_dma_initiator_nocres_bb.sv
-../../../../../../../rtl/verilog/code/peripheral/bb/peripheral_dma_initiator_req_bb.sv
-../../../../../../../rtl/verilog/code/peripheral/bb/peripheral_dma_interface_bb.sv
-../../../../../../../rtl/verilog/code/peripheral/bb/peripheral_dma_target_bb.sv
-../../../../../../../rtl/verilog/code/peripheral/bb/peripheral_dma_top_bb.sv
+../../../../../../../rtl/verilog/code/peripheral/biu/peripheral_dma_initiator_bb.sv
+../../../../../../../rtl/verilog/code/peripheral/biu/peripheral_dma_initiator_nocres_bb.sv
+../../../../../../../rtl/verilog/code/peripheral/biu/peripheral_dma_initiator_req_bb.sv
+../../../../../../../rtl/verilog/code/peripheral/biu/peripheral_dma_interface_bb.sv
+../../../../../../../rtl/verilog/code/peripheral/biu/peripheral_dma_target_bb.sv
+../../../../../../../rtl/verilog/code/peripheral/biu/peripheral_dma_top_bb.sv
 
 ../../../../../../../rtl/verilog/code/core/peripheral_arbiter_rr.sv
 ../../../../../../../rtl/verilog/code/core/peripheral_dma_initiator_nocreq.sv
 ../../../../../../../rtl/verilog/code/core/peripheral_dma_packet_buffer.sv
 ../../../../../../../rtl/verilog/code/core/peripheral_dma_request_table.sv
 
-../../../../../../../verification/tasks/library/peripheral/bb/bus/peripheral_bfm_master_bb.sv
-../../../../../../../verification/tasks/library/peripheral/bb/bus/peripheral_bfm_memory_bb.sv
-../../../../../../../verification/tasks/library/peripheral/bb/bus/peripheral_bfm_slave_bb.sv
-../../../../../../../verification/tasks/library/peripheral/bb/bus/peripheral_bfm_transactor_bb.sv
-../../../../../../../verification/tasks/library/peripheral/bb/main/peripheral_tap_generator.sv
-../../../../../../../verification/tasks/library/peripheral/bb/main/peripheral_utils_testbench.sv
-../../../../../../../verification/tasks/library/peripheral/bb/main/peripheral_dma_testbench.sv
-../../../../../../../verification/tasks/library/peripheral/bb/main/peripheral_top_testbench.sv
+../../../../../../../verification/tasks/library/peripheral/biu/bus/peripheral_bfm_master_bb.sv
+../../../../../../../verification/tasks/library/peripheral/biu/bus/peripheral_bfm_memory_bb.sv
+../../../../../../../verification/tasks/library/peripheral/biu/bus/peripheral_bfm_slave_bb.sv
+../../../../../../../verification/tasks/library/peripheral/biu/bus/peripheral_bfm_transactor_bb.sv
+../../../../../../../verification/tasks/library/peripheral/biu/main/peripheral_tap_generator.sv
+../../../../../../../verification/tasks/library/peripheral/biu/main/peripheral_utils_testbench.sv
+../../../../../../../verification/tasks/library/peripheral/biu/main/peripheral_dma_testbench.sv
+../../../../../../../verification/tasks/library/peripheral/biu/main/peripheral_top_testbench.sv
