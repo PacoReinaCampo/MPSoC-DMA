@@ -12,6 +12,20 @@ code
 │   │   ├── peripheral_dma_interface_ahb3.vhd
 │   │   ├── peripheral_dma_target_ahb3.vhd
 │   │   └── peripheral_dma_top_ahb3.vhd
+│   ├── apb4
+│   │   ├── peripheral_dma_initiator_ahb3.vhd
+│   │   ├── peripheral_dma_initiator_nocres_ahb3.vhd
+│   │   ├── peripheral_dma_initiator_req_ahb3.vhd
+│   │   ├── peripheral_dma_interface_ahb3.vhd
+│   │   ├── peripheral_dma_target_ahb3.vhd
+│   │   └── peripheral_dma_top_ahb3.vhd
+│   ├── axi4
+│   │   ├── peripheral_dma_initiator_ahb3.vhd
+│   │   ├── peripheral_dma_initiator_nocres_ahb3.vhd
+│   │   ├── peripheral_dma_initiator_req_ahb3.vhd
+│   │   ├── peripheral_dma_interface_ahb3.vhd
+│   │   ├── peripheral_dma_target_ahb3.vhd
+│   │   └── peripheral_dma_top_ahb3.vhd
 │   ├── bb
 │   │   ├── peripheral_dma_initiator_bb.vhd
 │   │   ├── peripheral_dma_initiator_nocres_bb.vhd
@@ -19,6 +33,13 @@ code
 │   │   ├── peripheral_dma_interface_bb.vhd
 │   │   ├── peripheral_dma_target_bb.vhd
 │   │   └── peripheral_dma_top_bb.vhd
+│   ├── biu
+│   │   ├── peripheral_dma_initiator_ahb3.vhd
+│   │   ├── peripheral_dma_initiator_nocres_ahb3.vhd
+│   │   ├── peripheral_dma_initiator_req_ahb3.vhd
+│   │   ├── peripheral_dma_interface_ahb3.vhd
+│   │   ├── peripheral_dma_target_ahb3.vhd
+│   │   └── peripheral_dma_top_ahb3.vhd
 │   └── wb
 │       ├── peripheral_dma_initiator_nocres_wb.vhd
 │       ├── peripheral_dma_initiator_req_wb.vhd
@@ -33,9 +54,15 @@ code
     └── peripheral
         ├── ahb3
         │   └── peripheral_ahb3_pkg.vhd
+        ├── apb4
+        │   └── peripheral_ahb3_pkg.vhd
         ├── axi4
         │   └── peripheral_axi4_pkg.vhd
+        ├── bb
+        │   └── peripheral_ahb3_pkg.vhd
+        ├── biu
+        │   └── peripheral_ahb3_pkg.vhd
         └── wb
             └── peripheral_wb_pkg.vhd
 
-11 directories, 27 files
+17 directories, 48 files

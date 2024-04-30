@@ -44,14 +44,14 @@
 
 ../../../../../../../rtl/verilog/code/pkg/core/peripheral_dma_pkg.sv
 
-../../../../../../../rtl/verilog/code/pkg/peripheral/biu/peripheral_bb_pkg.sv
+../../../../../../../rtl/verilog/code/pkg/peripheral/biu/peripheral_biu_pkg.sv
 
-../../../../../../../rtl/verilog/code/peripheral/biu/peripheral_dma_initiator_bb.sv
-../../../../../../../rtl/verilog/code/peripheral/biu/peripheral_dma_initiator_nocres_bb.sv
-../../../../../../../rtl/verilog/code/peripheral/biu/peripheral_dma_initiator_req_bb.sv
-../../../../../../../rtl/verilog/code/peripheral/biu/peripheral_dma_interface_bb.sv
-../../../../../../../rtl/verilog/code/peripheral/biu/peripheral_dma_target_bb.sv
-../../../../../../../rtl/verilog/code/peripheral/biu/peripheral_dma_top_bb.sv
+../../../../../../../rtl/verilog/code/peripheral/biu/peripheral_dma_initiator_biu.sv
+../../../../../../../rtl/verilog/code/peripheral/biu/peripheral_dma_initiator_nocres_biu.sv
+../../../../../../../rtl/verilog/code/peripheral/biu/peripheral_dma_initiator_req_biu.sv
+../../../../../../../rtl/verilog/code/peripheral/biu/peripheral_dma_interface_biu.sv
+../../../../../../../rtl/verilog/code/peripheral/biu/peripheral_dma_target_biu.sv
+../../../../../../../rtl/verilog/code/peripheral/biu/peripheral_dma_top_biu.sv
 
 ../../../../../../../rtl/verilog/code/core/peripheral_arbiter_rr.sv
 ../../../../../../../rtl/verilog/code/core/peripheral_dma_initiator_nocreq.sv
