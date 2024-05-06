@@ -1,6 +1,6 @@
 # MPSoC-DMA
 ## QueenField
 
-![QueenField](../master/icon.jpg)
+![QueenField](../main/icon.jpg)
 
 **Direct Access Memory for a Multi-Processor System on Chip**
