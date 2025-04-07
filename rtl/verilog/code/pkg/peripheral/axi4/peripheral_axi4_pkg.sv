@@ -40,8 +40,11 @@
 
 package peripheral_axi4_pkg;
 
+  localparam AXI_ID_WIDTH   = 10;
   localparam AXI_ADDR_WIDTH = 64;
   localparam AXI_DATA_WIDTH = 64;
+  localparam AXI_STRB_WIDTH = 8;
+  localparam AXI_USER_WIDTH = 10;
 
   // Burst length specifies the number of data transfers that occur within each burst
   localparam AXI_BURST_LENGTH_1 = 4'h0;
@@ -96,5 +99,8 @@ package peripheral_axi4_pkg;
   localparam AXI_RESPONSE_EXOKAY = 2'b01;
   localparam AXI_RESPONSE_SLAVE_ERROR = 2'b10;
   localparam AXI_RESPONSE_DECODE_ERROR = 2'b10;
+
+  // Address Test
+  localparam AXI_ADDRESS_TEST = 32'h0000000F;
 
 endpackage

@@ -46,8 +46,11 @@ use ieee.math_real.all;
 
 package peripheral_axi4_pkg is
 
+  constant AXI_ID_WIDTH   : integer := 10;
   constant AXI_ADDR_WIDTH : integer := 64;
   constant AXI_DATA_WIDTH : integer := 64;
+  constant AXI_STRB_WIDTH : integer := 8;
+  constant AXI_USER_WIDTH : integer := 10;
 
   -- Burst length specifies the number of data transfers that occur within each burst
   constant AXI_BURST_LENGTH_1  : std_logic_vector(3 downto 0) := X"0";
@@ -102,5 +105,8 @@ package peripheral_axi4_pkg is
   constant AXI_RESPONSE_EXOKAY       : std_logic_vector(1 downto 0) := "01";
   constant AXI_RESPONSE_SLAVE_ERROR  : std_logic_vector(1 downto 0) := "10";
   constant AXI_RESPONSE_DECODE_ERROR : std_logic_vector(1 downto 0) := "10";
+
+  -- Address Test
+  constant AXI_ADDRESS_TEST : std_logic_vector(31 downto 0) := = X"000F";
 
 end peripheral_axi4_pkg;
