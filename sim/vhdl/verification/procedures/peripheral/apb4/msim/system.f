@@ -43,7 +43,7 @@
 ###################################################################################
 
 ../../../../../../../rtl/vhdl/code/pkg/core/vhdl_pkg.vhd
-../../../../../../../rtl/vhdl/code/pkg/core/peripheral_dma_pkg.vhd
+../../../../../../../rtl/vhdl/code/pkg/peripheral/peripheral_dma_pkg.vhd
 
 ../../../../../../../rtl/vhdl/code/peripheral/apb4/peripheral_dma_initiator_apb4.vhd
 ../../../../../../../rtl/vhdl/code/peripheral/apb4/peripheral_dma_initiator_nocres_apb4.vhd
@@ -52,9 +52,9 @@
 ../../../../../../../rtl/vhdl/code/peripheral/apb4/peripheral_dma_target_apb4.vhd
 ../../../../../../../rtl/vhdl/code/peripheral/apb4/peripheral_dma_top_apb4.vhd
 
-../../../../../../../rtl/vhdl/code/core/peripheral_arbiter_rr.vhd
-../../../../../../../rtl/vhdl/code/core/peripheral_dma_initiator_nocreq.vhd
-../../../../../../../rtl/vhdl/code/core/peripheral_dma_packet_buffer.vhd
-../../../../../../../rtl/vhdl/code/core/peripheral_dma_request_table.vhd
+../../../../../../../rtl/vhdl/code/peripheral/peripheral_arbiter_rr.vhd
+../../../../../../../rtl/vhdl/code/peripheral/peripheral_dma_initiator_nocreq.vhd
+../../../../../../../rtl/vhdl/code/peripheral/peripheral_dma_packet_buffer.vhd
+../../../../../../../rtl/vhdl/code/peripheral/peripheral_dma_request_table.vhd
 
 ../../../../../../../verification/procedures/library/peripheral/apb4/peripheral_dma_testbench.vhd

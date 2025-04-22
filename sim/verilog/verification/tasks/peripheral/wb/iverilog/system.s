@@ -42,7 +42,7 @@
 ##                                                                               ##
 ###################################################################################
 
-../../../../../../../rtl/verilog/code/pkg/core/peripheral_dma_pkg.sv
+../../../../../../../rtl/verilog/code/pkg/peripheral/peripheral_dma_pkg.sv
 
 ../../../../../../../rtl/verilog/code/pkg/peripheral/wb/peripheral_wb_pkg.sv
 
@@ -53,10 +53,10 @@
 ../../../../../../../rtl/verilog/code/peripheral/wb/peripheral_dma_target_wb.sv
 ../../../../../../../rtl/verilog/code/peripheral/wb/peripheral_dma_top_wb.sv
 
-../../../../../../../rtl/verilog/code/core/peripheral_arbiter_rr.sv
-../../../../../../../rtl/verilog/code/core/peripheral_dma_initiator_nocreq.sv
-../../../../../../../rtl/verilog/code/core/peripheral_dma_packet_buffer.sv
-../../../../../../../rtl/verilog/code/core/peripheral_dma_request_table.sv
+../../../../../../../rtl/verilog/code/peripheral/peripheral_arbiter_rr.sv
+../../../../../../../rtl/verilog/code/peripheral/peripheral_dma_initiator_nocreq.sv
+../../../../../../../rtl/verilog/code/peripheral/peripheral_dma_packet_buffer.sv
+../../../../../../../rtl/verilog/code/peripheral/peripheral_dma_request_table.sv
 
 ../../../../../../../verification/tasks/library/peripheral/wb/bus/peripheral_bfm_master_wb.sv
 ../../../../../../../verification/tasks/library/peripheral/wb/bus/peripheral_bfm_memory_wb.sv

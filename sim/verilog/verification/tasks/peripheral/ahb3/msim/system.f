@@ -42,7 +42,7 @@
 ##                                                                               ##
 ###################################################################################
 
-../../../../../../../rtl/verilog/code/pkg/core/peripheral_dma_pkg.sv
+../../../../../../../rtl/verilog/code/pkg/peripheral/peripheral_dma_pkg.sv
 
 ../../../../../../../rtl/verilog/code/pkg/peripheral/ahb3/peripheral_ahb3_pkg.sv
 
@@ -53,10 +53,10 @@
 ../../../../../../../rtl/verilog/code/peripheral/ahb3/peripheral_dma_target_ahb3.sv
 ../../../../../../../rtl/verilog/code/peripheral/ahb3/peripheral_dma_top_ahb3.sv
 
-../../../../../../../rtl/verilog/code/core/peripheral_arbiter_rr.sv
-../../../../../../../rtl/verilog/code/core/peripheral_dma_initiator_nocreq.sv
-../../../../../../../rtl/verilog/code/core/peripheral_dma_packet_buffer.sv
-../../../../../../../rtl/verilog/code/core/peripheral_dma_request_table.sv
+../../../../../../../rtl/verilog/code/peripheral/peripheral_arbiter_rr.sv
+../../../../../../../rtl/verilog/code/peripheral/peripheral_dma_initiator_nocreq.sv
+../../../../../../../rtl/verilog/code/peripheral/peripheral_dma_packet_buffer.sv
+../../../../../../../rtl/verilog/code/peripheral/peripheral_dma_request_table.sv
 
 ../../../../../../../verification/tasks/library/peripheral/ahb3/peripheral_bfm_ahb3.sv
 ../../../../../../../verification/tasks/library/peripheral/ahb3/peripheral_bfm_master_ahb3.sv
