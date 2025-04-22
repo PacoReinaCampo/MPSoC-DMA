@@ -169,7 +169,7 @@ module peripheral_bfm_biu #(
     $display("       **                                                                                                ");
     $display("       **                                                                                                ");
     $display("        **                                                                                               ");
-    $display(" AHB3Lite Timer Testbench Initialized                                                                    ");
+    $display(" AHB4Lite Timer Testbench Initialized                                                                    ");
     $display(" Timers: %0d                                                                                             ", TIMERS);
     $display("---------------------------------------------------------------------------------------------------------");
   endtask : welcome_text
@@ -177,11 +177,11 @@ module peripheral_bfm_biu #(
   task finish_text();
     if (errors > 0) begin
       $display("------------------------------------------------------------");
-      $display(" AHB3Lite Timer Testbench failed with (%0d) errors @%0t", errors, $time);
+      $display(" AHB4Lite Timer Testbench failed with (%0d) errors @%0t", errors, $time);
       $display("------------------------------------------------------------");
     end else begin
       $display("------------------------------------------------------------");
-      $display(" AHB3Lite Timer Testbench finished successfully @%0t", $time);
+      $display(" AHB4Lite Timer Testbench finished successfully @%0t", $time);
       $display("------------------------------------------------------------");
     end
   endtask : finish_text

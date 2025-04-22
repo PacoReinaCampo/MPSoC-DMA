@@ -63,59 +63,59 @@ module peripheral_dma_testbench;
   logic                     clk;
   logic                     rst;
 
-  // AHB3
-  logic [   FLIT_WIDTH-1:0] noc_ahb3_in_req_flit;
-  logic                     noc_ahb3_in_req_valid;
-  logic                     noc_ahb3_in_req_ready;
+  // AHB4
+  logic [   FLIT_WIDTH-1:0] noc_ahb4_in_req_flit;
+  logic                     noc_ahb4_in_req_valid;
+  logic                     noc_ahb4_in_req_ready;
 
-  logic [   FLIT_WIDTH-1:0] noc_ahb3_in_res_flit;
-  logic                     noc_ahb3_in_res_valid;
-  logic                     noc_ahb3_in_res_ready;
+  logic [   FLIT_WIDTH-1:0] noc_ahb4_in_res_flit;
+  logic                     noc_ahb4_in_res_valid;
+  logic                     noc_ahb4_in_res_ready;
 
-  logic [   FLIT_WIDTH-1:0] noc_ahb3_out_req_flit;
-  logic                     noc_ahb3_out_req_valid;
-  logic                     noc_ahb3_out_req_ready;
+  logic [   FLIT_WIDTH-1:0] noc_ahb4_out_req_flit;
+  logic                     noc_ahb4_out_req_valid;
+  logic                     noc_ahb4_out_req_ready;
 
-  logic [   FLIT_WIDTH-1:0] noc_ahb3_out_res_flit;
-  logic                     noc_ahb3_out_res_valid;
-  logic                     noc_ahb3_out_res_ready;
+  logic [   FLIT_WIDTH-1:0] noc_ahb4_out_res_flit;
+  logic                     noc_ahb4_out_res_valid;
+  logic                     noc_ahb4_out_res_ready;
 
-  logic                     ahb3_if_hsel;
-  logic [   ADDR_WIDTH-1:0] ahb3_if_haddr;
-  logic [   DATA_WIDTH-1:0] ahb3_if_hwdata;
-  logic                     ahb3_if_hwrite;
-  logic [              2:0] ahb3_if_hsize;
-  logic [              2:0] ahb3_if_hburst;
-  logic [              3:0] ahb3_if_hprot;
-  logic [              1:0] ahb3_if_htrans;
-  logic                     ahb3_if_hmastlock;
+  logic                     ahb4_if_hsel;
+  logic [   ADDR_WIDTH-1:0] ahb4_if_haddr;
+  logic [   DATA_WIDTH-1:0] ahb4_if_hwdata;
+  logic                     ahb4_if_hwrite;
+  logic [              2:0] ahb4_if_hsize;
+  logic [              2:0] ahb4_if_hburst;
+  logic [              3:0] ahb4_if_hprot;
+  logic [              1:0] ahb4_if_htrans;
+  logic                     ahb4_if_hmastlock;
 
-  logic [   DATA_WIDTH-1:0] ahb3_if_hrdata;
-  logic                     ahb3_if_hready;
-  logic                     ahb3_if_hresp;
+  logic [   DATA_WIDTH-1:0] ahb4_if_hrdata;
+  logic                     ahb4_if_hready;
+  logic                     ahb4_if_hresp;
 
-  logic                     ahb3_hsel;
-  logic [   ADDR_WIDTH-1:0] ahb3_haddr;
-  logic [   DATA_WIDTH-1:0] ahb3_hwdata;
-  logic                     ahb3_hwrite;
-  logic [              2:0] ahb3_hsize;
-  logic [              2:0] ahb3_hburst;
-  logic [              3:0] ahb3_hprot;
-  logic [              1:0] ahb3_htrans;
-  logic                     ahb3_hmastlock;
+  logic                     ahb4_hsel;
+  logic [   ADDR_WIDTH-1:0] ahb4_haddr;
+  logic [   DATA_WIDTH-1:0] ahb4_hwdata;
+  logic                     ahb4_hwrite;
+  logic [              2:0] ahb4_hsize;
+  logic [              2:0] ahb4_hburst;
+  logic [              3:0] ahb4_hprot;
+  logic [              1:0] ahb4_htrans;
+  logic                     ahb4_hmastlock;
 
-  logic [   DATA_WIDTH-1:0] ahb3_hrdata;
-  logic                     ahb3_hready;
-  logic                     ahb3_hresp;
+  logic [   DATA_WIDTH-1:0] ahb4_hrdata;
+  logic                     ahb4_hready;
+  logic                     ahb4_hresp;
 
-  logic [TABLE_ENTRIES-1:0] irq_ahb3;
+  logic [TABLE_ENTRIES-1:0] irq_ahb4;
 
   //////////////////////////////////////////////////////////////////////////////
   // Body
   //////////////////////////////////////////////////////////////////////////////
 
-  // DUT AHB3
-  peripheral_dma_top_ahb3 #(
+  // DUT AHB4
+  peripheral_dma_top_ahb4 #(
     .ADDR_WIDTH(ADDR_WIDTH),
     .DATA_WIDTH(DATA_WIDTH),
 
@@ -124,54 +124,54 @@ module peripheral_dma_testbench;
     .TILEID                (TILEID),
     .NOC_PACKET_SIZE       (NOC_PACKET_SIZE),
     .GENERATE_INTERRUPT    (GENERATE_INTERRUPT)
-  ) peripheral_dma_top_ahb3 (
+  ) peripheral_dma_top_ahb4 (
     .clk(clk),
     .rst(rst),
 
-    .noc_in_req_flit (noc_ahb3_in_req_flit),
-    .noc_in_req_valid(noc_ahb3_in_req_valid),
-    .noc_in_req_ready(noc_ahb3_in_req_ready),
+    .noc_in_req_flit (noc_ahb4_in_req_flit),
+    .noc_in_req_valid(noc_ahb4_in_req_valid),
+    .noc_in_req_ready(noc_ahb4_in_req_ready),
 
-    .noc_in_res_flit (noc_ahb3_in_res_flit),
-    .noc_in_res_valid(noc_ahb3_in_res_valid),
-    .noc_in_res_ready(noc_ahb3_in_res_ready),
+    .noc_in_res_flit (noc_ahb4_in_res_flit),
+    .noc_in_res_valid(noc_ahb4_in_res_valid),
+    .noc_in_res_ready(noc_ahb4_in_res_ready),
 
-    .noc_out_req_flit (noc_ahb3_out_req_flit),
-    .noc_out_req_valid(noc_ahb3_out_req_valid),
-    .noc_out_req_ready(noc_ahb3_out_req_ready),
+    .noc_out_req_flit (noc_ahb4_out_req_flit),
+    .noc_out_req_valid(noc_ahb4_out_req_valid),
+    .noc_out_req_ready(noc_ahb4_out_req_ready),
 
-    .noc_out_res_flit (noc_ahb3_out_res_flit),
-    .noc_out_res_valid(noc_ahb3_out_res_valid),
-    .noc_out_res_ready(noc_ahb3_out_res_ready),
+    .noc_out_res_flit (noc_ahb4_out_res_flit),
+    .noc_out_res_valid(noc_ahb4_out_res_valid),
+    .noc_out_res_ready(noc_ahb4_out_res_ready),
 
-    .ahb3_if_hsel     (ahb3_if_hsel),
-    .ahb3_if_haddr    (ahb3_if_haddr),
-    .ahb3_if_hwdata   (ahb3_if_hwdata),
-    .ahb3_if_hwrite   (ahb3_if_hwrite),
-    .ahb3_if_hsize    (ahb3_if_hsize),
-    .ahb3_if_hburst   (ahb3_if_hburst),
-    .ahb3_if_hprot    (ahb3_if_hprot),
-    .ahb3_if_htrans   (ahb3_if_htrans),
-    .ahb3_if_hmastlock(ahb3_if_hmastlock),
+    .ahb4_if_hsel     (ahb4_if_hsel),
+    .ahb4_if_haddr    (ahb4_if_haddr),
+    .ahb4_if_hwdata   (ahb4_if_hwdata),
+    .ahb4_if_hwrite   (ahb4_if_hwrite),
+    .ahb4_if_hsize    (ahb4_if_hsize),
+    .ahb4_if_hburst   (ahb4_if_hburst),
+    .ahb4_if_hprot    (ahb4_if_hprot),
+    .ahb4_if_htrans   (ahb4_if_htrans),
+    .ahb4_if_hmastlock(ahb4_if_hmastlock),
 
-    .ahb3_if_hrdata(ahb3_if_hrdata),
-    .ahb3_if_hready(ahb3_if_hready),
-    .ahb3_if_hresp (ahb3_if_hresp),
+    .ahb4_if_hrdata(ahb4_if_hrdata),
+    .ahb4_if_hready(ahb4_if_hready),
+    .ahb4_if_hresp (ahb4_if_hresp),
 
-    .ahb3_hsel     (ahb3_hsel),
-    .ahb3_haddr    (ahb3_haddr),
-    .ahb3_hwdata   (ahb3_hwdata),
-    .ahb3_hwrite   (ahb3_hwrite),
-    .ahb3_hsize    (ahb3_hsize),
-    .ahb3_hburst   (ahb3_hburst),
-    .ahb3_hprot    (ahb3_hprot),
-    .ahb3_htrans   (ahb3_htrans),
-    .ahb3_hmastlock(ahb3_hmastlock),
+    .ahb4_hsel     (ahb4_hsel),
+    .ahb4_haddr    (ahb4_haddr),
+    .ahb4_hwdata   (ahb4_hwdata),
+    .ahb4_hwrite   (ahb4_hwrite),
+    .ahb4_hsize    (ahb4_hsize),
+    .ahb4_hburst   (ahb4_hburst),
+    .ahb4_hprot    (ahb4_hprot),
+    .ahb4_htrans   (ahb4_htrans),
+    .ahb4_hmastlock(ahb4_hmastlock),
 
-    .ahb3_hrdata(ahb3_hrdata),
-    .ahb3_hready(ahb3_hready),
-    .ahb3_hresp (ahb3_hresp),
+    .ahb4_hrdata(ahb4_hrdata),
+    .ahb4_hready(ahb4_hready),
+    .ahb4_hresp (ahb4_hresp),
 
-    .irq(irq_ahb3)
+    .irq(irq_ahb4)
   );
 endmodule

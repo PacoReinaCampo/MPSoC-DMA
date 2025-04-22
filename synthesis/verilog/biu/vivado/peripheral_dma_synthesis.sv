@@ -49,7 +49,7 @@ module peripheral_dma_synthesis #(
   input HRESETn,
   input HCLK,
 
-  // UART AHB3
+  // UART AHB4
   input                         dma_HSEL,
   input      [HADDR_SIZE  -1:0] dma_HADDR,
   input      [HDATA_SIZE  -1:0] dma_HWDATA,
@@ -88,7 +88,7 @@ module peripheral_dma_synthesis #(
   // Body
   //////////////////////////////////////////////////////////////////////////////
 
-  // DUT AHB3
+  // DUT AHB4
   peripheral_bridge_apb2ahb #(
     .HADDR_SIZE(HADDR_SIZE),
     .HDATA_SIZE(HDATA_SIZE),

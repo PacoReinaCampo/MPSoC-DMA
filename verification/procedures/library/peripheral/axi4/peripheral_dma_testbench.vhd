@@ -57,7 +57,7 @@ architecture rtl of peripheral_dma_testbench is
   -- Components
   ------------------------------------------------------------------------------
 
-  component peripheral_dma_top_ahb3
+  component peripheral_dma_top_ahb4
     generic (
       ADDR_WIDTH             : integer := 64;
       DATA_WIDTH             : integer := 64;
@@ -87,26 +87,26 @@ architecture rtl of peripheral_dma_testbench is
       noc_out_res_valid : out std_logic;
       noc_out_res_ready : in  std_logic;
 
-      ahb3_if_haddr     : in  std_logic_vector(ADDR_WIDTH-1 downto 0);
-      ahb3_if_hrdata    : in  std_logic_vector(DATA_WIDTH-1 downto 0);
-      ahb3_if_hmastlock : in  std_logic;
-      ahb3_if_hsel      : in  std_logic;
-      ahb3_if_hwrite    : in  std_logic;
-      ahb3_if_hwdata    : out std_logic_vector(DATA_WIDTH-1 downto 0);
-      ahb3_if_hready    : out std_logic;
-      ahb3_if_hresp     : out std_logic;
+      ahb4_if_haddr     : in  std_logic_vector(ADDR_WIDTH-1 downto 0);
+      ahb4_if_hrdata    : in  std_logic_vector(DATA_WIDTH-1 downto 0);
+      ahb4_if_hmastlock : in  std_logic;
+      ahb4_if_hsel      : in  std_logic;
+      ahb4_if_hwrite    : in  std_logic;
+      ahb4_if_hwdata    : out std_logic_vector(DATA_WIDTH-1 downto 0);
+      ahb4_if_hready    : out std_logic;
+      ahb4_if_hresp     : out std_logic;
 
-      ahb3_haddr     : out std_logic_vector(ADDR_WIDTH-1 downto 0);
-      ahb3_hwdata    : out std_logic_vector(DATA_WIDTH-1 downto 0);
-      ahb3_hmastlock : out std_logic;
-      ahb3_hsel      : out std_logic;
-      ahb3_hprot     : out std_logic_vector(3 downto 0);
-      ahb3_hwrite    : out std_logic;
-      ahb3_hsize     : out std_logic_vector(2 downto 0);
-      ahb3_hburst    : out std_logic_vector(2 downto 0);
-      ahb3_htrans    : out std_logic_vector(1 downto 0);
-      ahb3_hrdata    : in  std_logic_vector(DATA_WIDTH-1 downto 0);
-      ahb3_hready    : in  std_logic;
+      ahb4_haddr     : out std_logic_vector(ADDR_WIDTH-1 downto 0);
+      ahb4_hwdata    : out std_logic_vector(DATA_WIDTH-1 downto 0);
+      ahb4_hmastlock : out std_logic;
+      ahb4_hsel      : out std_logic;
+      ahb4_hprot     : out std_logic_vector(3 downto 0);
+      ahb4_hwrite    : out std_logic;
+      ahb4_hsize     : out std_logic_vector(2 downto 0);
+      ahb4_hburst    : out std_logic_vector(2 downto 0);
+      ahb4_htrans    : out std_logic_vector(1 downto 0);
+      ahb4_hrdata    : in  std_logic_vector(DATA_WIDTH-1 downto 0);
+      ahb4_hready    : in  std_logic;
 
       irq : out std_logic_vector(TABLE_ENTRIES-1 downto 0)
       );
@@ -130,53 +130,53 @@ architecture rtl of peripheral_dma_testbench is
   signal clk : std_logic;
   signal rst : std_logic;
 
-  -- AHB3
-  signal noc_ahb3_in_req_flit  : std_logic_vector(FLIT_WIDTH-1 downto 0);
-  signal noc_ahb3_in_req_valid : std_logic;
-  signal noc_ahb3_in_req_ready : std_logic;
+  -- AHB4
+  signal noc_ahb4_in_req_flit  : std_logic_vector(FLIT_WIDTH-1 downto 0);
+  signal noc_ahb4_in_req_valid : std_logic;
+  signal noc_ahb4_in_req_ready : std_logic;
 
-  signal noc_ahb3_in_res_flit  : std_logic_vector(FLIT_WIDTH-1 downto 0);
-  signal noc_ahb3_in_res_valid : std_logic;
-  signal noc_ahb3_in_res_ready : std_logic;
+  signal noc_ahb4_in_res_flit  : std_logic_vector(FLIT_WIDTH-1 downto 0);
+  signal noc_ahb4_in_res_valid : std_logic;
+  signal noc_ahb4_in_res_ready : std_logic;
 
-  signal noc_ahb3_out_req_flit  : std_logic_vector(FLIT_WIDTH-1 downto 0);
-  signal noc_ahb3_out_req_valid : std_logic;
-  signal noc_ahb3_out_req_ready : std_logic;
+  signal noc_ahb4_out_req_flit  : std_logic_vector(FLIT_WIDTH-1 downto 0);
+  signal noc_ahb4_out_req_valid : std_logic;
+  signal noc_ahb4_out_req_ready : std_logic;
 
-  signal noc_ahb3_out_res_flit  : std_logic_vector(FLIT_WIDTH-1 downto 0);
-  signal noc_ahb3_out_res_valid : std_logic;
-  signal noc_ahb3_out_res_ready : std_logic;
+  signal noc_ahb4_out_res_flit  : std_logic_vector(FLIT_WIDTH-1 downto 0);
+  signal noc_ahb4_out_res_valid : std_logic;
+  signal noc_ahb4_out_res_ready : std_logic;
 
-  signal ahb3_if_haddr     : std_logic_vector(ADDR_WIDTH-1 downto 0);
-  signal ahb3_if_hrdata    : std_logic_vector(DATA_WIDTH-1 downto 0);
-  signal ahb3_if_hmastlock : std_logic;
-  signal ahb3_if_hsel      : std_logic;
-  signal ahb3_if_hwrite    : std_logic;
-  signal ahb3_if_hwdata    : std_logic_vector(DATA_WIDTH-1 downto 0);
-  signal ahb3_if_hready    : std_logic;
-  signal ahb3_if_hresp     : std_logic;
+  signal ahb4_if_haddr     : std_logic_vector(ADDR_WIDTH-1 downto 0);
+  signal ahb4_if_hrdata    : std_logic_vector(DATA_WIDTH-1 downto 0);
+  signal ahb4_if_hmastlock : std_logic;
+  signal ahb4_if_hsel      : std_logic;
+  signal ahb4_if_hwrite    : std_logic;
+  signal ahb4_if_hwdata    : std_logic_vector(DATA_WIDTH-1 downto 0);
+  signal ahb4_if_hready    : std_logic;
+  signal ahb4_if_hresp     : std_logic;
 
-  signal ahb3_haddr     : std_logic_vector(ADDR_WIDTH-1 downto 0);
-  signal ahb3_hwdata    : std_logic_vector(DATA_WIDTH-1 downto 0);
-  signal ahb3_hmastlock : std_logic;
-  signal ahb3_hsel      : std_logic;
-  signal ahb3_hprot     : std_logic_vector(3 downto 0);
-  signal ahb3_hwrite    : std_logic;
-  signal ahb3_hsize     : std_logic_vector(2 downto 0);
-  signal ahb3_hburst    : std_logic_vector(2 downto 0);
-  signal ahb3_htrans    : std_logic_vector(1 downto 0);
-  signal ahb3_hrdata    : std_logic_vector(DATA_WIDTH-1 downto 0);
-  signal ahb3_hready    : std_logic;
+  signal ahb4_haddr     : std_logic_vector(ADDR_WIDTH-1 downto 0);
+  signal ahb4_hwdata    : std_logic_vector(DATA_WIDTH-1 downto 0);
+  signal ahb4_hmastlock : std_logic;
+  signal ahb4_hsel      : std_logic;
+  signal ahb4_hprot     : std_logic_vector(3 downto 0);
+  signal ahb4_hwrite    : std_logic;
+  signal ahb4_hsize     : std_logic_vector(2 downto 0);
+  signal ahb4_hburst    : std_logic_vector(2 downto 0);
+  signal ahb4_htrans    : std_logic_vector(1 downto 0);
+  signal ahb4_hrdata    : std_logic_vector(DATA_WIDTH-1 downto 0);
+  signal ahb4_hready    : std_logic;
 
-  signal irq_ahb3 : std_logic_vector(TABLE_ENTRIES-1 downto 0);
+  signal irq_ahb4 : std_logic_vector(TABLE_ENTRIES-1 downto 0);
 
 begin
   ------------------------------------------------------------------------------
   -- Module Body
   ------------------------------------------------------------------------------
 
-  -- DUT AHB3
-  ahb3_top : peripheral_dma_top_ahb3
+  -- DUT AHB4
+  ahb4_top : peripheral_dma_top_ahb4
     generic map (
       ADDR_WIDTH => ADDR_WIDTH,
       DATA_WIDTH => DATA_WIDTH,
@@ -191,43 +191,43 @@ begin
       clk => clk,
       rst => rst,
 
-      noc_in_req_flit  => noc_ahb3_in_req_flit,
-      noc_in_req_valid => noc_ahb3_in_req_valid,
-      noc_in_req_ready => noc_ahb3_in_req_ready,
+      noc_in_req_flit  => noc_ahb4_in_req_flit,
+      noc_in_req_valid => noc_ahb4_in_req_valid,
+      noc_in_req_ready => noc_ahb4_in_req_ready,
 
-      noc_in_res_flit  => noc_ahb3_in_res_flit,
-      noc_in_res_valid => noc_ahb3_in_res_valid,
-      noc_in_res_ready => noc_ahb3_in_res_ready,
+      noc_in_res_flit  => noc_ahb4_in_res_flit,
+      noc_in_res_valid => noc_ahb4_in_res_valid,
+      noc_in_res_ready => noc_ahb4_in_res_ready,
 
-      noc_out_req_flit  => noc_ahb3_out_req_flit,
-      noc_out_req_valid => noc_ahb3_out_req_valid,
-      noc_out_req_ready => noc_ahb3_out_req_ready,
+      noc_out_req_flit  => noc_ahb4_out_req_flit,
+      noc_out_req_valid => noc_ahb4_out_req_valid,
+      noc_out_req_ready => noc_ahb4_out_req_ready,
 
-      noc_out_res_flit  => noc_ahb3_out_res_flit,
-      noc_out_res_valid => noc_ahb3_out_res_valid,
-      noc_out_res_ready => noc_ahb3_out_res_ready,
+      noc_out_res_flit  => noc_ahb4_out_res_flit,
+      noc_out_res_valid => noc_ahb4_out_res_valid,
+      noc_out_res_ready => noc_ahb4_out_res_ready,
 
-      ahb3_if_haddr     => ahb3_if_haddr,
-      ahb3_if_hrdata    => ahb3_if_hrdata,
-      ahb3_if_hmastlock => ahb3_if_hmastlock,
-      ahb3_if_hsel      => ahb3_if_hsel,
-      ahb3_if_hwrite    => ahb3_if_hwrite,
-      ahb3_if_hwdata    => ahb3_if_hwdata,
-      ahb3_if_hready    => ahb3_if_hready,
-      ahb3_if_hresp     => ahb3_if_hresp,
+      ahb4_if_haddr     => ahb4_if_haddr,
+      ahb4_if_hrdata    => ahb4_if_hrdata,
+      ahb4_if_hmastlock => ahb4_if_hmastlock,
+      ahb4_if_hsel      => ahb4_if_hsel,
+      ahb4_if_hwrite    => ahb4_if_hwrite,
+      ahb4_if_hwdata    => ahb4_if_hwdata,
+      ahb4_if_hready    => ahb4_if_hready,
+      ahb4_if_hresp     => ahb4_if_hresp,
 
-      ahb3_haddr     => ahb3_haddr,
-      ahb3_hwdata    => ahb3_hwdata,
-      ahb3_hmastlock => ahb3_hmastlock,
-      ahb3_hsel      => ahb3_hsel,
-      ahb3_hprot     => ahb3_hprot,
-      ahb3_hwrite    => ahb3_hwrite,
-      ahb3_hsize     => ahb3_hsize,
-      ahb3_hburst    => ahb3_hburst,
-      ahb3_htrans    => ahb3_htrans,
-      ahb3_hrdata    => ahb3_hrdata,
-      ahb3_hready    => ahb3_hready,
+      ahb4_haddr     => ahb4_haddr,
+      ahb4_hwdata    => ahb4_hwdata,
+      ahb4_hmastlock => ahb4_hmastlock,
+      ahb4_hsel      => ahb4_hsel,
+      ahb4_hprot     => ahb4_hprot,
+      ahb4_hwrite    => ahb4_hwrite,
+      ahb4_hsize     => ahb4_hsize,
+      ahb4_hburst    => ahb4_hburst,
+      ahb4_htrans    => ahb4_htrans,
+      ahb4_hrdata    => ahb4_hrdata,
+      ahb4_hready    => ahb4_hready,
 
-      irq => irq_ahb3
+      irq => irq_ahb4
       );
 end rtl;

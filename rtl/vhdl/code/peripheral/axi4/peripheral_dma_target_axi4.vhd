@@ -204,7 +204,7 @@ architecture rtl of peripheral_dma_target_axi4 is
   signal data_fifo_valid : std_logic;
   signal data_fifo       : M_2_DATA_WIDTH;  -- data storage
   signal data_fifo_pop   : std_logic;       -- NOC pushes
-  signal data_fifo_push  : std_logic;       -- AHB3 pops
+  signal data_fifo_push  : std_logic;       -- AHB4 pops
 
   signal data_fifo_out : std_logic_vector(DATA_WIDTH-1 downto 0);  -- Current first element
   signal data_fifo_in  : std_logic_vector(DATA_WIDTH-1 downto 0);  -- Push element

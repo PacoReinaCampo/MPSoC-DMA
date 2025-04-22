@@ -145,7 +145,7 @@ module peripheral_dma_target_apb4 #(
   wire                                   data_fifo_valid;
   reg     [              DATA_WIDTH-1:0] data_fifo                                     [0:2];  // data storage
   reg                                    data_fifo_pop;  // NOC pushes
-  reg                                    data_fifo_push;  // AHB3 pops
+  reg                                    data_fifo_push;  // AHB4 pops
 
   wire    [              DATA_WIDTH-1:0] data_fifo_out;  // Current first element
   wire    [              DATA_WIDTH-1:0] data_fifo_in;  // Push element
