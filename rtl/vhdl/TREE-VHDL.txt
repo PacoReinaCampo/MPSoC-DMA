@@ -33,13 +33,13 @@ code
 │   │   ├── peripheral_dma_interface_bb.vhd
 │   │   ├── peripheral_dma_target_bb.vhd
 │   │   └── peripheral_dma_top_bb.vhd
-│   ├── biu
-│   │   ├── peripheral_dma_initiator_biu.vhd
-│   │   ├── peripheral_dma_initiator_nocres_biu.vhd
-│   │   ├── peripheral_dma_initiator_req_biu.vhd
-│   │   ├── peripheral_dma_interface_biu.vhd
-│   │   ├── peripheral_dma_target_biu.vhd
-│   │   └── peripheral_dma_top_biu.vhd
+│   ├── tl
+│   │   ├── peripheral_dma_initiator_tl.vhd
+│   │   ├── peripheral_dma_initiator_nocres_tl.vhd
+│   │   ├── peripheral_dma_initiator_req_tl.vhd
+│   │   ├── peripheral_dma_interface_tl.vhd
+│   │   ├── peripheral_dma_target_tl.vhd
+│   │   └── peripheral_dma_top_tl.vhd
 │   └── wb
 │       ├── peripheral_dma_initiator_nocres_wb.vhd
 │       ├── peripheral_dma_initiator_req_wb.vhd
@@ -60,7 +60,7 @@ code
         │   └── peripheral_axi4_pkg.vhd
         ├── bb
         │   └── peripheral_bb_pkg.vhd
-        ├── biu
+        ├── tl
         │   └── peripheral_biu_pkg.vhd
         └── wb
             └── peripheral_wb_pkg.vhd
