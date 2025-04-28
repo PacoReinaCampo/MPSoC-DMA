@@ -89,7 +89,7 @@ module peripheral_bfm_testbench;
   // TB and DUT
   //////////////////////////////////////////////////////////////////////////////
 
-  peripheral_bfm_ahb4 #(
+  peripheral_bfm_tl #(
     .TIMERS    (TIMERS),
     .HADDR_SIZE(HADDR_SIZE),
     .HDATA_SIZE(HDATA_SIZE)
@@ -97,7 +97,7 @@ module peripheral_bfm_testbench;
     .*
   );
 
-  peripheral_timer_ahb4 #(
+  peripheral_timer_tl #(
     .TIMERS    (TIMERS),
     .HADDR_SIZE(HADDR_SIZE),
     .HDATA_SIZE(HDATA_SIZE)

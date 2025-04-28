@@ -57,7 +57,7 @@ architecture rtl of peripheral_dma_testbench is
   -- Components
   ------------------------------------------------------------------------------
 
-  component peripheral_dma_top_ahb4
+  component peripheral_dma_top_tl
     generic (
       ADDR_WIDTH             : integer := 64;
       DATA_WIDTH             : integer := 64;
@@ -87,26 +87,26 @@ architecture rtl of peripheral_dma_testbench is
       noc_out_res_valid : out std_logic;
       noc_out_res_ready : in  std_logic;
 
-      ahb4_if_haddr     : in  std_logic_vector(ADDR_WIDTH-1 downto 0);
-      ahb4_if_hrdata    : in  std_logic_vector(DATA_WIDTH-1 downto 0);
-      ahb4_if_hmastlock : in  std_logic;
-      ahb4_if_hsel      : in  std_logic;
-      ahb4_if_hwrite    : in  std_logic;
-      ahb4_if_hwdata    : out std_logic_vector(DATA_WIDTH-1 downto 0);
-      ahb4_if_hready    : out std_logic;
-      ahb4_if_hresp     : out std_logic;
+      tl_if_haddr     : in  std_logic_vector(ADDR_WIDTH-1 downto 0);
+      tl_if_hrdata    : in  std_logic_vector(DATA_WIDTH-1 downto 0);
+      tl_if_hmastlock : in  std_logic;
+      tl_if_hsel      : in  std_logic;
+      tl_if_hwrite    : in  std_logic;
+      tl_if_hwdata    : out std_logic_vector(DATA_WIDTH-1 downto 0);
+      tl_if_hready    : out std_logic;
+      tl_if_hresp     : out std_logic;
 
-      ahb4_haddr     : out std_logic_vector(ADDR_WIDTH-1 downto 0);
-      ahb4_hwdata    : out std_logic_vector(DATA_WIDTH-1 downto 0);
-      ahb4_hmastlock : out std_logic;
-      ahb4_hsel      : out std_logic;
-      ahb4_hprot     : out std_logic_vector(3 downto 0);
-      ahb4_hwrite    : out std_logic;
-      ahb4_hsize     : out std_logic_vector(2 downto 0);
-      ahb4_hburst    : out std_logic_vector(2 downto 0);
-      ahb4_htrans    : out std_logic_vector(1 downto 0);
-      ahb4_hrdata    : in  std_logic_vector(DATA_WIDTH-1 downto 0);
-      ahb4_hready    : in  std_logic;
+      tl_haddr     : out std_logic_vector(ADDR_WIDTH-1 downto 0);
+      tl_hwdata    : out std_logic_vector(DATA_WIDTH-1 downto 0);
+      tl_hmastlock : out std_logic;
+      tl_hsel      : out std_logic;
+      tl_hprot     : out std_logic_vector(3 downto 0);
+      tl_hwrite    : out std_logic;
+      tl_hsize     : out std_logic_vector(2 downto 0);
+      tl_hburst    : out std_logic_vector(2 downto 0);
+      tl_htrans    : out std_logic_vector(1 downto 0);
+      tl_hrdata    : in  std_logic_vector(DATA_WIDTH-1 downto 0);
+      tl_hready    : in  std_logic;
 
       irq : out std_logic_vector(TABLE_ENTRIES-1 downto 0)
       );
@@ -131,44 +131,44 @@ architecture rtl of peripheral_dma_testbench is
   signal rst : std_logic;
 
   -- AHB4
-  signal noc_ahb4_in_req_flit  : std_logic_vector(FLIT_WIDTH-1 downto 0);
-  signal noc_ahb4_in_req_valid : std_logic;
-  signal noc_ahb4_in_req_ready : std_logic;
+  signal noc_tl_in_req_flit  : std_logic_vector(FLIT_WIDTH-1 downto 0);
+  signal noc_tl_in_req_valid : std_logic;
+  signal noc_tl_in_req_ready : std_logic;
 
-  signal noc_ahb4_in_res_flit  : std_logic_vector(FLIT_WIDTH-1 downto 0);
-  signal noc_ahb4_in_res_valid : std_logic;
-  signal noc_ahb4_in_res_ready : std_logic;
+  signal noc_tl_in_res_flit  : std_logic_vector(FLIT_WIDTH-1 downto 0);
+  signal noc_tl_in_res_valid : std_logic;
+  signal noc_tl_in_res_ready : std_logic;
 
-  signal noc_ahb4_out_req_flit  : std_logic_vector(FLIT_WIDTH-1 downto 0);
-  signal noc_ahb4_out_req_valid : std_logic;
-  signal noc_ahb4_out_req_ready : std_logic;
+  signal noc_tl_out_req_flit  : std_logic_vector(FLIT_WIDTH-1 downto 0);
+  signal noc_tl_out_req_valid : std_logic;
+  signal noc_tl_out_req_ready : std_logic;
 
-  signal noc_ahb4_out_res_flit  : std_logic_vector(FLIT_WIDTH-1 downto 0);
-  signal noc_ahb4_out_res_valid : std_logic;
-  signal noc_ahb4_out_res_ready : std_logic;
+  signal noc_tl_out_res_flit  : std_logic_vector(FLIT_WIDTH-1 downto 0);
+  signal noc_tl_out_res_valid : std_logic;
+  signal noc_tl_out_res_ready : std_logic;
 
-  signal ahb4_if_haddr     : std_logic_vector(ADDR_WIDTH-1 downto 0);
-  signal ahb4_if_hrdata    : std_logic_vector(DATA_WIDTH-1 downto 0);
-  signal ahb4_if_hmastlock : std_logic;
-  signal ahb4_if_hsel      : std_logic;
-  signal ahb4_if_hwrite    : std_logic;
-  signal ahb4_if_hwdata    : std_logic_vector(DATA_WIDTH-1 downto 0);
-  signal ahb4_if_hready    : std_logic;
-  signal ahb4_if_hresp     : std_logic;
+  signal tl_if_haddr     : std_logic_vector(ADDR_WIDTH-1 downto 0);
+  signal tl_if_hrdata    : std_logic_vector(DATA_WIDTH-1 downto 0);
+  signal tl_if_hmastlock : std_logic;
+  signal tl_if_hsel      : std_logic;
+  signal tl_if_hwrite    : std_logic;
+  signal tl_if_hwdata    : std_logic_vector(DATA_WIDTH-1 downto 0);
+  signal tl_if_hready    : std_logic;
+  signal tl_if_hresp     : std_logic;
 
-  signal ahb4_haddr     : std_logic_vector(ADDR_WIDTH-1 downto 0);
-  signal ahb4_hwdata    : std_logic_vector(DATA_WIDTH-1 downto 0);
-  signal ahb4_hmastlock : std_logic;
-  signal ahb4_hsel      : std_logic;
-  signal ahb4_hprot     : std_logic_vector(3 downto 0);
-  signal ahb4_hwrite    : std_logic;
-  signal ahb4_hsize     : std_logic_vector(2 downto 0);
-  signal ahb4_hburst    : std_logic_vector(2 downto 0);
-  signal ahb4_htrans    : std_logic_vector(1 downto 0);
-  signal ahb4_hrdata    : std_logic_vector(DATA_WIDTH-1 downto 0);
-  signal ahb4_hready    : std_logic;
+  signal tl_haddr     : std_logic_vector(ADDR_WIDTH-1 downto 0);
+  signal tl_hwdata    : std_logic_vector(DATA_WIDTH-1 downto 0);
+  signal tl_hmastlock : std_logic;
+  signal tl_hsel      : std_logic;
+  signal tl_hprot     : std_logic_vector(3 downto 0);
+  signal tl_hwrite    : std_logic;
+  signal tl_hsize     : std_logic_vector(2 downto 0);
+  signal tl_hburst    : std_logic_vector(2 downto 0);
+  signal tl_htrans    : std_logic_vector(1 downto 0);
+  signal tl_hrdata    : std_logic_vector(DATA_WIDTH-1 downto 0);
+  signal tl_hready    : std_logic;
 
-  signal irq_ahb4 : std_logic_vector(TABLE_ENTRIES-1 downto 0);
+  signal irq_tl : std_logic_vector(TABLE_ENTRIES-1 downto 0);
 
 begin
   ------------------------------------------------------------------------------
@@ -176,7 +176,7 @@ begin
   ------------------------------------------------------------------------------
 
   -- DUT AHB4
-  ahb4_top : peripheral_dma_top_ahb4
+  tl_top : peripheral_dma_top_tl
     generic map (
       ADDR_WIDTH => ADDR_WIDTH,
       DATA_WIDTH => DATA_WIDTH,
@@ -191,43 +191,43 @@ begin
       clk => clk,
       rst => rst,
 
-      noc_in_req_flit  => noc_ahb4_in_req_flit,
-      noc_in_req_valid => noc_ahb4_in_req_valid,
-      noc_in_req_ready => noc_ahb4_in_req_ready,
+      noc_in_req_flit  => noc_tl_in_req_flit,
+      noc_in_req_valid => noc_tl_in_req_valid,
+      noc_in_req_ready => noc_tl_in_req_ready,
 
-      noc_in_res_flit  => noc_ahb4_in_res_flit,
-      noc_in_res_valid => noc_ahb4_in_res_valid,
-      noc_in_res_ready => noc_ahb4_in_res_ready,
+      noc_in_res_flit  => noc_tl_in_res_flit,
+      noc_in_res_valid => noc_tl_in_res_valid,
+      noc_in_res_ready => noc_tl_in_res_ready,
 
-      noc_out_req_flit  => noc_ahb4_out_req_flit,
-      noc_out_req_valid => noc_ahb4_out_req_valid,
-      noc_out_req_ready => noc_ahb4_out_req_ready,
+      noc_out_req_flit  => noc_tl_out_req_flit,
+      noc_out_req_valid => noc_tl_out_req_valid,
+      noc_out_req_ready => noc_tl_out_req_ready,
 
-      noc_out_res_flit  => noc_ahb4_out_res_flit,
-      noc_out_res_valid => noc_ahb4_out_res_valid,
-      noc_out_res_ready => noc_ahb4_out_res_ready,
+      noc_out_res_flit  => noc_tl_out_res_flit,
+      noc_out_res_valid => noc_tl_out_res_valid,
+      noc_out_res_ready => noc_tl_out_res_ready,
 
-      ahb4_if_haddr     => ahb4_if_haddr,
-      ahb4_if_hrdata    => ahb4_if_hrdata,
-      ahb4_if_hmastlock => ahb4_if_hmastlock,
-      ahb4_if_hsel      => ahb4_if_hsel,
-      ahb4_if_hwrite    => ahb4_if_hwrite,
-      ahb4_if_hwdata    => ahb4_if_hwdata,
-      ahb4_if_hready    => ahb4_if_hready,
-      ahb4_if_hresp     => ahb4_if_hresp,
+      tl_if_haddr     => tl_if_haddr,
+      tl_if_hrdata    => tl_if_hrdata,
+      tl_if_hmastlock => tl_if_hmastlock,
+      tl_if_hsel      => tl_if_hsel,
+      tl_if_hwrite    => tl_if_hwrite,
+      tl_if_hwdata    => tl_if_hwdata,
+      tl_if_hready    => tl_if_hready,
+      tl_if_hresp     => tl_if_hresp,
 
-      ahb4_haddr     => ahb4_haddr,
-      ahb4_hwdata    => ahb4_hwdata,
-      ahb4_hmastlock => ahb4_hmastlock,
-      ahb4_hsel      => ahb4_hsel,
-      ahb4_hprot     => ahb4_hprot,
-      ahb4_hwrite    => ahb4_hwrite,
-      ahb4_hsize     => ahb4_hsize,
-      ahb4_hburst    => ahb4_hburst,
-      ahb4_htrans    => ahb4_htrans,
-      ahb4_hrdata    => ahb4_hrdata,
-      ahb4_hready    => ahb4_hready,
+      tl_haddr     => tl_haddr,
+      tl_hwdata    => tl_hwdata,
+      tl_hmastlock => tl_hmastlock,
+      tl_hsel      => tl_hsel,
+      tl_hprot     => tl_hprot,
+      tl_hwrite    => tl_hwrite,
+      tl_hsize     => tl_hsize,
+      tl_hburst    => tl_hburst,
+      tl_htrans    => tl_htrans,
+      tl_hrdata    => tl_hrdata,
+      tl_hready    => tl_hready,
 
-      irq => irq_ahb4
+      irq => irq_tl
       );
 end rtl;
