@@ -1,90 +1,65 @@
-////////////////////////////////////////////////////////////////////////////////
-//                                            __ _      _     _               //
-//                                           / _(_)    | |   | |              //
-//                __ _ _   _  ___  ___ _ __ | |_ _  ___| | __| |              //
-//               / _` | | | |/ _ \/ _ \ '_ \|  _| |/ _ \ |/ _` |              //
-//              | (_| | |_| |  __/  __/ | | | | | |  __/ | (_| |              //
-//               \__, |\__,_|\___|\___|_| |_|_| |_|\___|_|\__,_|              //
-//                  | |                                                       //
-//                  |_|                                                       //
-//                                                                            //
-//                                                                            //
-//              Peripheral-BFM for MPSoC                                      //
-//              Bus Functional Model for MPSoC                                //
-//              AMBA4 AXI-Lite Bus Interface                                  //
-//                                                                            //
-////////////////////////////////////////////////////////////////////////////////
-// Copyright (c) 2018-2019 by the author(s)
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-// THE SOFTWARE.
-//
-////////////////////////////////////////////////////////////////////////////////
-// Author(s):
-//   Paco Reina Campo <pacoreinacampo@queenfield.tech>
-
-module peripheral_bfm_master_tl (
-
+module peripheral_bfm_master_tl #(
+  parameter TL_AW=32,                        // Address width in bits
+  parameter TL_DW=32,                        // Data width in bits
+  parameter TL_SRCW=8,                       // Source id width in bits
+  parameter TL_SINKW=1,                      // Sink id width in bits
+  parameter TL_DBW=(TL_DW>>3),               // Data mask width in bits
+  parameter TL_SZW=$clog2($clog2(TL_DBW)+1)  // Size width in bits
+) (
   // Global Signals
-  input wire aclk,
-  input wire aresetn, // Active LOW
+  input  wire clk,
+  input  wire reset,
 
-  // Write Address Channel
-  output reg  [ 3:0] awid,     // Address Write ID
-  output reg  [31:0] awadr,    // Write Address
-  output reg  [ 3:0] awlen,    // Burst Length
-  output reg  [ 2:0] awsize,   // Burst Size
-  output reg  [ 1:0] awburst,  // Burst Type
-  output reg  [ 1:0] awlock,   // Lock Type
-  output reg  [ 3:0] awcache,  // Cache Type
-  output reg  [ 2:0] awprot,   // Protection Type
-  output reg         awvalid,  // Write Address Valid   
-  input  wire        awready,  // Write Address Ready
+  // Channel A Signals (Mandatory)
+  output reg  [         2:0] a_opcode,
+  output reg  [         2:0] a_param,
+  output reg  [TL_SZW  -1:0] a_size,
+  output reg  [TL_SRCW -1:0] a_source,
+  output reg  [TL_AW   -1:0] a_address,
+  output reg  [TL_DBW  -1:0] a_mask,
+  output reg  [TL_DW   -1:0] a_data,
+  output reg                 a_corrupt,
+  output reg                 a_valid,
+  input  wire                a_ready,
 
-  // Write Data Channel
-  output reg  [ 3:0] wid,     // Write ID
-  output reg  [31:0] wrdata,  // Write Data
-  output reg  [ 3:0] wstrb,   // Write Strobes
-  output reg         wlast,   // Write Last
-  output reg         wvalid,  // Write Valid   
-  input  wire        wready,  // Write Ready
+  // Channel B Signals (TL-C only)
+  output reg  [         2:0] b_opcode,
+  output reg  [         2:0] b_param,
+  output reg  [TL_SZW  -1:0] b_size,
+  output reg  [TL_SRCW -1:0] b_source,
+  output reg  [TL_AW   -1:0] b_address,
+  output reg  [TL_DBW  -1:0] b_mask,
+  output reg  [TL_DW   -1:0] b_data,
+  output reg                 b_corrupt,
+  output reg                 b_valid,
+  input  wire                b_ready,
 
-  // Write Response CHannel
-  output reg  [3:0] bid,     // Response ID
-  output reg  [1:0] bresp,   // Write Response
-  output reg        bvalid,  // Write Response Valid   
-  input  wire       bready,  // Response Ready
+  // Channel C Signals (TL-C only)
+  output reg  [         2:0] c_opcode,
+  output reg  [         2:0] c_param,
+  output reg  [TL_SZW  -1:0] c_size,
+  output reg  [TL_SRCW -1:0] c_source,
+  output reg  [TL_AW   -1:0] c_address,
+  output reg  [TL_DW   -1:0] c_data,
+  output reg                 c_corrupt,
+  output reg                 c_valid,
+  input  wire                c_ready,
 
-  // Read Address Channel
-  output reg  [ 3:0] arid,     // Read Address ID
-  output reg  [31:0] araddr,   // Read Address
-  output reg  [ 3:0] arlen,    // Burst Length
-  output reg  [ 2:0] arsize,   // Burst Size
-  output reg  [ 1:0] arlock,   // Lock Type
-  output reg  [ 3:0] arcache,  // Cache Type
-  output reg  [ 2:0] arprot,   // Protection Type
-  output reg         arvalid,  // Read Address Valid   
-  input  wire        arready,  // Read Address Ready
-  input  wire [ 3:0] rid,      // Read ID
-  input  wire [31:0] rdata,    // Read Data
-  input  wire [ 1:0] rresp,    // Read Response
-  input  wire        rlast,    // Read Last
-  input  wire        rvalid,   // Read Valid
-  output reg         rready    // Read Ready
+  // Channel D Signals (Mandatory)
+  output reg  [         2:0] d_opcode,
+  output reg  [         2:0] d_param,
+  output reg  [TL_SZW  -1:0] d_size,
+  output reg  [TL_SRCW -1:0] d_source,
+  output reg  [TL_SINKW-1:0] d_sink,
+  output reg                 d_denied
+  output reg  [TL_DW   -1:0] d_data,
+  output reg                 d_corrupt,
+  output reg                 d_valid,
+  input  wire                d_ready,
+
+  // Channel E Signals (TL-C only)
+  output reg  [TL_SINKW-1:0] e_sink,
+  output reg                 e_valid,
+  input  wire                e_ready
 );
-endmodule  // peripheral_bfm_master_generic_tl
+endmodule  // peripheral_bfm_master_tl
