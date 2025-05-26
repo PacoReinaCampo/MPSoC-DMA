@@ -11,7 +11,7 @@
 //                                                                            //
 //              MPSoC-RISCV CPU                                               //
 //              Direct Access Memory Interface                                //
-//              Blackbone Bus Interface                                       //
+//              BackBone Bus Interface                                       //
 //                                                                            //
 ////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2018-2019 by the author(s)
@@ -71,14 +71,14 @@ module peripheral_dma_initiator_bb #(
   input                   noc_in_valid,
   output                  noc_in_ready,
 
-  // Blackbone interface for L2R data fetch
+  // BackBone interface for L2R data fetch
   output [ADDR_WIDTH-1:0] bb_req_addr_o,
   output [DATA_WIDTH-1:0] bb_req_din_o,
   output                  bb_req_en_o,
   output                  bb_req_we_o,
   input  [DATA_WIDTH-1:0] bb_req_dout_i,
 
-  // Blackbone interface for L2R data fetch
+  // BackBone interface for L2R data fetch
   output [ADDR_WIDTH-1:0] bb_res_addr_o,
   output [DATA_WIDTH-1:0] bb_res_din_o,
   output                  bb_res_en_o,

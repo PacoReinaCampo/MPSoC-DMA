@@ -11,7 +11,7 @@
 //                                                                            //
 //              MPSoC-RISCV CPU                                               //
 //              Direct Access Memory Interface                                //
-//              Blackbone Bus Interface                                       //
+//              BackBone Bus Interface                                       //
 //                                                                            //
 ////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2018-2019 by the author(s)
@@ -74,7 +74,7 @@ module peripheral_dma_target_bb #(
   input                   noc_in_valid,
   output                  noc_in_ready,
 
-  // Blackbone interface for L2R data store
+  // BackBone interface for L2R data store
   output     [ADDR_WIDTH-1:0] bb_addr_o,
   output     [DATA_WIDTH-1:0] bb_din_o,
   output reg                  bb_en_o,
@@ -242,7 +242,7 @@ module peripheral_dma_target_bb #(
     end
   end
 
-  // Blackbone signal generation
+  // BackBone signal generation
 
   // The data of the payload flits
   assign bb_din_o  = buf_flit[FLIT_CONTENT_MSB:FLIT_CONTENT_LSB];

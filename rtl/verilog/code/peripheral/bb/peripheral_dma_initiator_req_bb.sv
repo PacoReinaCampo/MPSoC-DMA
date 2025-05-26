@@ -11,7 +11,7 @@
 //                                                                            //
 //              MPSoC-RISCV CPU                                               //
 //              Direct Access Memory Interface                                //
-//              Blackbone Bus Interface                                       //
+//              BackBone Bus Interface                                       //
 //                                                                            //
 ////////////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2018-2019 by the author(s)
@@ -67,7 +67,7 @@ module peripheral_dma_initiator_req_bb #(
   // Constants
   //////////////////////////////////////////////////////////////////////////////
 
-  // Blackbone state machine
+  // BackBone state machine
   localparam WB_REQ_WIDTH = 2;
   localparam WB_REQ_IDLE = 2'b00;
   localparam WB_REQ_DATA = 2'b01;
@@ -175,7 +175,7 @@ module peripheral_dma_initiator_req_bb #(
     end
   end
 
-  // Blackbone interface logic
+  // BackBone interface logic
 
   // Statically zero (this interface reads)
   assign bb_req_din_o = 32'h0000_0000;
